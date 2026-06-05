@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApiSpi Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="header-logo">
+    <span>ApiSpi</span>
+  </a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="docs/overview.html" class="nav-link">Overview</a>
+      <a href="docs/architecture.html" class="nav-link">Architecture</a>
+      <a href="docs/auth.html" class="nav-link">Authentication</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="docs/agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="docs/aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="docs/connectors.html" class="nav-link">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="docs/training.html" class="nav-link">Training Courses</a>
+      <a href="docs/partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>ApiSpi <span>Documentation</span></h1>
+      <p>Enterprise-grade autonomous AI agents, digital avatars, and training for Australian businesses.</p>
+      <div class="hero-links">
+        <a href="docs/overview.html" class="btn btn-primary">Get Started</a>
+        <a href="docs/agents.html" class="btn btn-outline">Agents Catalogue</a>
+        <a href="docs/aria.html" class="btn btn-outline">Aria Assistant</a>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <a href="docs/agents.html">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">AI Agents</div>
+            <div class="feature-desc">Nine pre-built autonomous agents covering bid &amp; tender, security, architecture, and more.</div>
+          </a>
+        </div>
+        <div class="feature-card">
+          <a href="docs/aria.html">
+            <div class="feature-icon">💬</div>
+            <div class="feature-title">Aria AI Assistant</div>
+            <div class="feature-desc">Multi-provider AI assistant with agentic tool use. Supports Anthropic, Gemini, and SCX AI.</div>
+          </a>
+        </div>
+        <div class="feature-card">
+          <a href="docs/connectors.html">
+            <div class="feature-icon">🔌</div>
+            <div class="feature-title">Connectors</div>
+            <div class="feature-desc">Live integrations — Microsoft 365, Gmail, BOM weather, Substack, and SCX AI vector search.</div>
+          </a>
+        </div>
+        <div class="feature-card">
+          <a href="docs/training.html">
+            <div class="feature-icon">🎓</div>
+            <div class="feature-title">Training</div>
+            <div class="feature-desc">Hands-on workshops and online courses covering AI adoption, prompt engineering, and strategy.</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <h2>Quick Links</h2>
+    <table>
+      <thead><tr><th>Topic</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="docs/overview.html">Platform Overview</a></td><td>What ApiSpi is, core offerings, and contact information.</td></tr>
+        <tr><td><a href="docs/agents.html">Agents Catalogue</a></td><td>All nine agents with pricing, use cases, and subscription management.</td></tr>
+        <tr><td><a href="docs/aria.html">Aria AI Assistant</a></td><td>Public chatbot, dashboard Aria, modes, tools, and the agentic loop.</td></tr>
+        <tr><td><a href="docs/connectors.html">Connectors</a></td><td>Data model, OAuth vs API key, tool definitions, and management routes.</td></tr>
+        <tr><td><a href="docs/training.html">Training Courses</a></td><td>Course catalogue with formats and pricing.</td></tr>
+        <tr><td><a href="docs/partners.html">Partner Program</a></td><td>Referral and Agency partner tiers.</td></tr>
+        <tr><td><a href="docs/auth.html">Authentication</a></td><td>Login methods, Azure SSO role mapping, and personalisation.</td></tr>
+        <tr><td><a href="docs/architecture.html">Architecture</a></td><td>Stack, models, controllers, agentic loop, rate limits, and env vars.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Contact:</strong> sales@apispi.com &nbsp;·&nbsp; Mon–Fri 9 AM–6 PM AEST
+    </div>
+  </main>
+</div>
+
+<script>
+  // Mark active nav link
+  const links = document.querySelectorAll('.nav-link');
+  links.forEach(l => {
+    if (l.href === location.href) l.classList.add('active');
+    else l.classList.remove('active');
+  });
+</script>
+</body>
+</html>

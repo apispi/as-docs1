@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Courses — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="auth.html" class="nav-link">Authentication</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link active">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Training Courses</h1>
+    <p class="page-lead">Hands-on AI training for individuals and teams. All prices in AUD per person unless noted.</p>
+
+    <h2>Courses</h2>
+    <table>
+      <thead><tr><th>Course</th><th>Format</th><th>Price</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Introduction to AI</strong></td><td>Full Day Workshop</td><td>$1,500</td><td>Most popular ⭐</td></tr>
+        <tr><td><strong>Digital Avatar</strong></td><td>Online</td><td>$250/avatar</td><td>New</td></tr>
+        <tr><td><strong>Prompt Engineering Masterclass</strong></td><td>Workshop</td><td>$750</td><td></td></tr>
+        <tr><td><strong>AI for Business Leaders</strong></td><td>Half Day Workshop</td><td>$995</td><td></td></tr>
+        <tr><td><strong>Building AI Agents with APIs</strong></td><td>Online (3-day)</td><td>$1,200</td><td></td></tr>
+        <tr><td><strong>Enterprise AI Strategy</strong></td><td>2-day Workshop</td><td>$2,500</td><td>Includes certification 🎓</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Admin Management</h2>
+    <p>Training entries are seeded into the <code>trainings</code> table and managed by admins at <code>/admin/trainings</code>. The public listing is at <code>/training</code>.</p>
+    <p>Each training record stores: title, description, duration, price, format, <code>is_featured</code>, and <code>sort_order</code>.</p>
+  </main>
+</div>
+
+</body>
+</html>

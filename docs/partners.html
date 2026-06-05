@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Program — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="auth.html" class="nav-link">Authentication</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link active">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Partner Program</h1>
+    <p class="page-lead">Two partnership types for agencies, consultants, and referrers.</p>
+
+    <h2>Partner Types</h2>
+
+    <h3>Referral Partner</h3>
+    <p>Earn up to <strong>20% recurring revenue share</strong> by referring clients to ApiSpi. No delivery required — refer and earn.</p>
+
+    <h3>Agency Partner</h3>
+    <p>For digital and marketing agencies that deliver AI solutions to their own clients. Includes:</p>
+    <ul>
+      <li>Agency-tier pricing.</li>
+      <li>Volume discounts.</li>
+      <li>Joint go-to-market support.</li>
+      <li>Co-sell support.</li>
+    </ul>
+
+    <h2>Applying</h2>
+    <p>Partners apply at <code>/partners</code>. The application is handled by <code>PartnerController</code> and a notification is sent to the admin team. Onboarding takes <strong>48 hours</strong> from approval.</p>
+    <div class="callout">The partner application route is throttled to <strong>5 submissions per 10 minutes</strong> per IP.</div>
+  </main>
+</div>
+
+</body>
+</html>

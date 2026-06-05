@@ -9,7 +9,11 @@
       "Bash(npm install *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/docs/agents)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/docs/aria)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/docs/aria)",
+      "Bash(rm /Users/terence/repo/as-docs1/docs/*.md && ls -R /Users/terence/repo/as-docs1/)"
+    ],
+    "additionalDirectories": [
+      "/Users/terence/repo/as-docs1/docs"
     ]
   }
 }

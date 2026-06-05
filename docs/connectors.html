@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connectors — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="auth.html" class="nav-link">Authentication</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link active">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Connectors</h1>
+    <p class="page-lead">Connectors are integrations with external services that extend Aria's capabilities and power agent functionality. Each connector is defined in the <code>connectors</code> table and linked to users via <code>user_connectors</code>.</p>
+
+    <h2>Connector Types</h2>
+
+    <h3>API Key Connectors</h3>
+    <p>The user provides an API key (and optionally other config values). Keys are stored in <code>user_connectors.config</code> and used directly in tool calls.</p>
+    <p><strong>Examples:</strong> Anthropic, Google Gemini, SCX AI, Substack.</p>
+
+    <h3>OAuth Connectors</h3>
+    <p>The user completes an OAuth flow. Tokens are stored in <code>connector_tokens</code> and automatically refreshed via <code>OAuthService::getValidToken()</code>. OAuth flows are handled by <code>ConnectorOAuthController</code>.</p>
+    <p><strong>Examples:</strong> Microsoft 365, Gmail.</p>
+    <table>
+      <thead><tr><th>Route</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET /connectors/{slug}/authorize</code></td><td>Start the OAuth redirect.</td></tr>
+        <tr><td><code>GET /connectors/{slug}/callback</code></td><td>Receive the token after consent.</td></tr>
+        <tr><td><code>POST /connectors/{slug}/disconnect</code></td><td>Revoke the user's token.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Data Model</h2>
+
+    <h3><code>connectors</code> table</h3>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>slug</code></td><td>string</td><td>Unique identifier (e.g. <code>anthropic</code>, <code>microsoft</code>).</td></tr>
+        <tr><td><code>name</code></td><td>string</td><td>Display name.</td></tr>
+        <tr><td><code>category</code></td><td>string</td><td>Grouping label.</td></tr>
+        <tr><td><code>is_active</code></td><td>boolean</td><td>Whether the connector appears in the catalogue.</td></tr>
+        <tr><td><code>is_oauth</code></td><td>boolean</td><td>Whether the connector uses OAuth instead of an API key.</td></tr>
+        <tr><td><code>oauth_*</code></td><td>various</td><td>OAuth client credentials, endpoints, scopes, and extra params.</td></tr>
+        <tr><td><code>config_schema</code></td><td>JSON</td><td>Field definitions for the user-facing configuration form.</td></tr>
+        <tr><td><code>tool_definitions</code></td><td>JSON</td><td>Anthropic-format tool schemas exposed to Aria.</td></tr>
+      </tbody>
+    </table>
+
+    <h3><code>user_connectors</code> table</h3>
+    <table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>user_id</code></td><td>Owning user.</td></tr>
+        <tr><td><code>connector_id</code></td><td>The connector being used.</td></tr>
+        <tr><td><code>status</code></td><td><code>active</code> or <code>inactive</code>.</td></tr>
+        <tr><td><code>config</code></td><td>JSON — stores API keys, model overrides, and connector-specific options.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>AI Provider Connectors</h2>
+    <p>These connectors configure which LLM Aria uses on the dashboard. A user's connector key takes precedence over the platform's fallback key.</p>
+    <table>
+      <thead><tr><th>Connector</th><th>Slug</th><th>Config Keys</th></tr></thead>
+      <tbody>
+        <tr><td>Anthropic</td><td><code>anthropic</code></td><td><code>api_key</code>, <code>model</code></td></tr>
+        <tr><td>Google Gemini</td><td><code>gemini</code></td><td><code>api_key</code>, <code>model</code></td></tr>
+        <tr><td>SCX AI</td><td><code>scx</code></td><td><code>api_key</code>, <code>model</code>, <code>vector_store_id</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Managing Connectors</h2>
+
+    <h3>User self-service (dashboard)</h3>
+    <table>
+      <thead><tr><th>Action</th><th>Route</th></tr></thead>
+      <tbody>
+        <tr><td>View all connectors</td><td><code>GET /dashboard/connectors</code></td></tr>
+        <tr><td>Connect an API-key connector</td><td><code>POST /dashboard/connectors/{connector}/connect</code></td></tr>
+        <tr><td>Configure connector settings</td><td><code>POST /dashboard/connectors/{connector}/configure</code></td></tr>
+        <tr><td>Edit an existing connection</td><td><code>GET /dashboard/connectors/{userConnector}/edit</code></td></tr>
+        <tr><td>Update connection config</td><td><code>PUT /dashboard/connectors/{userConnector}</code></td></tr>
+        <tr><td>Disconnect</td><td><code>DELETE /dashboard/connectors/{userConnector}</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Admin management</h3>
+    <p>Admins manage the connector catalogue at <code>/admin/connectors</code> and assign connectors to users at <code>/admin/users/{user}/connectors</code>.</p>
+
+    <h2>Tool Definitions Format</h2>
+    <p>A connector's <code>tool_definitions</code> field is a JSON array of tool schemas in Anthropic's tool format. When Aria builds its tool list it merges definitions from all active connectors. The internal fields <code>_connector_slug</code> and <code>_connector_config</code> are stripped before being sent to any LLM.</p>
+    <pre><code>[
+  {
+    "name": "tool_name",
+    "description": "What this tool does.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "param": { "type": "string", "description": "..." }
+      },
+      "required": ["param"]
+    }
+  }
+]</code></pre>
+  </main>
+</div>
+
+</body>
+</html>

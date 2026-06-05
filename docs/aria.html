@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aria AI Assistant — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="auth.html" class="nav-link">Authentication</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link active">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Aria AI Assistant</h1>
+    <p class="page-lead">Aria is ApiSpi's AI assistant. There are two variants: the <strong>public chatbot</strong> on the marketing site, and the <strong>dashboard Aria</strong> available to authenticated users.</p>
+
+    <h2>Public Chatbot</h2>
+    <p>Route: <code>POST /chat</code> — handled by <code>ChatController</code>.</p>
+    <p>Embedded on the public website to answer questions about ApiSpi's services, pricing, and partners.</p>
+
+    <h3>Behaviour</h3>
+    <ul>
+      <li>Rate-limited to <strong>30 messages per IP per minute</strong>.</li>
+      <li>Responses capped at <strong>512 tokens</strong>.</li>
+      <li>Keeps up to <strong>10 messages</strong> of conversation history per session.</li>
+      <li>Accepts up to 20 history entries — oldest are trimmed automatically.</li>
+    </ul>
+
+    <h3>AI Provider</h3>
+    <p>Uses the Anthropic API (<code>https://api.anthropic.com/v1/messages</code>). Model is configured via <code>services.anthropic.model</code> (defaults to <code>claude-sonnet-4-5</code>). If no API key is configured, Aria returns a static fallback directing users to <code>sales@apispi.com</code>.</p>
+
+    <h3>System Prompt Topics</h3>
+    <p>Aria is primed with detailed knowledge of all 9 agents, the Digital Avatar service, training courses and pricing, the partner program, recent blog posts, and contact information.</p>
+
+    <hr>
+
+    <h2>Dashboard Aria</h2>
+    <p>Route: <code>POST /dashboard/aria/chat</code> — handled by <code>DashboardAriaChatController</code>.</p>
+    <p>Authenticated users get a full-featured, personalised Aria with multi-provider support and live tool use.</p>
+
+    <h3>Provider Resolution</h3>
+    <p>Three AI providers are supported, resolved in priority order:</p>
+    <table>
+      <thead><tr><th>Priority</th><th>Provider</th><th>Condition</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>SCX AI</strong></td><td>User has an active SCX connector and no explicit Anthropic/Gemini model requested.</td></tr>
+        <tr><td>2</td><td><strong>Google Gemini</strong></td><td>User has an active Gemini connector and no Anthropic key or explicit Claude model.</td></tr>
+        <tr><td>3</td><td><strong>Anthropic</strong></td><td>Default. Uses user's Anthropic connector key or the platform fallback key.</td></tr>
+      </tbody>
+    </table>
+    <p>If no provider is configured, Aria falls back to keyword-matching static responses and shows a notice to connect a provider.</p>
+
+    <h3>Model Selection</h3>
+    <p>The resolved model follows this hierarchy per provider:</p>
+    <ol>
+      <li>Explicit <code>model</code> param in the request.</li>
+      <li>Mode's configured model override (e.g. Research mode forces <code>claude-opus-4-8</code>).</li>
+      <li>Model configured on the user's connector.</li>
+      <li>Platform default (<code>claude-sonnet-4-6</code> for Anthropic, <code>gemini-2.0-flash</code> for Gemini, <code>default</code> for SCX).</li>
+    </ol>
+
+    <h3>Modes</h3>
+    <table>
+      <thead><tr><th>Mode</th><th>Icon</th><th>Description</th><th>Model Override</th><th>Tools Restricted To</th></tr></thead>
+      <tbody>
+        <tr><td><strong>General</strong></td><td>◇</td><td>Default assistant behaviour.</td><td>None</td><td>All tools</td></tr>
+        <tr><td><strong>Email</strong></td><td>✉</td><td>Email management, drafting, summarising.</td><td>None</td><td><code>graph_get_emails</code>, <code>graph_search_emails</code></td></tr>
+        <tr><td><strong>Research</strong></td><td>◎</td><td>Thorough analytical responses, structured with headings.</td><td><code>claude-opus-4-8</code></td><td>All tools</td></tr>
+        <tr><td><strong>Strategy</strong></td><td>◈</td><td>Business strategy, frameworks, pros/cons.</td><td>None</td><td>All tools</td></tr>
+        <tr><td><strong>Technical</strong></td><td>⬡</td><td>Precise technical answers, code examples.</td><td>None</td><td>All tools</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Personalisation</h3>
+    <p>Aria injects user profile data into the system prompt when available: preferred name, job title, industry, organisation, communication style, preferred response length, and custom instructions.</p>
+
+    <h3>Disclosure Handling</h3>
+    <p>Aria intercepts self-referential questions and answers directly — bypassing the LLM to ensure accuracy:</p>
+    <ul>
+      <li><em>"What model are you?"</em> → returns provider, model, and mode.</li>
+      <li><em>"What connectors do you have?"</em> → lists the user's active connectors.</li>
+      <li><em>"What mode are you in?"</em> → returns current mode.</li>
+      <li><em>"Tell me about your configuration"</em> → full summary of all of the above.</li>
+    </ul>
+
+    <h3>Agentic Loop</h3>
+    <p>Dashboard Aria runs a tool-use loop with up to <strong>5 iterations</strong> per request. When the model returns a <code>tool_use</code> stop reason, Aria executes each tool call against the appropriate connector, appends results, and loops until the model produces a final text response or the limit is reached.</p>
+
+    <h3>Token Tracking</h3>
+    <p>Input and output tokens are recorded per request in the <code>token_usage</code> table, attributed to the user, provider, and model. Admins can view usage at <code>/admin/token-usage</code>.</p>
+
+    <hr>
+
+    <h2>Available Tools</h2>
+
+    <h3>Microsoft 365 <code>microsoft</code></h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>graph_get_emails</code></td><td>Fetch recent inbox messages (up to 20). Supports <code>$filter</code>.</td></tr>
+        <tr><td><code>graph_search_emails</code></td><td>Search emails by keyword query. Returns up to 10 results.</td></tr>
+        <tr><td><code>graph_list_calendar</code></td><td>List upcoming calendar events for a configurable number of days (default 7, up to 20 events).</td></tr>
+        <tr><td><code>graph_list_files</code></td><td>List OneDrive files/folders. Optionally specify a folder path.</td></tr>
+        <tr><td><code>graph_search_sharepoint</code></td><td>Search SharePoint drive items and list items by query string.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Gmail <code>gmail</code></h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>gmail_list_messages</code></td><td>List inbox messages (up to 25). Supports label filter.</td></tr>
+        <tr><td><code>gmail_search_messages</code></td><td>Search messages by Gmail query syntax.</td></tr>
+        <tr><td><code>gmail_send_email</code></td><td>Send an email. Requires <code>to</code>, <code>subject</code>, and <code>body</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Bureau of Meteorology <code>bom</code></h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>bom_get_observations</code></td><td>Current weather observations for a city — temperature, humidity, wind, pressure, and more.</td></tr>
+        <tr><td><code>bom_get_forecast</code></td><td>7-day forecast for a major city (capital cities only).</td></tr>
+      </tbody>
+    </table>
+    <p>Observations supported for 22 cities across Australia. A default city can be configured on the connector.</p>
+
+    <h3>Substack <code>substack</code></h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>substack_list_posts</code></td><td>Fetch recent posts from a configured Substack publication (up to 25).</td></tr>
+        <tr><td><code>substack_search_posts</code></td><td>Search posts by title, subtitle, or description text.</td></tr>
+      </tbody>
+    </table>
+    <p>A <code>publication_url</code> must be configured on the connector.</p>
+
+    <h3>SCX AI <code>scx</code></h3>
+    <table>
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>scx_vector_search</code></td><td>Semantic search against a configured vector store. Requires <code>vector_store_id</code> in connector config. Returns up to 20 results.</td></tr>
+      </tbody>
+    </table>
+    <p>SCX AI also serves as a full chat provider (OpenAI-compatible <code>/v1/chat/completions</code>).</p>
+
+    <div class="callout">
+      Every tool execution is logged in <code>connector_usage_logs</code> — capturing user, connector, tool name, status (<code>ok</code> / <code>error</code>), result count, and any error message.
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
