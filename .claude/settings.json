@@ -3,7 +3,13 @@
     "allow": [
       "Bash(find /Users/terence/repo/as-website1-laravel -type f \\\\\\( -name \"*.php\" -o -name \"*.md\" \\\\\\) | xargs grep -l \"ApiSpi\\\\|apispi\\\\|api_spi\\\\|ApiSPI\" 2>/dev/null | head -20)",
       "Read(//Users/terence/repo/as-website1-laravel/**)",
-      "Bash(xargs cat)"
+      "Bash(xargs cat)",
+      "Bash(xargs ls)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/docs/agents)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4173/docs/aria)"
     ]
   }
 }
