@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/terence/repo/as-website1-laravel -type f \\\\\\( -name \"*.php\" -o -name \"*.md\" \\\\\\) | xargs grep -l \"ApiSpi\\\\|apispi\\\\|api_spi\\\\|ApiSPI\" 2>/dev/null | head -20)",
+      "Read(//Users/terence/repo/as-website1-laravel/**)"
+    ]
+  }
+}
