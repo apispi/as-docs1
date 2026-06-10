@@ -48,9 +48,10 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 - Pivot fields: name, description, category, refreshed_at (for tracking skill relevance)
 
 ### 4. Connectors (OAuth & API Integrations)
-- Third-party service integrations (Slack, Zapier, Anthropic, Microsoft, Gmail, etc.)
+- Third-party service integrations (Slack, Zapier, Anthropic, Microsoft, Gmail, YouTube, etc.)
 - OAuth 2.0 support with metadata: client ID, secret, auth/token URLs, scopes, extra params
 - Dynamic configuration: `config_schema` (JSON) allows form generation
+- `tool_definitions` (JSON array) — the tool/function schemas (name, description, `input_schema`) a connector exposes for Aria's tool use. Read by `DashboardAriaChatController` to build Claude's tool list, and surfaced read-only in the Admin Catalog's **All Tools** tab (`/admin/agents`)
 - Many-to-many with agents via `agent_connector` pivot
 - One-to-many with `user_connectors` (user's authenticated connections)
 - Encrypted secret storage (OAuth client secrets)
@@ -131,6 +132,7 @@ Example:
 - **Pages**: Managed via admin.js with `data-page` attribute for client-side routing
 - **Features**:
   - Agent CRUD and management
+  - **All Tools** tab (`/admin/agents`): read-only catalog of every connector's `tool_definitions`, with search and a searchable connector-filter dropdown
   - Skill association and bulk operations
   - Connector OAuth setup
   - User management and impersonation (via `actor_id` on ActivityLog)

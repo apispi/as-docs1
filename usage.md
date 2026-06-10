@@ -296,6 +296,21 @@ Connect the **Gmail** connector to let Aria work with your Google inbox.
 | `gmail_search_messages` | Searches Gmail using standard Gmail query syntax (e.g. `from:someone subject:meeting`) |
 | `gmail_send_email` | Sends a plain-text email on your behalf |
 
+#### YouTube
+
+Connect the **YouTube** connector (Google OAuth, read-only) to let Aria browse YouTube on your behalf.
+
+| Tool | What it does |
+|---|---|
+| `youtube_search_videos` | Searches YouTube for videos matching a query |
+| `youtube_get_video_details` | Returns details (title, description, stats) for a video |
+| `youtube_get_my_channel` | Returns details for your authenticated channel |
+| `youtube_list_channel_videos` | Lists videos uploaded by a channel |
+| `youtube_list_my_playlists` | Lists playlists on your channel |
+| `youtube_get_playlist_items` | Lists the videos in a playlist |
+
+> The YouTube connector and its tool definitions are seeded, but the Aria tool-execution handler for `youtube_*` tools is not yet implemented — connecting and viewing the connector works, but tool calls will currently fail.
+
 #### Substack
 
 Connect the **Substack** connector to manage your publication.
@@ -398,7 +413,7 @@ The admin panel is available at `/admin` and covers:
 | Section | URL | Description |
 |---|---|---|
 | Dashboard | `/admin` | Overview and key metrics |
-| Agents | `/admin/agents` | Create, edit, and delete agents |
+| Agents | `/admin/agents` | Create, edit, and delete agents; includes an **All Tools** tab (see below) |
 | Skills | `/admin/skills` | Manage agent skills and categories |
 | Connectors | `/admin/connectors` | Manage OAuth connectors |
 | Subscriptions | `/admin/subscriptions` | View and manage all user subscriptions |
@@ -408,6 +423,18 @@ The admin panel is available at `/admin` and covers:
 | Activity Log | `/admin/activity` | Audit log of all admin and user actions |
 | Token Usage | `/admin/token-usage` | AI API token consumption tracking |
 | Azure Policies | `/admin/azure/policies` | Azure AD policy configuration |
+
+### All Tools (Admin Catalog)
+
+The **All Tools** tab on `/admin/agents` lists every tool definition exposed by every connector — a read-only inspector over the same `tool_definitions` JSON that Aria's chat backend uses to build its tool list.
+
+For each tool it shows the tool name, owning connector (with icon and link to `/admin/connectors/{id}/edit`), description, and parameter count. Click a row to expand its `input_schema` and see each parameter's name, type, required flag, and description.
+
+- **Search**: filters by tool name, description, or connector name
+- **Connector filter**: a searchable dropdown for narrowing the list to a single connector
+- Results are paginated (20 per page)
+
+This tab is useful for auditing what capabilities Aria has access to and verifying a connector's tool schema after editing it.
 
 ### Assigning Agents to Users
 
