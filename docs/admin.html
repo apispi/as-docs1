@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin &amp; Governance — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link active">Admin &amp; Governance</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Admin &amp; Governance</h1>
+    <p class="page-lead">Org-wide controls, usage telemetry, and the in-app affiliate program — all managed under <code>/admin</code> by users with the <code>is_admin</code> flag.</p>
+
+    <h2>Admin Panel Sections</h2>
+    <table>
+      <thead><tr><th>Section</th><th>Route</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Token Usage</td><td><code>/admin/token-usage</code></td><td>AI token consumption and connector tool-call activity.</td></tr>
+        <tr><td>Governance</td><td><code>/admin/policy</code></td><td>Org-wide AI policy: blocked keywords, daily token limit, connector kill switch.</td></tr>
+        <tr><td>AI Firewall</td><td><code>/admin/firewall</code></td><td>PII/prompt-injection detection rules and match log.</td></tr>
+        <tr><td>Sales / Affiliates</td><td><code>/admin/sales?tab=affiliates</code></td><td>Referral conversions and commission payouts.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Token Usage</h2>
+    <p>Every Aria conversation turn is recorded in <code>token_usage</code> — user, connector, model, input/output tokens, prompt, reply, system prompt, and mode. The admin page shows a 30-day daily chart, totals by connector/model, and a filterable per-turn log. Connector tool-call activity is tracked separately in <code>connector_usage_log</code> (see <a href="connectors.html">Connectors</a>).</p>
+    <p>Users see their own usage on the <strong>Usage</strong>/<strong>Token</strong> tabs of <code>/dashboard/profile</code> — remaining, lifetime, and consumed tokens per AI provider.</p>
+
+    <h2>Governance</h2>
+    <p>A single org-wide <code>OrgPolicy</code> row (<code>OrgPolicy::current()</code>) controls:</p>
+    <table>
+      <thead><tr><th>Field</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>content</code></td><td>Free text injected directly into Aria's system prompt on every conversation.</td></tr>
+        <tr><td><code>blocked_keywords</code></td><td>If a user message or AI reply matches, the reply is swapped for a guardrail message and logged to the Activity Log as <code>aria.guardrail.blocked</code>.</td></tr>
+        <tr><td><code>daily_token_limit</code></td><td>Once a user's daily token total (<code>TokenUsage::todayTotalForUser()</code>) reaches this value, further Aria requests get a fixed "limit reached" reply instead of calling the model.</td></tr>
+        <tr><td><code>connectors_disabled</code></td><td>Global kill switch — ignores everyone's saved AI connector config and falls back to the platform's Anthropic key, without altering individual user settings.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">Governance enforcement happens inline in the chat controllers at message-send time (<code>ChatController</code>, <code>DashboardAriaChatController</code>, <code>WorkspaceChatController</code>) — it is not a separate request-blocking middleware.</div>
+
+    <h2>AI Firewall</h2>
+    <p>A separate, pattern-based detector (<code>AiFirewallService::inspectRequest()</code>) scans outbound gateway/connector request bodies for prompt injection and PII (email, credit card, API key patterns).</p>
+    <div class="callout"><strong>Detection only:</strong> the firewall never blocks or modifies a request — it logs matches for review and nothing more.</div>
+    <p><code>FirewallRule</code> toggles each category on or off, either globally or scoped to a specific connector (a connector-level rule overrides the global one). Every match is recorded in <code>FirewallLog</code> — user, connector, direction, category, and a 200-character snippet — and reviewed in a filterable activity log on the same admin page.</p>
+
+    <h2>Affiliate Program</h2>
+    <p>Distinct from the formal <a href="partners.html">Partner Program</a> application, every registered user automatically gets a referral code (<code>users.referral_code</code>) and a shareable link: <code>https://apispi.com/register?ref=&lt;code&gt;</code>.</p>
+    <table>
+      <thead><tr><th>Step</th><th>Mechanism</th></tr></thead>
+      <tbody>
+        <tr><td>Capture</td><td><code>CaptureReferral</code> middleware reads <code>?ref=</code> on any page and stores it in the session.</td></tr>
+        <tr><td>Attribution</td><td>On signup, <code>users.referred_by</code> is set if a valid referral code was captured.</td></tr>
+        <tr><td>Conversion</td><td>An <code>AffiliateConversion</code> row is created only when the referred user completes a <strong>paid</strong> action — a subscription or token purchase — via the Stripe webhook. Signups alone do not convert.</td></tr>
+        <tr><td>Commission</td><td>Purchase amount × a fixed config rate. Status starts <code>pending</code>.</td></tr>
+        <tr><td>Payout</td><td>An admin bulk-marks all of a user's pending conversions <code>paid</code> from <code>/admin/sales?tab=affiliates</code> — there is no partial payout.</td></tr>
+      </tbody>
+    </table>
+    <p>Users track their own referrals, conversions, and commission totals on the <strong>Affiliate</strong> tab of <code>/dashboard/profile</code>.</p>
+  </main>
+</div>
+
+</body>
+</html>

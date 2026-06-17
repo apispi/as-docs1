@@ -34,6 +34,10 @@
       <a href="training.html" class="nav-link">Training Courses</a>
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+    </div>
   </nav>
 
   <main class="content">
@@ -130,6 +134,19 @@
     }
   }
 ]</code></pre>
+
+    <h2>API Gateway &amp; Keys</h2>
+    <p>The API Gateway lets external scripts call a user's connected services programmatically over a single authenticated proxy endpoint, without managing upstream OAuth tokens or API keys directly.</p>
+    <table>
+      <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>ANY /api/gateway/{connector_slug}/{path?}</code></td><td>Bearer-authenticated proxy. Injects the user's stored OAuth token or API key and forwards the request.</td></tr>
+        <tr><td><code>GET / POST / DELETE /api/gateway/keys</code></td><td>Self-service key management (JSON API), session-authenticated.</td></tr>
+        <tr><td><code>/dashboard/profile#api-keys</code></td><td>Self-service key management (dashboard UI) — the primary way users create/revoke their own keys.</td></tr>
+        <tr><td><code>/admin/api-keys</code></td><td>Admins issue a key on behalf of any user.</td></tr>
+      </tbody>
+    </table>
+    <p>Keys are prefixed <code>gw_</code>, hashed with SHA-256 at rest, and shown in full only once at creation. A key is <strong>not</strong> scoped to specific connectors — it works against any connector the owning user has actively connected. There is currently no rate limiting on gateway/proxy requests. Every proxy call is logged to <code>connector_usage_log</code> (user, connector, tool/path, status, result count, error message) and reviewable at <code>/admin/token-usage</code>.</p>
   </main>
 </div>
 
