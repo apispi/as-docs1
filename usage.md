@@ -370,7 +370,11 @@ PDF text is extracted automatically. Upload the file, then type your question �
 
 ### Token Usage
 
-All Aria dashboard conversations are tracked. Admins can view token consumption by provider, model, and mode at `/admin/token-usage`. This includes input and output token counts per conversation turn, the prompt used, and which mode was active.
+All Aria dashboard conversations are tracked. Admins can view token consumption at `/admin/token-usage`: a 30-day daily input/output chart, totals grouped by connector and model, and a filterable, paginated log of individual conversation turns (connector, user, date range) showing the prompt, reply, system prompt, and mode used. Connector tool-call activity (from the [API Gateway](api.md)) is tracked separately on the same page.
+
+You can see your own usage on the **Usage**/**Token** tabs of `/dashboard/profile` — remaining, lifetime, and consumed token counts per AI provider, plus your recent usage history.
+
+If an org-wide **daily token limit** is set (see [Governance](#governance--ai-firewall) below) and you exceed it, Aria responds with a fixed "you've reached your daily AI usage limit" message instead of calling the model for the rest of that day.
 
 ---
 
@@ -402,6 +406,19 @@ Manage other preferences in the **Settings** section. Saves via `PUT /dashboard/
 
 At the bottom of the profile page, use the **Delete Account** control. This action is permanent — your account, subscriptions, and connector connections are removed. Submits `DELETE /dashboard/profile`.
 
+### API Keys
+
+Manage your own API Gateway keys from the **API Keys** section of your profile (`/dashboard/profile#api-keys`) — create, name, set an optional expiry, and revoke keys for programmatic access. See [API Gateway](api.md) for full details on using a key.
+
+### Affiliate Program
+
+Every user gets a referral code, visible in the **Affiliate** tab of `/dashboard/profile` along with a ready-to-share link (`https://apispi.com/register?ref=<your-code>`) and a **copy link** button.
+
+- **Referral History** sub-tab lists everyone who signed up using your link
+- A **conversion** is recorded — and earns you a commission — when a referred user makes a paid subscription or token purchase (signing up alone does not generate a commission)
+- The commission rate is a fixed percentage of the purchase amount, shown on the Affiliate tab
+- Commissions start as **pending** and are marked **paid** by an admin; the tab shows your pending and paid totals
+
 ---
 
 ## Admin Panel
@@ -422,6 +439,9 @@ The admin panel is available at `/admin` and covers:
 | Leads | `/admin/leads` | View and manage digital avatar demo requests |
 | Activity Log | `/admin/activity` | Audit log of all admin and user actions |
 | Token Usage | `/admin/token-usage` | AI API token consumption tracking |
+| Sales | `/admin/sales` | Revenue overview; **Affiliates** tab for referral/commission tracking |
+| Governance | `/admin/policy` | Org-wide AI policy: blocked keywords, daily token limit, connector kill switch |
+| AI Firewall | `/admin/firewall` | PII/prompt-injection detection rules and activity log |
 | Azure Policies | `/admin/azure/policies` | Azure AD policy configuration |
 
 ### All Tools (Admin Catalog)
@@ -451,6 +471,24 @@ Skills and connectors on a subscription can be added, toggled (enabled/disabled)
 ### Activity Log
 
 Every admin action — creating agents, toggling admin status, assigning subscriptions — is recorded in the activity log at `/admin/activity`. Each entry captures the action, description, the user affected, the admin who performed it, and any relevant metadata.
+
+### Governance & AI Firewall
+
+Two related but distinct controls live under admin:
+
+**Governance** (`/admin/policy`) — a single org-wide policy record:
+- **Policy content** — free text injected directly into Aria's system prompt on every conversation, instructing the model to follow it
+- **Blocked keywords** — if a user message or AI reply matches a blocked keyword, the reply is replaced with a guardrail message and the block is logged to the Activity Log (`aria.guardrail.blocked`)
+- **Daily token limit** — once a user's token usage for the day reaches this limit, further Aria requests get a fixed "limit reached" reply instead of calling the model (see [Token Usage](#token-usage))
+- **Connectors disabled** — a kill switch that makes the system ignore everyone's saved AI connector config org-wide and fall back to the global Anthropic key, without changing any individual user's connector settings
+
+**AI Firewall** (`/admin/firewall`) — pattern-based detection (prompt injection, emails, credit card numbers, API keys) that scans outbound gateway and connector requests. It is **detection/logging only** — it never blocks or modifies a request. Toggle categories globally or override them per connector, and review matches (user, connector, direction, category, a 200-character snippet) in the filterable activity log on the same page.
+
+### Affiliates
+
+The **Affiliates** tab of `/admin/sales` (`/admin/sales?tab=affiliates`) lists every affiliate (name, email, referral code, number of referred signups, pending/paid commission) and a table of recent conversions (affiliate, referred user, type — subscription or token purchase, amount, commission, status).
+
+Use **Mark Paid** to bulk-settle all of a user's pending commissions at once, recording a paid timestamp. There is no partial-payout option — it's all-or-nothing per affiliate.
 
 ---
 

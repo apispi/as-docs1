@@ -73,6 +73,29 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 - `actor_id` set when admin acts on behalf of another user
 - Metadata: custom JSON for context (e.g., which agent was subscribed)
 
+### 8. OrgPolicy (Governance)
+- Single org-wide row, fetched/created via `OrgPolicy::current()`
+- Fields: `content` (free text injected into Aria's system prompt), `connectors_disabled` (global kill switch for user AI connectors), `daily_token_limit`, `blocked_keywords` (array)
+- Enforced inline in chat controllers (`ChatController`, `DashboardAriaChatController`, `WorkspaceChatController`) at message-send time — not a separate middleware
+- Keyword/limit hits produce a canned reply to the user and a guardrail entry in `ActivityLog`
+
+### 9. FirewallRule / FirewallLog (AI Firewall)
+- Pattern-based detection only (prompt injection, PII: email/credit card/API key) via `AiFirewallService::inspectRequest()` — **never blocks or alters a request**, logging only
+- `FirewallRule`: per-category enable/disable, optionally scoped to a `connector_id` (connector-level rule overrides the global one)
+- `FirewallLog`: records user_id, connector_slug, direction, category, and a truncated snippet for each match
+- Runs against outbound gateway/connector request bodies, distinct from `OrgPolicy`'s keyword guardrail (which runs on chat messages/replies)
+
+### 10. TokenUsage / ConnectorUsageLog (Telemetry)
+- `TokenUsage`: one row per Aria conversation turn — user_id, connector_slug, model, input/output tokens, prompt, reply, system prompt, mode
+- `ConnectorUsageLog`: one row per API Gateway proxy call — user_id, connector_slug, tool_name (upstream path), status, result_count, error_message (see [API Gateway → Usage Logging](api.md#usage-logging))
+- Both feed the admin `/admin/token-usage` page; `TokenUsage::todayTotalForUser()` also backs `OrgPolicy.daily_token_limit` enforcement
+
+### 11. AffiliateConversion (Referral Program)
+- `users.referral_code` (lazily generated) + `users.referred_by` (set at signup if a valid `?ref=` code was captured by `CaptureReferral` middleware)
+- `AffiliateConversion` row created when a referred user completes a **paid** action (subscription or token purchase) via Stripe webhook — plain signups do not create a conversion
+- Commission = purchase amount × a fixed config rate; status starts `pending`, admin bulk-marks a user's conversions `paid`
+- Deduped per Stripe session via `firstOrCreate`
+
 ## Request Flow
 
 ```
@@ -139,6 +162,8 @@ Example:
   - Subscription administration
   - Training course management
   - Activity log viewing
+  - Governance (`/admin/policy`) and AI Firewall (`/admin/firewall`) configuration
+  - Affiliate/referral commission tracking (`/admin/sales?tab=affiliates`)
 
 ## Authentication & Authorization
 
