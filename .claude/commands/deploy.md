@@ -1,4 +1,4 @@
-Deploy the apispi.com Laravel app to production on SiteGround.
+Deploy the docs.apispi.com app to production on SiteGround.
 
 Work through these steps in order. Stop and report clearly if any step fails — never proceed past a failure.
 
@@ -84,7 +84,7 @@ Print the following block exactly for the user to run via SSH on SiteGround. Fil
 ssh <siteground-user>@<host>
 
 # Inside the server:
-cd ~/www/apispi.com
+cd ~/www/docs.apispi.com
 
 # Pull latest code (includes built assets)
 git pull origin main
