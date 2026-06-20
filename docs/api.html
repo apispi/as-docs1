@@ -77,6 +77,35 @@ Content-Type: application/json
   "key": "gw_AbCdEfGhIjKlMnOpQrStUvWxYz0123456789012345678901",
   "key_prefix": "gw_AbCdEfGh"
 }</code></pre>
+
+    <details class="code-tabs"><summary>curl</summary>
+    <pre><code>curl -X POST https://apispi.com/api/gateway/keys \
+  -H "Cookie: &lt;your-session-cookie&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "my-script", "expires_at": "2027-01-01" }'</code></pre>
+    </details>
+    <details class="code-tabs"><summary>Python</summary>
+    <pre><code>import requests
+
+resp = requests.post(
+    "https://apispi.com/api/gateway/keys",
+    json={"name": "my-script", "expires_at": "2027-01-01"},
+    cookies={"apispi_session": "&lt;your-session-cookie&gt;"},
+)
+key = resp.json()["key"]
+print(key)  # store this now — it is never returned again</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (fetch)</summary>
+    <pre><code>const resp = await fetch("https://apispi.com/api/gateway/keys", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include", // sends your session cookie
+  body: JSON.stringify({ name: "my-script", expires_at: "2027-01-01" }),
+});
+const { key } = await resp.json();
+console.log(key); // store this now — it is never returned again</code></pre>
+    </details>
+
     <div class="callout">A key is <strong>not</strong> restricted to specific connectors — it inherits whichever connectors the owning user has actively connected. There is no per-key connector scoping or custom rate limit.</div>
 
     <h2>Proxy Endpoint</h2>
@@ -89,6 +118,9 @@ Content-Type: application/json
       <li><strong>No rate limiting</strong> is currently applied to gateway/proxy requests</li>
     </ul>
     <h3>Example: call Anthropic through the gateway</h3>
+    <p>The gateway injects your Anthropic API key automatically — you send only your ApiSpi gateway key.</p>
+
+    <details class="code-tabs"><summary>curl</summary>
     <pre><code>curl -X POST https://apispi.com/api/gateway/anthropic/v1/messages \
   -H "Authorization: Bearer gw_&lt;your-key&gt;" \
   -H "Content-Type: application/json" \
@@ -97,9 +129,84 @@ Content-Type: application/json
     "max_tokens": 1024,
     "messages": [{"role": "user", "content": "Hello"}]
   }'</code></pre>
+    </details>
+    <details class="code-tabs"><summary>Python</summary>
+    <pre><code>import requests
+
+resp = requests.post(
+    "https://apispi.com/api/gateway/anthropic/v1/messages",
+    headers={"Authorization": "Bearer gw_&lt;your-key&gt;"},
+    json={
+        "model": "claude-sonnet-4-6",
+        "max_tokens": 1024,
+        "messages": [{"role": "user", "content": "Hello"}],
+    },
+)
+print(resp.json())</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (fetch)</summary>
+    <pre><code>const resp = await fetch("https://apispi.com/api/gateway/anthropic/v1/messages", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer gw_&lt;your-key&gt;",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    messages: [{ role: "user", content: "Hello" }],
+  }),
+});
+console.log(await resp.json());</code></pre>
+    </details>
+    <details class="code-tabs"><summary>PHP</summary>
+    <pre><code>&lt;?php
+$ch = curl_init("https://apispi.com/api/gateway/anthropic/v1/messages");
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer gw_&lt;your-key&gt;",
+        "Content-Type: application/json",
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        "model" => "claude-sonnet-4-6",
+        "max_tokens" => 1024,
+        "messages" => [["role" => "user", "content" => "Hello"]],
+    ]),
+]);
+echo curl_exec($ch);</code></pre>
+    </details>
+
     <h3>Example: list Microsoft 365 emails</h3>
+    <p>The gateway injects a valid OAuth access token for Microsoft Graph, refreshing it if needed.</p>
+
+    <details class="code-tabs"><summary>curl</summary>
     <pre><code>curl "https://apispi.com/api/gateway/microsoft/me/messages?\$top=10&\$select=subject,from,receivedDateTime" \
   -H "Authorization: Bearer gw_&lt;your-key&gt;"</code></pre>
+    </details>
+    <details class="code-tabs"><summary>Python</summary>
+    <pre><code>import requests
+
+resp = requests.get(
+    "https://apispi.com/api/gateway/microsoft/me/messages",
+    headers={"Authorization": "Bearer gw_&lt;your-key&gt;"},
+    params={"$top": 10, "$select": "subject,from,receivedDateTime"},
+)
+for msg in resp.json()["value"]:
+    print(msg["subject"])</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (fetch)</summary>
+    <pre><code>const url = new URL("https://apispi.com/api/gateway/microsoft/me/messages");
+url.searchParams.set("$top", "10");
+url.searchParams.set("$select", "subject,from,receivedDateTime");
+
+const resp = await fetch(url, {
+  headers: { Authorization: "Bearer gw_&lt;your-key&gt;" },
+});
+const { value } = await resp.json();
+console.log(value.map(m => m.subject));</code></pre>
+    </details>
 
     <h2>Unified Gateway (Tool Discovery &amp; Invoke)</h2>
     <p>Instead of constructing a raw HTTP request per upstream service, discover tools via a manifest and invoke them by name — the gateway resolves the owning connector and injects credentials automatically.</p>
@@ -111,16 +218,102 @@ Content-Type: application/json
       </tbody>
     </table>
 
+    <h3>Discover tools</h3>
+    <details class="code-tabs"><summary>curl</summary>
+    <pre><code>curl https://apispi.com/api/gateway/tools \
+  -H "Authorization: Bearer gw_&lt;your-key&gt;"</code></pre>
+    </details>
+    <details class="code-tabs"><summary>Python</summary>
+    <pre><code>import requests
+
+resp = requests.get(
+    "https://apispi.com/api/gateway/tools",
+    headers={"Authorization": "Bearer gw_&lt;your-key&gt;"},
+)
+for tool in resp.json()["tools"]:
+    print(tool["name"], "—", tool["description"])</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (fetch)</summary>
+    <pre><code>const resp = await fetch("https://apispi.com/api/gateway/tools", {
+  headers: { Authorization: "Bearer gw_&lt;your-key&gt;" },
+});
+const { tools } = await resp.json();
+console.log(tools.map(t => t.name));</code></pre>
+    </details>
+
+    <h3>Invoke a tool</h3>
+    <details class="code-tabs"><summary>curl</summary>
+    <pre><code>curl -X POST https://apispi.com/api/gateway/invoke \
+  -H "Authorization: Bearer gw_&lt;your-key&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{ "tool": "gmail_search_messages", "input": { "query": "from:someone subject:meeting" } }'</code></pre>
+    </details>
+    <details class="code-tabs"><summary>Python</summary>
+    <pre><code>import requests
+
+resp = requests.post(
+    "https://apispi.com/api/gateway/invoke",
+    headers={"Authorization": "Bearer gw_&lt;your-key&gt;"},
+    json={
+        "tool": "gmail_search_messages",
+        "input": {"query": "from:someone subject:meeting"},
+    },
+)
+print(resp.json())</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (fetch)</summary>
+    <pre><code>const resp = await fetch("https://apispi.com/api/gateway/invoke", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer gw_&lt;your-key&gt;",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    tool: "gmail_search_messages",
+    input: { query: "from:someone subject:meeting" },
+  }),
+});
+console.log(await resp.json());</code></pre>
+    </details>
+
     <h2>OpenAI-Compatible Endpoints</h2>
     <pre><code>GET   https://apispi.com/api/gateway/v1/models
 POST  https://apispi.com/api/gateway/v1/chat/completions</code></pre>
     <p>Point any OpenAI-compatible client at <code>https://apispi.com/api/gateway/v1</code> with your gateway key:</p>
+
+    <details class="code-tabs"><summary>Python (openai SDK)</summary>
     <pre><code>from openai import OpenAI
+
 client = OpenAI(base_url="https://apispi.com/api/gateway/v1", api_key="gw_xxxxx")
 resp = client.chat.completions.create(
     model="claude-sonnet-4-6",
-    messages=[{"role":"user","content":"Search my connectors and summarize"}],
-)</code></pre>
+    messages=[{"role": "user", "content": "Search my connectors and summarize"}],
+)
+print(resp.choices[0].message.content)</code></pre>
+    </details>
+    <details class="code-tabs"><summary>JavaScript (openai SDK)</summary>
+    <pre><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://apispi.com/api/gateway/v1",
+  apiKey: "gw_xxxxx",
+});
+const resp = await client.chat.completions.create({
+  model: "claude-sonnet-4-6",
+  messages: [{ role: "user", content: "Search my connectors and summarize" }],
+});
+console.log(resp.choices[0].message.content);</code></pre>
+    </details>
+    <details class="code-tabs"><summary>curl</summary>
+    <pre><code>curl https://apispi.com/api/gateway/v1/chat/completions \
+  -H "Authorization: Bearer gw_xxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "messages": [{"role": "user", "content": "Search my connectors and summarize"}]
+  }'</code></pre>
+    </details>
+
     <p><strong>How it works:</strong> the request runs through the same agentic engine Aria uses (<code>runAgentLoop</code>) — your active connectors are auto-injected as tools and executed server-side — and the reply comes back in OpenAI's <code>chat.completion</code> shape, plus a non-standard <code>apispi.tool_calls</code> field showing which connector tools ran.</p>
     <div class="callout">
       <strong>v1 limitations:</strong> non-streaming only (<code>stream:true</code> rejected) · model maps to Anthropic — non-<code>claude-*</code> models fall back to the platform default · client-supplied tools are ignored in favour of your connectors · <code>max_tokens</code> is fixed at 1024 · errors always render as JSON regardless of <code>Accept</code> header.

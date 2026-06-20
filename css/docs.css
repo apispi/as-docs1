@@ -285,6 +285,25 @@ pre code {
   font-size: 0.875rem;
 }
 
+/* ── Code example tabs ── */
+.code-tabs { margin: 1.25rem 0; }
+.code-tabs > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--primary-light);
+  padding: 0.5rem 0;
+  list-style: none;
+}
+.code-tabs > summary::-webkit-details-marker { display: none; }
+.code-tabs > summary::before {
+  content: '▸ ';
+}
+.code-tabs[open] > summary::before {
+  content: '▾ ';
+}
+.code-tabs pre { margin-top: 0.5rem; }
+
 /* ── Callout ── */
 .callout {
   border-left: 3px solid var(--primary);
