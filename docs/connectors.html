@@ -136,10 +136,12 @@
 ]</code></pre>
 
     <h2>API Gateway &amp; Keys</h2>
-    <p>The API Gateway lets external scripts call a user's connected services programmatically over a single authenticated proxy endpoint, without managing upstream OAuth tokens or API keys directly.</p>
+    <p>The API Gateway lets external scripts call a user's connected services programmatically via a single authenticated proxy or unified tool invocation endpoint, without managing upstream OAuth tokens or API keys directly.</p>
     <table>
       <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
       <tbody>
+        <tr><td><code>GET /api/gateway/tools</code></td><td>Unified gateway discovery manifest: returns all available tools and their input schemas.</td></tr>
+        <tr><td><code>POST /api/gateway/invoke</code></td><td>Unified gateway invocation: run any tool by name. The gateway routes it to the owning connector.</td></tr>
         <tr><td><code>ANY /api/gateway/{connector_slug}/{path?}</code></td><td>Bearer-authenticated proxy. Injects the user's stored OAuth token or API key and forwards the request.</td></tr>
         <tr><td><code>GET / POST / DELETE /api/gateway/keys</code></td><td>Self-service key management (JSON API), session-authenticated.</td></tr>
         <tr><td><code>/dashboard/profile#api-keys</code></td><td>Self-service key management (dashboard UI) — the primary way users create/revoke their own keys.</td></tr>

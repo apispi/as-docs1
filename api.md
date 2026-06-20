@@ -77,6 +77,30 @@ A key is **not** restricted to specific connectors — it inherits whichever con
 
 ---
 
+## Unified API Gateway
+
+The unified gateway exposes all your connected tools through a single, normalized interface. Instead of constructing raw HTTP requests for each upstream service, you discover tools via a manifest and invoke them by name. The gateway handles routing and credential injection automatically.
+
+**Discover available tools**
+```http
+GET /api/gateway/tools
+```
+Returns a manifest of every tool available to you, grouped by connector, including the JSON-schema for expected inputs.
+
+**Invoke a tool**
+```http
+POST /api/gateway/invoke
+Content-Type: application/json
+
+{
+  "tool": "tool_name",
+  "input": { "param": "value" }
+}
+```
+The gateway resolves which connector owns the tool, injects your credentials, and returns the result as JSON.
+
+---
+
 ## Proxy Endpoint
 
 ```
