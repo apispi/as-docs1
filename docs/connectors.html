@@ -142,12 +142,34 @@
       <tbody>
         <tr><td><code>GET /api/gateway/tools</code></td><td>Unified gateway discovery manifest: returns all available tools and their input schemas.</td></tr>
         <tr><td><code>POST /api/gateway/invoke</code></td><td>Unified gateway invocation: run any tool by name. The gateway routes it to the owning connector.</td></tr>
+        <tr><td><code>GET /api/gateway/v1/models</code><br><code>POST /api/gateway/v1/chat/completions</code></td><td>OpenAI-compatible gateway endpoints. Allows OpenAI clients to interact with active connectors executed server-side.</td></tr>
         <tr><td><code>ANY /api/gateway/{connector_slug}/{path?}</code></td><td>Bearer-authenticated proxy. Injects the user's stored OAuth token or API key and forwards the request.</td></tr>
         <tr><td><code>GET / POST / DELETE /api/gateway/keys</code></td><td>Self-service key management (JSON API), session-authenticated.</td></tr>
         <tr><td><code>/dashboard/profile#api-keys</code></td><td>Self-service key management (dashboard UI) — the primary way users create/revoke their own keys.</td></tr>
         <tr><td><code>/admin/api-keys</code></td><td>Admins issue a key on behalf of any user.</td></tr>
       </tbody>
     </table>
+    
+    <h3>OpenAI-Compatible Gateway Endpoints</h3>
+    <p>You can point any OpenAI-compatible client at the base URL <code>https://apispi.com/api/gateway/v1</code> using your gateway key (<code>gw_xxxxx</code>):</p>
+    <pre><code>from openai import OpenAI
+
+client = OpenAI(base_url="https://apispi.com/api/gateway/v1", api_key="gw_xxxxx")
+resp = client.chat.completions.create(
+    model="claude-sonnet-4-6",
+    messages=[{"role":"user","content":"Search my connectors and summarize"}],
+)</code></pre>
+    <p><strong>How it works:</strong> The request runs through the same agentic engine Aria uses (<code>runAgentLoop</code>) — the caller's active connectors are auto-injected as tools and executed server-side — and the final message comes back in OpenAI's <code>chat.completion</code> shape (<code>id</code>, <code>object</code>, <code>choices[].message</code>, <code>usage</code>). It also adds a non-standard <code>apispi.tool_calls</code> field so you can see which connector tools ran.</p>
+    
+    <p><strong>v1 scope / limitations (worth knowing):</strong></p>
+    <ul>
+      <li><strong>Non-streaming only.</strong> <code>stream:true</code> is rejected — SSE is the planned follow-up.</li>
+      <li><strong>Model maps to Anthropic.</strong> A <code>claude-*</code> model passes through; anything else (e.g. <code>gpt-4o</code>) falls back to the platform default. <code>/v1/models</code> advertises the Claude models.</li>
+      <li><strong>Client-supplied tools are ignored</strong> — the gateway uses your connectors as the tool set and runs them itself (its value-add), rather than returning <code>tool_calls</code> for client-side execution.</li>
+      <li><code>max_tokens</code> from the request isn't honored yet (fixed 1024 in the loop).</li>
+      <li>Validation/auth/throttle errors now render as JSON (forced <code>Accept: application/json</code> in GatewayAuth, so clients without that header still get OpenAI-style error objects).</li>
+    </ul>
+
     <p>Keys are prefixed <code>gw_</code>, hashed with SHA-256 at rest, and shown in full only once at creation. A key is <strong>not</strong> scoped to specific connectors — it works against any connector the owning user has actively connected. There is currently no rate limiting on gateway/proxy requests. Every proxy call is logged to <code>connector_usage_log</code> (user, connector, tool/path, status, result count, error message) and reviewable at <code>/admin/token-usage</code>.</p>
   </main>
 </div>

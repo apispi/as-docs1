@@ -101,6 +101,36 @@ The gateway resolves which connector owns the tool, injects your credentials, an
 
 ---
 
+## OpenAI-Compatible Gateway Endpoints
+
+```
+GET   https://apispi.com/api/gateway/v1/models
+POST  https://apispi.com/api/gateway/v1/chat/completions
+```
+
+You can point any OpenAI-compatible client at the base URL `https://apispi.com/api/gateway/v1` using your gateway key (`gw_xxxxx`):
+
+```python
+from openai import OpenAI
+client = OpenAI(base_url="https://apispi.com/api/gateway/v1", api_key="gw_xxxxx")
+resp = client.chat.completions.create(
+    model="claude-sonnet-4-6",
+    messages=[{"role":"user","content":"Search my connectors and summarize"}],
+)
+```
+
+**How it works:** 
+The request runs through the same agentic engine Aria uses (`runAgentLoop`) — the caller's active connectors are auto-injected as tools and executed server-side — and the final message comes back in OpenAI's `chat.completion` shape (`id`, `object`, `choices[].message`, `usage`). It also adds a non-standard `apispi.tool_calls` field so you can see which connector tools ran.
+
+**v1 scope / limitations (worth knowing):**
+- **Non-streaming only.** `stream:true` is rejected — SSE is the planned follow-up.
+- **Model maps to Anthropic.** A `claude-*` model passes through; anything else (e.g. `gpt-4o`) falls back to the platform default. `/v1/models` advertises the Claude models.
+- **Client-supplied tools are ignored** — the gateway uses your connectors as the tool set and runs them itself (its value-add), rather than returning `tool_calls` for client-side execution.
+- `max_tokens` from the request isn't honored yet (fixed 1024 in the loop).
+- Validation/auth/throttle errors now render as JSON (forced `Accept: application/json` in GatewayAuth, so clients without that header still get OpenAI-style error objects).
+
+---
+
 ## Proxy Endpoint
 
 ```
