@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workspaces — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link active">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Workspaces</h1>
+    <p class="page-lead">A workspace is a shared team chat space — one Aria conversation thread visible to every member — not a private project container. Any authenticated user can create one.</p>
+
+    <h2>Data Model</h2>
+    <table>
+      <thead><tr><th>Table</th><th>Key fields</th></tr></thead>
+      <tbody>
+        <tr><td><code>workspaces</code></td><td><code>name</code>, unique <code>slug</code>, unique <code>invite_code</code>, <code>owner_id</code> (FK <code>users</code>, cascade delete)</td></tr>
+        <tr><td><code>workspace_members</code></td><td><code>workspace_id</code> + <code>user_id</code> (unique pair), <code>role</code> (<code>owner</code> or <code>member</code>), <code>ai_enabled</code> (boolean, default false)</td></tr>
+        <tr><td><code>workspace_messages</code></td><td><code>workspace_id</code>, nullable <code>user_id</code>, <code>user_name</code>, <code>role</code>, <code>content</code>, <code>tool_calls</code> (JSON), <code>active_agents</code> (JSON)</td></tr>
+      </tbody>
+    </table>
+    <p>There is exactly <strong>one shared message stream per workspace</strong> — every member reads and writes the same thread.</p>
+
+    <h2>Create or Join</h2>
+    <ul>
+      <li><code>/dashboard/workspaces</code> — list your workspaces and create a new one (auto-generates a unique <code>slug</code> and <code>invite_code</code>)</li>
+      <li><code>/dashboard/workspaces/join/{inviteCode}</code> — join via an invite link</li>
+    </ul>
+
+    <h2>Membership &amp; Roles</h2>
+    <p>Only two roles exist — <strong>owner</strong> and <strong>member</strong>. There is no separate admin/moderator tier.</p>
+    <table>
+      <thead><tr><th>Action</th><th>Who can do it</th></tr></thead>
+      <tbody>
+        <tr><td>Invite new members</td><td>Any member</td></tr>
+        <tr><td>Toggle their own AI setting</td><td>Any member</td></tr>
+        <tr><td>Send chat messages</td><td>Any member</td></tr>
+        <tr><td>Clear the entire shared history</td><td>Any member (removes it for everyone)</td></tr>
+        <tr><td>Remove another member</td><td>Owner only</td></tr>
+        <tr><td>Be removed</td><td>The owner cannot be removed</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Chat</h2>
+    <p>The Chat tab polls for new messages every few seconds, supports file attachments, and shows tool-call badges for any connector tool the AI used while generating a reply. Sending a message is <strong>not</strong> gated by anything member-specific.</p>
+
+    <h2>Per-Member AI Toggle</h2>
+    <div class="callout"><code>ai_enabled</code> does <strong>not</strong> control whether a member can chat. It controls whether <em>that member's</em> personal AI connector/personalisation settings are folded into the assistant's shared reply when it responds in the thread. It defaults to off.</div>
+
+    <h2>Token Usage &amp; Governance</h2>
+    <p>Workspace chat reuses the same connector/tool pipeline as dashboard Aria chat (<code>WorkspaceChatController</code> shares the <code>RunsAgentTools</code> trait with <code>DashboardAriaChatController</code>) and logs to <code>token_usage</code> the same way, tagged as a workspace conversation.</p>
+    <p>The org-wide <strong>daily token limit</strong> (see <a href="admin.html">Admin &amp; Governance</a>) still applies per user inside a workspace. The <strong>blocked-keyword guardrail</strong> and the <strong>connectors-disabled kill switch</strong> are currently dashboard-chat-only and are <strong>not</strong> enforced in workspace chat.</p>
+  </main>
+</div>
+
+</body>
+</html>

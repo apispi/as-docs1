@@ -14,8 +14,9 @@ ApiSpi is an AI agents SaaS platform that builds and deploys enterprise-grade au
 6. [Training](#training)
 7. [Digital Avatars](#digital-avatars)
 8. [Aria — AI Assistant](#aria--ai-assistant)
-9. [Account & Profile](#account--profile)
-10. [Admin Panel](#admin-panel)
+9. [Workspaces](#workspaces)
+10. [Account & Profile](#account--profile)
+11. [Admin Panel](#admin-panel)
 
 ---
 
@@ -375,6 +376,43 @@ All Aria dashboard conversations are tracked. Admins can view token consumption 
 You can see your own usage on the **Usage**/**Token** tabs of `/dashboard/profile` — remaining, lifetime, and consumed token counts per AI provider, plus your recent usage history.
 
 If an org-wide **daily token limit** is set (see [Governance](#governance--ai-firewall) below) and you exceed it, Aria responds with a fixed "you've reached your daily AI usage limit" message instead of calling the model for the rest of that day.
+
+---
+
+## Workspaces
+
+A workspace is a **shared team chat space** — one Aria conversation thread visible to every member, not a private project container. Any authenticated user can create one.
+
+### Create or Join a Workspace
+
+- Go to `/dashboard/workspaces` to see workspaces you belong to and create a new one (gets a unique `slug` and `invite_code`)
+- Join an existing workspace via its invite link: `/dashboard/workspaces/join/{inviteCode}`
+
+### Invite & Manage Members
+
+From a workspace's **Members** tab:
+
+- Any member can invite others (by sharing the invite link, or by email)
+- Each member has a `role` of **owner** or **member**. The owner cannot be removed and is the only one who can remove other members
+- There is no admin/moderator tier beyond owner — any member can chat, invite others, or clear the shared history
+
+### Workspace Chat
+
+The **Chat** tab is a single shared thread — every member sees the same messages and AI replies, refreshed automatically (polled every few seconds). You can attach files and see which connector tools the AI used on a reply (tool-call badges).
+
+> Sending a message is **not** gated by anything member-specific — any member can post at any time.
+
+### Per-Member AI Toggle
+
+Each member has an **AI enabled** switch on the Members tab (off by default). This does **not** control whether you can send messages — it controls whether *your* personal AI connector/personalisation settings are folded into the assistant's shared reply when it responds in the thread.
+
+### Token Usage & Limits
+
+Workspace chat reuses the same connector/tool pipeline as the regular dashboard Aria chat and is tracked in token usage (tagged as a workspace conversation). The org-wide **daily token limit** (see [Governance](#governance--ai-firewall)) still applies per user. Note that the org-wide **keyword guardrail** and **connectors-disabled kill switch** are dashboard-chat-only and are not currently enforced inside workspace chat.
+
+### Clearing History
+
+Any member can clear the entire shared message history for a workspace — this removes it for everyone, not just yourself.
 
 ---
 

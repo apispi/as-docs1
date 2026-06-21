@@ -28,6 +28,7 @@
       <a href="agents.html" class="nav-link">Agents Catalogue</a>
       <a href="aria.html" class="nav-link">Aria AI Assistant</a>
       <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">API</div>
@@ -74,7 +75,7 @@
         <tr><td><code>connectors_disabled</code></td><td>Global kill switch — ignores everyone's saved AI connector config and falls back to the platform's Anthropic key, without altering individual user settings.</td></tr>
       </tbody>
     </table>
-    <div class="callout">Governance enforcement happens inline in the chat controllers at message-send time (<code>ChatController</code>, <code>DashboardAriaChatController</code>, <code>WorkspaceChatController</code>) — it is not a separate request-blocking middleware.</div>
+    <div class="callout">Governance enforcement happens inline in the chat controllers at message-send time — it is not a separate request-blocking middleware. <code>daily_token_limit</code> is enforced in <code>ChatController</code>, <code>DashboardAriaChatController</code>, and <code>WorkspaceChatController</code> alike, but <code>blocked_keywords</code> and <code>connectors_disabled</code> are currently checked only in <code>ChatController</code> and <code>DashboardAriaChatController</code> — not in <a href="workspaces.html">Workspace</a> chat.</div>
 
     <h2>AI Firewall</h2>
     <p>A separate, pattern-based detector (<code>AiFirewallService::inspectRequest()</code>) scans outbound gateway/connector request bodies for prompt injection and PII (email, credit card, API key patterns).</p>

@@ -76,7 +76,7 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 ### 8. OrgPolicy (Governance)
 - Single org-wide row, fetched/created via `OrgPolicy::current()`
 - Fields: `content` (free text injected into Aria's system prompt), `connectors_disabled` (global kill switch for user AI connectors), `daily_token_limit`, `blocked_keywords` (array)
-- Enforced inline in chat controllers (`ChatController`, `DashboardAriaChatController`, `WorkspaceChatController`) at message-send time — not a separate middleware
+- Enforced inline in chat controllers at message-send time — not a separate middleware. `daily_token_limit` is enforced in `ChatController`, `DashboardAriaChatController`, and `WorkspaceChatController`; `blocked_keywords` and `connectors_disabled` are enforced only in `ChatController` and `DashboardAriaChatController` (not currently checked in workspace chat)
 - Keyword/limit hits produce a canned reply to the user and a guardrail entry in `ActivityLog`
 
 ### 9. FirewallRule / FirewallLog (AI Firewall)
@@ -95,6 +95,16 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 - `AffiliateConversion` row created when a referred user completes a **paid** action (subscription or token purchase) via Stripe webhook — plain signups do not create a conversion
 - Commission = purchase amount × a fixed config rate; status starts `pending`, admin bulk-marks a user's conversions `paid`
 - Deduped per Stripe session via `firstOrCreate`
+
+### 12. Workspaces (Shared Team Chat)
+- `Workspace`: `name`, unique `slug`, unique `invite_code`, `owner_id` (FK users, cascade delete)
+- `WorkspaceMember`: pivot of `workspace_id` + `user_id`, unique composite, `role` (`owner`/`member`, no other tiers), `ai_enabled` (boolean, default false)
+- `WorkspaceMessage`: `workspace_id`, nullable `user_id` (nullOnDelete), `user_name`, `role`, `content`, plus `tool_calls`/`active_agents` (JSON, cast to array)
+- One shared message stream per workspace — every member reads/writes the same thread; sending is not gated by `ai_enabled`
+- `ai_enabled` per member controls only whether *that member's* personal AI/personalisation settings are folded into the assistant's shared reply — not whether they can chat
+- Membership check: `abort_unless($workspace->users()->where('users.id', Auth::id())->exists(), 403)` in both `WorkspaceController` and `WorkspaceChatController`
+- Only the owner can remove other members (and cannot be removed themselves); any member can invite others or clear the entire shared history
+- `WorkspaceChatController` shares the `RunsAgentTools` trait with `DashboardAriaChatController` — same connector/tool pipeline, same `TokenUsage` logging (tagged as a workspace source) — but does **not** enforce `OrgPolicy.blocked_keywords` or `connectors_disabled` (see [OrgPolicy](#8-orgpolicy-governance))
 
 ## Request Flow
 

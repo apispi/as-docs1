@@ -28,6 +28,7 @@
       <a href="agents.html" class="nav-link">Agents Catalogue</a>
       <a href="aria.html" class="nav-link active">Aria AI Assistant</a>
       <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">API</div>
@@ -122,6 +123,8 @@
 
     <h3>Token Tracking</h3>
     <p>Input and output tokens are recorded per request in the <code>token_usage</code> table, attributed to the user, provider, and model. Admins can view usage at <code>/admin/token-usage</code>.</p>
+
+    <div class="callout">For a <strong>shared, multi-user</strong> Aria conversation visible to a whole team, see <a href="workspaces.html">Workspaces</a> — it reuses the same connector/tool pipeline as Dashboard Aria but is not subject to the keyword guardrail or connector kill switch.</div>
 
     <hr>
 
