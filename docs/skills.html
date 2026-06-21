@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link active">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Skills</h1>
+    <p class="page-lead">A Skill is a packaged capability or persona prompt — distinct from both Agents and Connectors — that gets attached to one or more agents. Skills have no relationship to connectors.</p>
+
+    <h2>Data Model</h2>
+    <p>Model <code>Skill</code>, table <code>skills</code>: <code>slug</code>, <code>name</code>, <code>description</code>, <code>category</code>, <code>is_active</code>, <code>sort_order</code>. Seeded by <code>SkillSeeder</code> — <strong>42 skills</strong> across <strong>10 categories</strong>.</p>
+    <div class="callout">Most skills carry a short one-line description. A subset (Forensic Analysis, Architecture Review, Technology Roadmapping, Decision Record Drafting, Architecture Pattern Matching, Avatar Generation, Voice Cloning, Market Mapping, Pricing Strategy) instead carry a full markdown system-prompt — these double as the actual prompt injected when the skill is active for an agent.</div>
+
+    <h2>Full Skill List</h2>
+    <table>
+      <thead><tr><th>Name</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td>Document Analysis</td><td>Document Processing</td></tr>
+        <tr><td>RFQ / RFT Parsing</td><td>Document Processing</td></tr>
+        <tr><td>CV Parsing</td><td>Document Processing</td></tr>
+        <tr><td>Contract Review</td><td>Document Processing</td></tr>
+        <tr><td>OCR &amp; Text Extraction</td><td>Document Processing</td></tr>
+        <tr><td>Compliance Matrix Generation</td><td>Compliance &amp; Governance</td></tr>
+        <tr><td>Gap Analysis</td><td>Compliance &amp; Governance</td></tr>
+        <tr><td>Regulatory Mapping</td><td>Compliance &amp; Governance</td></tr>
+        <tr><td>Audit Trail Generation</td><td>Compliance &amp; Governance</td></tr>
+        <tr><td>Policy Drafting</td><td>Compliance &amp; Governance</td></tr>
+        <tr><td>STAR Response Generation</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Executive Summary Writing</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Capability Statement Writing</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Content Generation</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Report Writing</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Translation &amp; Localisation</td><td>Writing &amp; Communication</td></tr>
+        <tr><td>Data Extraction</td><td>Data &amp; Analytics</td></tr>
+        <tr><td>Data Analysis</td><td>Data &amp; Analytics</td></tr>
+        <tr><td>Data Visualisation</td><td>Data &amp; Analytics</td></tr>
+        <tr><td>Predictive Modelling</td><td>Data &amp; Analytics</td></tr>
+        <tr><td>SQL Query Generation</td><td>Data &amp; Analytics</td></tr>
+        <tr><td>Threat Detection</td><td>Security &amp; Cyber</td></tr>
+        <tr><td>Incident Triage</td><td>Security &amp; Cyber</td></tr>
+        <tr><td>Vulnerability Assessment</td><td>Security &amp; Cyber</td></tr>
+        <tr><td>Forensic Analysis †</td><td>Security &amp; Cyber</td></tr>
+        <tr><td>Penetration Test Reporting</td><td>Security &amp; Cyber</td></tr>
+        <tr><td>Knowledge Capture</td><td>Knowledge Management</td></tr>
+        <tr><td>Taxonomy Building</td><td>Knowledge Management</td></tr>
+        <tr><td>Semantic Search</td><td>Knowledge Management</td></tr>
+        <tr><td>FAQ Generation</td><td>Knowledge Management</td></tr>
+        <tr><td>Knowledge Gap Detection</td><td>Knowledge Management</td></tr>
+        <tr><td>Intent Classification</td><td>Customer &amp; Support</td></tr>
+        <tr><td>Sentiment Analysis</td><td>Customer &amp; Support</td></tr>
+        <tr><td>Automated Response</td><td>Customer &amp; Support</td></tr>
+        <tr><td>Ticket Summarisation</td><td>Customer &amp; Support</td></tr>
+        <tr><td>Escalation Detection</td><td>Customer &amp; Support</td></tr>
+        <tr><td>Architecture Review †</td><td>Architecture &amp; Strategy</td></tr>
+        <tr><td>Technology Roadmapping †</td><td>Architecture &amp; Strategy</td></tr>
+        <tr><td>Decision Record Drafting †</td><td>Architecture &amp; Strategy</td></tr>
+        <tr><td>Architecture Pattern Matching †</td><td>Architecture &amp; Strategy</td></tr>
+        <tr><td>Avatar Generation †</td><td>Avatar &amp; Media</td></tr>
+        <tr><td>Voice Cloning †</td><td>Avatar &amp; Media</td></tr>
+        <tr><td>Video Script Generation</td><td>Avatar &amp; Media</td></tr>
+        <tr><td>Multilingual Narration</td><td>Avatar &amp; Media</td></tr>
+        <tr><td>Market Mapping †</td><td>Market &amp; Strategy</td></tr>
+        <tr><td>Pricing Strategy †</td><td>Market &amp; Strategy</td></tr>
+      </tbody>
+    </table>
+    <p>† Carries a full markdown system-prompt description rather than a one-line blurb.</p>
+
+    <h2>Skill ↔ Agent Relationship</h2>
+    <p>Skills attach to agents via a many-to-many pivot, <code>agent_skill</code> (with a <code>definition</code> column), seeded by <code>AgentSkillSeeder</code>. Each of the <a href="agents.html">10 agents</a> is assigned 4–8 skills; some skills are reused across multiple agents (e.g. Document Analysis, Report Writing, Compliance Matrix Generation).</p>
+    <p>Example — <strong>Bid &amp; Tender Response</strong> draws on: RFQ/RFT Parsing, CV Parsing, Document Analysis, STAR Response Generation, Executive Summary Writing, Capability Statement Writing, Compliance Matrix Generation, and Gap Analysis. The pattern repeats for the other agents — each draws on the skill category closest to its domain.</p>
+
+    <h2>Skill Entitlement (Subscriptions)</h2>
+    <p>Skills carry <strong>no price</strong> of their own. Entitlement is managed per subscription tier via the <code>subscription_skill</code> pivot (with an <code>is_disabled</code> flag), editable by admins via the Subscription Skills controller — gating which packaged capabilities a subscriber's agents can use, independent of which connectors that agent can call.</p>
+
+    <h2>Relationship Summary</h2>
+    <pre><code>Agent ──&lt; agent_skill &gt;── Skill          (which packaged capabilities an agent has)
+Agent ──&lt; agent_connector &gt;── Connector  (which tools/integrations an agent can call)
+Subscription ──&lt; subscription_skill &gt;── Skill  (which skills a subscriber is entitled to)</code></pre>
+  </main>
+</div>
+
+</body>
+</html>
