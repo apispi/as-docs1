@@ -120,7 +120,54 @@
     </ul>
 
     <h3>Agentic Loop</h3>
-    <p>Dashboard Aria runs a tool-use loop with up to <strong>5 iterations</strong> per request. When the model returns a <code>tool_use</code> stop reason, Aria executes each tool call against the appropriate connector, appends results, and loops until the model produces a final text response or the limit is reached.</p>
+    <p>Dashboard Aria runs a tool-use loop with up to <strong>30 iterations</strong> per request (<code>RunsAgentTools::MAX_TOOL_ITERATIONS</code>). When the model returns a <code>tool_use</code> stop reason, Aria executes each tool call against the appropriate connector, appends the result as a <code>tool_result</code> block, and loops so the model can use the data — or call another tool — until it produces a final text response or the limit is reached. The same loop pattern runs for all three providers (<code>runAgentLoop</code> for Anthropic, <code>runScxLoop</code> for SCX, <code>runGeminiLoop</code> for Gemini).</p>
+
+    <h3>Tool Selection</h3>
+    <p>Aria does not pick the tool — <strong>the model does</strong>. The app's job is to curate which tools are even on the table; the model then chooses among them based on the user's message and each tool's description. There is no keyword routing or <code>if/else</code> dispatch in the codebase.</p>
+
+    <h4>1. The app builds the candidate tool set</h4>
+    <p><code>buildToolsWithMeta()</code> assembles the list and filters it before the model ever sees it:</p>
+    <ul>
+      <li><strong>Built-in tools</strong> (e.g. generate Word/Excel) are always included.</li>
+      <li><strong>Connector tools</strong> come from each of the user's <em>active</em> connectors' <code>tool_definitions</code>.</li>
+      <li>Filters applied, in order:
+        <ol>
+          <li><strong>Governance kill switch</strong> — if <code>connectors_disabled</code> is set (org policy or the user's own stricter override), <em>no</em> connector tools are included at all; only built-ins remain.</li>
+          <li><strong>Data-sovereignty</strong> — connectors whose <code>country</code> field matches a blocked country (org policy <code>blocked_countries</code>, merged with the user's own list) are dropped entirely (<code>OrgPolicy::isCountryBlocked()</code> / <code>EffectiveGovernance::isCountryBlocked()</code>).</li>
+          <li><strong>Per-connector <code>disabled_tools</code></strong> — a user can disable individual tool names from a connector's <code>tool_definitions</code> without disconnecting the whole connector.</li>
+          <li><strong>Mode's <code>allowedTools</code></strong> — e.g. Email mode restricts the candidate set to the Graph email tools only.</li>
+        </ol>
+      </li>
+    </ul>
+    <p>A connector tool is only a candidate if it survives every one of those gates.</p>
+
+    <h4>2. Tools are handed to the model — choice is "auto"</h4>
+    <p>The surviving tool list (each with <code>name</code>, <code>description</code>, <code>input_schema</code>) is sent in the API payload with no <code>tool_choice</code> set, which means the provider's default <strong>auto</strong> behaviour: the model decides whether to call a tool, and which one.</p>
+    <div class="callout">The tool <strong>description</strong> is the steering wheel. Connector authors write descriptions like <em>"Always use this tool for current X news — do not answer from training data"</em> to bias selection. The system prompt nudges further — it lists the user's active connectors/agents, the current mode's instruction, and the governance policy text.</div>
+
+    <h4>3. The loop executes tool calls and feeds results back</h4>
+    <p>On each iteration: call the model → if <code>stop_reason !== 'tool_use'</code>, return its text answer (done) → otherwise, for each <code>tool_use</code> block, look up the connector by slug in <code>CONNECTOR_TOOL_HANDLERS</code>, run <code>-&gt;execute()</code>, append the result, and loop.</p>
+
+    <h4>What this means in practice</h4>
+    <ul>
+      <li>If two tools could plausibly match (e.g. two news connectors for "latest US news"), the model judges from their names/descriptions — it might pick one, or call several and synthesise the results.</li>
+      <li>To <strong>bias</strong> selection toward a tool, edit that tool's description or the mode/system prompt — not routing code.</li>
+      <li>To <strong>prevent</strong> a tool being chosen, remove it from the candidate set: disable the connector, block its country, disable that specific tool, or use a mode whose <code>allowedTools</code> excludes it.</li>
+    </ul>
+
+    <h3>Governance Layering</h3>
+    <p>Each user has their own optional governance overrides (<code>users.governance</code>, a JSON column), editable on the <strong>Governance</strong> tab of <code>/dashboard/profile</code> (sub-tabs: Policy, Guardrails, Sovereignty, Limits — <code>PUT /dashboard/profile/governance</code>). <code>EffectiveGovernance</code> combines this with the global <code>OrgPolicy</code> at request time:</p>
+    <table>
+      <thead><tr><th>Field</th><th>How the two layers combine</th></tr></thead>
+      <tbody>
+        <tr><td><code>connectors_disabled</code></td><td>Kill switch — <strong>either</strong> layer disabling it disables it for that user.</td></tr>
+        <tr><td><code>daily_token_limit</code></td><td>The stricter (lowest) of the two limits that are set.</td></tr>
+        <tr><td><code>blocked_keywords</code></td><td>Union of both lists (de-duplicated, case-insensitive).</td></tr>
+        <tr><td><code>blocked_countries</code></td><td>Union of both lists — used for the data-sovereignty tool filter above.</td></tr>
+        <tr><td><code>content</code></td><td>Both layers' free text are concatenated into the system prompt.</td></tr>
+      </tbody>
+    </table>
+    <p>A user's own rules can only add to or tighten the org-wide policy — they can never loosen it.</p>
 
     <h3>Token Tracking</h3>
     <p>Input and output tokens are recorded per request in the <code>token_usage</code> table, attributed to the user, provider, and model. Admins can view usage at <code>/admin/token-usage</code>.</p>

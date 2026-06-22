@@ -257,7 +257,20 @@ Aria reads your profile settings to tailor responses. Set these under `/dashboar
 
 When you have active connectors, Aria can call them directly — fetching live data instead of relying on training knowledge. Aria will always use a connected tool before answering a question the tool can address.
 
-Aria runs up to **5 tool calls per response** and reports what it did and what the result was.
+Aria runs up to **30 tool calls per response** and reports what it did and what the result was.
+
+### Tool Selection
+
+Aria itself doesn't decide which tool to use by keyword matching — **the underlying model does**, choosing from whichever tools survive the app's filtering, based on your message and each tool's description.
+
+Before the model ever sees the tool list, the app narrows it down:
+
+1. **Governance kill switch** — if connectors are disabled (org-wide or your own stricter setting), no connector tools are offered at all, only built-ins.
+2. **Data-sovereignty** — connectors based in a blocked country (org or your own restriction) are excluded entirely.
+3. **Per-tool disable** — you can turn off individual tools on a connector without disconnecting it (`/dashboard/connectors`).
+4. **Mode restrictions** — some [modes](#modes) limit the candidate tools (e.g. Email mode only offers the Graph email tools).
+
+Whatever tools remain are offered to the model with no forced choice — it decides whether to call a tool, and which one, based on the tool's description and your request. If two tools could plausibly answer your question, the model may pick one or call several and combine the results.
 
 #### Microsoft 365
 
@@ -518,7 +531,10 @@ Two related but distinct controls live under admin:
 - **Policy content** — free text injected directly into Aria's system prompt on every conversation, instructing the model to follow it
 - **Blocked keywords** — if a user message or AI reply matches a blocked keyword, the reply is replaced with a guardrail message and the block is logged to the Activity Log (`aria.guardrail.blocked`)
 - **Daily token limit** — once a user's token usage for the day reaches this limit, further Aria requests get a fixed "limit reached" reply instead of calling the model (see [Token Usage](#token-usage))
-- **Connectors disabled** — a kill switch that makes the system ignore everyone's saved AI connector config org-wide and fall back to the global Anthropic key, without changing any individual user's connector settings
+- **Connectors disabled** — a kill switch that makes the system ignore everyone's saved AI connector config org-wide and fall back to the global Anthropic key, without changing any individual user's connector settings, and drops every connector tool from Aria's candidate tool set (see [Tool Selection](#tool-selection))
+- **Blocked countries** — a data-sovereignty list; any connector whose configured country matches is excluded from Aria's tool set before the model ever sees it
+
+Each user can also stack their own governance rules on top of this org-wide policy from the **Governance** tab of `/dashboard/profile` (Policy/Guardrails/Sovereignty/Limits sub-tabs). The two layers merge additively — a user's rules can only tighten the org policy, never loosen it: the kill switch is OR'd, the token limit takes the stricter value, and keyword/country lists are unioned.
 
 **AI Firewall** (`/admin/firewall`) — pattern-based detection (prompt injection, emails, credit card numbers, API keys) that scans outbound gateway and connector requests. It is **detection/logging only** — it never blocks or modifies a request. Toggle categories globally or override them per connector, and review matches (user, connector, direction, category, a 200-character snippet) in the filterable activity log on the same page.
 

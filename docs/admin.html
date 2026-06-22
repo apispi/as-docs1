@@ -73,10 +73,24 @@
         <tr><td><code>content</code></td><td>Free text injected directly into Aria's system prompt on every conversation.</td></tr>
         <tr><td><code>blocked_keywords</code></td><td>If a user message or AI reply matches, the reply is swapped for a guardrail message and logged to the Activity Log as <code>aria.guardrail.blocked</code>.</td></tr>
         <tr><td><code>daily_token_limit</code></td><td>Once a user's daily token total (<code>TokenUsage::todayTotalForUser()</code>) reaches this value, further Aria requests get a fixed "limit reached" reply instead of calling the model.</td></tr>
-        <tr><td><code>connectors_disabled</code></td><td>Global kill switch — ignores everyone's saved AI connector config and falls back to the platform's Anthropic key, without altering individual user settings.</td></tr>
+        <tr><td><code>connectors_disabled</code></td><td>Global kill switch — ignores everyone's saved AI connector config and falls back to the platform's Anthropic key, without altering individual user settings. Also drops every connector tool from Aria's candidate tool set (see <a href="aria.html">Tool Selection</a>).</td></tr>
+        <tr><td><code>blocked_countries</code></td><td>Data-sovereignty list. Any connector whose <code>country</code> field matches is excluded from Aria's tool set before the model ever sees it as a callable tool.</td></tr>
       </tbody>
     </table>
     <div class="callout">Governance enforcement happens inline in the chat controllers at message-send time — it is not a separate request-blocking middleware. <code>daily_token_limit</code> is enforced in <code>ChatController</code>, <code>DashboardAriaChatController</code>, and <code>WorkspaceChatController</code> alike, but <code>blocked_keywords</code> and <code>connectors_disabled</code> are currently checked only in <code>ChatController</code> and <code>DashboardAriaChatController</code> — not in <a href="workspaces.html">Workspace</a> chat.</div>
+
+    <h3>Per-User Governance Overrides</h3>
+    <p>Each user can stack their own governance rules on top of the org-wide policy from the <strong>Governance</strong> tab of <code>/dashboard/profile</code> (Policy, Guardrails, Sovereignty, and Limits sub-tabs; saved via <code>PUT /dashboard/profile/governance</code> to a <code>users.governance</code> JSON column). <code>App\Support\EffectiveGovernance</code> merges the two layers at request time:</p>
+    <table>
+      <thead><tr><th>Field</th><th>Merge rule</th></tr></thead>
+      <tbody>
+        <tr><td><code>connectors_disabled</code></td><td>Either layer disabling it disables it for that user (OR).</td></tr>
+        <tr><td><code>daily_token_limit</code></td><td>The stricter (lowest) of the two limits that are set.</td></tr>
+        <tr><td><code>blocked_keywords</code> / <code>blocked_countries</code></td><td>Union of both lists, de-duplicated case-insensitively.</td></tr>
+        <tr><td><code>content</code></td><td>Both layers' text is concatenated into the system prompt.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">A user's own governance rules can only add to or tighten the org-wide policy — they can never loosen it.</div>
 
     <h2>AI Firewall</h2>
     <p>A separate, pattern-based detector (<code>AiFirewallService::inspectRequest()</code>) scans outbound gateway/connector request bodies for prompt injection and PII (email, credit card, API key patterns).</p>

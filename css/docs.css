@@ -226,6 +226,12 @@ h3 {
   margin: 1.75rem 0 0.5rem;
 }
 h3 + p, h3 + ul, h3 + table { margin-top: 0.25rem; }
+h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin: 1.25rem 0 0.4rem;
+}
 p { margin-bottom: 1rem; color: var(--light-2); }
 
 ul, ol { padding-left: 1.4rem; margin-bottom: 1rem; color: var(--light-2); }

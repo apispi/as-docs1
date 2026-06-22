@@ -75,9 +75,11 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 
 ### 8. OrgPolicy (Governance)
 - Single org-wide row, fetched/created via `OrgPolicy::current()`
-- Fields: `content` (free text injected into Aria's system prompt), `connectors_disabled` (global kill switch for user AI connectors), `daily_token_limit`, `blocked_keywords` (array)
+- Fields: `content` (free text injected into Aria's system prompt), `connectors_disabled` (global kill switch for user AI connectors), `daily_token_limit`, `blocked_keywords` (array), `blocked_countries` (array — data-sovereignty list, matched against `connectors.country`)
 - Enforced inline in chat controllers at message-send time — not a separate middleware. `daily_token_limit` is enforced in `ChatController`, `DashboardAriaChatController`, and `WorkspaceChatController`; `blocked_keywords` and `connectors_disabled` are enforced only in `ChatController` and `DashboardAriaChatController` (not currently checked in workspace chat)
 - Keyword/limit hits produce a canned reply to the user and a guardrail entry in `ActivityLog`
+- **Per-user layer:** `users.governance` (JSON) holds optional per-user overrides, editable on the Governance tab of `/dashboard/profile` (`PUT /dashboard/profile/governance`). `App\Support\EffectiveGovernance` combines a user's overrides with the global `OrgPolicy` at request time (`User::governancePolicy()`) — user rules are strictly additive: `connectors_disabled` is OR'd, `daily_token_limit` takes the stricter (lowest) value, and `blocked_keywords`/`blocked_countries` are unioned. A user can never loosen the org-wide policy.
+- `blocked_countries` (effective, per-user) is consulted when Aria builds its candidate tool set — see [Tool Selection](docs/aria.html#tool-selection) — to drop connectors based in a blocked country before the model ever sees them as tools
 
 ### 9. FirewallRule / FirewallLog (AI Firewall)
 - Pattern-based detection only (prompt injection, PII: email/credit card/API key) via `AiFirewallService::inspectRequest()` — **never blocks or alters a request**, logging only
