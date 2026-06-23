@@ -1,8 +1,8 @@
 # Skills Catalogue
 
-A **Skill** is a distinct first-class model (`app/Models/Skill.php`, `skills` table) — separate from both **Agents** ([the 10 catalogue agents](usage.md#agent-catalog)) and **Connectors** ([connectors.md](connectors.md)). A skill is a packaged capability/persona prompt (e.g. "Contract Review", "Threat Detection") that gets attached to one or more agents; it has no relationship to connectors at all.
+A **Skill** is a distinct first-class model (`app/Models/Skill.php`, `skills` table) — separate from both **Agents** ([the 18 catalogue agents](usage.md#agent-catalog)) and **Connectors** ([connectors.md](connectors.md)). A skill is a packaged capability/persona prompt (e.g. "Contract Review", "Threat Detection") that gets attached to one or more agents; it has no relationship to connectors at all.
 
-Seeded by `database/seeders/SkillSeeder.php` — **42 skills** across **10 categories**, auto-run via `DatabaseSeeder`.
+The base catalogue is seeded by `database/seeders/SkillSeeder.php` — **46 skills** across 10 categories, auto-run via `DatabaseSeeder`. A further **20 industry skills** (across the **Front Office**, **Commerce & Retail**, **Trades & Field Services**, and **Communications & Front Office** categories) are added by the standalone agent seeders (`ShoppingAgentSeeder`, `DigitalReceptionistAgentSeeder`, `DigitalPlumberAgentSeeder`, `IndustryAgentSkillConnectorSeeder`), bringing the total to **66 skills** across **14 categories**.
 
 Fields on `Skill`: `slug`, `name`, `description`, `category`, `is_active`, `sort_order`. Most skills have a short one-line `description`; a handful (noted below) instead carry a full markdown system-prompt — hundreds of lines covering purpose, capabilities, process, and best practices — because they double as the actual prompt injected when that skill is active for an agent.
 
@@ -58,14 +58,34 @@ Fields on `Skill`: `slug`, `name`, `description`, `category`, `is_active`, `sort
 | `multilingual-narration` | Multilingual Narration | Avatar & Media |
 | `market-mapping` | Market Mapping † | Market & Strategy |
 | `pricing-strategy` | Pricing Strategy † | Market & Strategy |
+| `appointment-scheduling` | Appointment Scheduling | Front Office |
+| `call-message-handling` | Call & Message Handling | Front Office |
+| `inquiry-routing` | Inquiry Routing & Triage | Front Office |
+| `message-taking` | Message Taking & Relay | Front Office |
+| `lead-capture` | Visitor & Lead Capture | Front Office |
+| `product-search` | Product Search | Commerce & Retail |
+| `price-comparison` | Price Comparison | Commerce & Retail |
+| `deal-discovery` | Deal & Promotion Discovery | Commerce & Retail |
+| `product-recommendation` | Product Recommendation | Commerce & Retail |
+| `shopping-list-management` | Shopping List & Cart Management | Commerce & Retail |
+| `order-tracking` | Order & Delivery Tracking | Commerce & Retail |
+| `shopping-agent` | Shopping Agent † | Commerce & Retail |
+| `job-quoting` | Job Quoting & Estimation | Trades & Field Services |
+| `trade-diagnostics` | Trade Diagnostics | Trades & Field Services |
+| `materials-estimation` | Materials & Parts Estimation | Trades & Field Services |
+| `job-dispatch` | Job Scheduling & Dispatch | Trades & Field Services |
+| `plumbing-compliance` | Plumbing Standards & Compliance | Trades & Field Services |
+| `invoice-generation` | Invoice Generation | Trades & Field Services |
+| `digital-plumber` | Digital Plumber † | Trades & Field Services |
+| `digital-receptionist` | Digital Receptionist † | Communications & Front Office |
 
-† Carries a full markdown system-prompt description rather than a one-line blurb.
+† Carries a full markdown system-prompt description rather than a one-line blurb. The three persona skills (`shopping-agent`, `digital-plumber`, `digital-receptionist`) are the full system prompts behind the Shopping, Digital Plumber, and Digital Receptionist agents.
 
 ---
 
 ## Skill ↔ Agent Relationship
 
-Skills attach to [agents](usage.md#agent-catalog) via a many-to-many pivot, `agent_skill` (with a `definition` column), seeded by `database/seeders/AgentSkillSeeder.php`. Each of the **10 agents** is assigned 4–8 skills; some skills are reused across multiple agents (e.g. `document-analysis`, `report-writing`, `compliance-matrix`).
+Skills attach to [agents](usage.md#agent-catalog) via a many-to-many pivot, `agent_skill` (with a `definition` column), seeded by `database/seeders/AgentSkillSeeder.php` (and, for the industry/standalone agents, by their respective seeders). Each of the **18 agents** is assigned 4–10 skills; some skills are reused across multiple agents (e.g. `document-analysis`, `report-writing`, `compliance-matrix`).
 
 Example mapping — **Bid & Tender Response** agent (`bid-tender`):
 

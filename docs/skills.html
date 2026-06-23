@@ -52,8 +52,8 @@
     <p class="page-lead">A Skill is a packaged capability or persona prompt — distinct from both Agents and Connectors — that gets attached to one or more agents. Skills have no relationship to connectors.</p>
 
     <h2>Data Model</h2>
-    <p>Model <code>Skill</code>, table <code>skills</code>: <code>slug</code>, <code>name</code>, <code>description</code>, <code>category</code>, <code>is_active</code>, <code>sort_order</code>. Seeded by <code>SkillSeeder</code> — <strong>42 skills</strong> across <strong>10 categories</strong>.</p>
-    <div class="callout">Most skills carry a short one-line description. A subset (Forensic Analysis, Architecture Review, Technology Roadmapping, Decision Record Drafting, Architecture Pattern Matching, Avatar Generation, Voice Cloning, Market Mapping, Pricing Strategy) instead carry a full markdown system-prompt — these double as the actual prompt injected when the skill is active for an agent.</div>
+    <p>Model <code>Skill</code>, table <code>skills</code>: <code>slug</code>, <code>name</code>, <code>description</code>, <code>category</code>, <code>is_active</code>, <code>sort_order</code>. The base catalogue is seeded by <code>SkillSeeder</code> — <strong>46 skills</strong> across 10 categories — with a further <strong>20 industry skills</strong> (Front Office, Commerce &amp; Retail, Trades &amp; Field Services, and Communications &amp; Front Office) added by the standalone agent seeders, for <strong>66 skills</strong> across <strong>14 categories</strong>.</p>
+    <div class="callout">Most skills carry a short one-line description. A subset (Forensic Analysis, Architecture Review, Technology Roadmapping, Decision Record Drafting, Architecture Pattern Matching, Avatar Generation, Voice Cloning, Market Mapping, Pricing Strategy) instead carry a full markdown system-prompt — these double as the actual prompt injected when the skill is active for an agent. The three persona skills (Shopping Agent, Digital Plumber, Digital Receptionist) are the full system prompts behind those agents.</div>
 
     <h2>Full Skill List</h2>
     <table>
@@ -105,12 +105,32 @@
         <tr><td>Multilingual Narration</td><td>Avatar &amp; Media</td></tr>
         <tr><td>Market Mapping †</td><td>Market &amp; Strategy</td></tr>
         <tr><td>Pricing Strategy †</td><td>Market &amp; Strategy</td></tr>
+        <tr><td>Appointment Scheduling</td><td>Front Office</td></tr>
+        <tr><td>Call &amp; Message Handling</td><td>Front Office</td></tr>
+        <tr><td>Inquiry Routing &amp; Triage</td><td>Front Office</td></tr>
+        <tr><td>Message Taking &amp; Relay</td><td>Front Office</td></tr>
+        <tr><td>Visitor &amp; Lead Capture</td><td>Front Office</td></tr>
+        <tr><td>Product Search</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Price Comparison</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Deal &amp; Promotion Discovery</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Product Recommendation</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Shopping List &amp; Cart Management</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Order &amp; Delivery Tracking</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Shopping Agent †</td><td>Commerce &amp; Retail</td></tr>
+        <tr><td>Job Quoting &amp; Estimation</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Trade Diagnostics</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Materials &amp; Parts Estimation</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Job Scheduling &amp; Dispatch</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Plumbing Standards &amp; Compliance</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Invoice Generation</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Digital Plumber †</td><td>Trades &amp; Field Services</td></tr>
+        <tr><td>Digital Receptionist †</td><td>Communications &amp; Front Office</td></tr>
       </tbody>
     </table>
     <p>† Carries a full markdown system-prompt description rather than a one-line blurb.</p>
 
     <h2>Skill ↔ Agent Relationship</h2>
-    <p>Skills attach to agents via a many-to-many pivot, <code>agent_skill</code> (with a <code>definition</code> column), seeded by <code>AgentSkillSeeder</code>. Each of the <a href="agents.html">10 agents</a> is assigned 4–8 skills; some skills are reused across multiple agents (e.g. Document Analysis, Report Writing, Compliance Matrix Generation).</p>
+    <p>Skills attach to agents via a many-to-many pivot, <code>agent_skill</code> (with a <code>definition</code> column), seeded by <code>AgentSkillSeeder</code>. Each of the <a href="agents.html">18 agents</a> is assigned 4–10 skills; some skills are reused across multiple agents (e.g. Document Analysis, Report Writing, Compliance Matrix Generation).</p>
     <p>Example — <strong>Bid &amp; Tender Response</strong> draws on: RFQ/RFT Parsing, CV Parsing, Document Analysis, STAR Response Generation, Executive Summary Writing, Capability Statement Writing, Compliance Matrix Generation, and Gap Analysis. The pattern repeats for the other agents — each draws on the skill category closest to its domain.</p>
 
     <h2>Skill Entitlement (Subscriptions)</h2>

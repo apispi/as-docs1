@@ -143,8 +143,8 @@
 ]</code></pre>
 
     <h2>Full Connector List</h2>
-    <p><strong>54 connector slugs</strong> are defined across <code>ConnectorSeeder.php</code> (29, auto-run) and 25 standalone per-integration seeders. Entries marked "(stub)" have a <code>config_schema</code> but no <code>tool_definitions</code> yet — connectable, but expose no callable tools until implemented.</p>
-    <details class="code-tabs"><summary>Show full table (54 connectors)</summary>
+    <p><strong>63 connector slugs</strong> are defined across <code>ConnectorSeeder.php</code> (38, auto-run) and ~34 standalone per-integration seeders. Entries marked "(stub)" have a <code>config_schema</code> but no <code>tool_definitions</code> yet — connectable, but expose no callable tools until implemented.</p>
+    <details class="code-tabs"><summary>Show full table (63 connectors)</summary>
     <table>
       <thead><tr><th>Slug</th><th>Name</th><th>Category</th><th>Auth</th><th>Description</th></tr></thead>
       <tbody>
@@ -174,6 +174,7 @@
         <tr><td><code>twilio</code></td><td>Twilio</td><td>Communications</td><td>API key</td><td>Send SMS/WhatsApp, lookup numbers, message/call history</td></tr>
         <tr><td><code>shopify</code></td><td>Shopify</td><td>E-commerce</td><td>API key (stub)</td><td>Manage products/orders/customers</td></tr>
         <tr><td><code>woolworths</code></td><td>Woolworths</td><td>E-commerce</td><td>Custom</td><td>Search products, manage trolley, track orders</td></tr>
+        <tr><td><code>amazon-product-search</code></td><td>Amazon Product Search</td><td>E-commerce</td><td>API key (PA-API)</td><td>Search products, compare prices, view bestsellers, find deals via the Amazon Product Advertising API</td></tr>
         <tr><td><code>stripe</code></td><td>Stripe</td><td>Finance</td><td>API key</td><td>Retrieve payments/subscriptions/customers</td></tr>
         <tr><td><code>quickbooks</code></td><td>QuickBooks</td><td>Finance</td><td>API key (stub)</td><td>Sync invoices/expenses</td></tr>
         <tr><td><code>xero</code></td><td>Xero</td><td>Finance</td><td>OAuth</td><td>Contacts, invoices, org details, create draft invoices</td></tr>
@@ -192,6 +193,14 @@
         <tr><td><code>facebook</code></td><td>Facebook</td><td>Content</td><td>OAuth (Facebook Graph)</td><td>View/manage Pages, publish posts</td></tr>
         <tr><td><code>linkedin</code></td><td>LinkedIn</td><td>Content</td><td>OAuth</td><td>View profile, share posts</td></tr>
         <tr><td><code>youtube</code></td><td>YouTube</td><td>Content</td><td>OAuth (Google)</td><td>Search videos, channel/video stats, playlists</td></tr>
+        <tr><td><code>aws</code></td><td>Amazon Web Services</td><td>Cloud</td><td>API key (IAM access key)</td><td>Read-only: month-to-date costs, EC2 instances, S3 buckets, account identity, CloudWatch alarms</td></tr>
+        <tr><td><code>abc-australia</code></td><td>ABC News (Australia)</td><td>News &amp; Media</td><td>None required</td><td>Latest ABC News (Australia) headlines &amp; summaries by section, live from public RSS feeds</td></tr>
+        <tr><td><code>channel-news-asia</code></td><td>Channel News Asia</td><td>News &amp; Media</td><td>None required</td><td>Latest CNA headlines &amp; summaries by section (best for Singapore/Asia news), live from RSS feeds</td></tr>
+        <tr><td><code>japan-times</code></td><td>The Japan Times</td><td>News &amp; Media</td><td>None required</td><td>Latest Japan Times headlines &amp; summaries, live from the public RSS feed</td></tr>
+        <tr><td><code>jerusalem-post</code></td><td>The Jerusalem Post</td><td>News &amp; Media</td><td>None required</td><td>Latest JPost headlines &amp; summaries by section, live from public RSS feeds</td></tr>
+        <tr><td><code>new-york-times</code></td><td>The New York Times</td><td>News &amp; Media</td><td>None required</td><td>Latest NYT headlines &amp; summaries by section, live from public RSS feeds</td></tr>
+        <tr><td><code>washington-post</code></td><td>The Washington Post</td><td>News &amp; Media</td><td>None required</td><td>Latest Washington Post headlines &amp; summaries by section, live from public RSS feeds</td></tr>
+        <tr><td><code>xinhua</code></td><td>Xinhua News</td><td>News &amp; Media</td><td>None required</td><td>Latest Xinhua (English) headlines by section (best for China-perspective news), live from english.news.cn</td></tr>
         <tr><td><code>scx</code></td><td>SCX AI</td><td>AI provider</td><td>API key</td><td>Powers Aria with SCX models + vector store search</td></tr>
         <tr><td><code>argyll</code></td><td>Argyll Data</td><td>AI provider</td><td>API key</td><td>Powers Aria with Argyll models + vector store search</td></tr>
         <tr><td><code>mistral</code></td><td>Mistral AI</td><td>AI provider</td><td>API key</td><td>Powers Aria with Mistral Large/Small</td></tr>
@@ -205,7 +214,7 @@
     </details>
 
     <h2>Tools Exposed Per Connector</h2>
-    <p>Only connectors with non-empty <code>tool_definitions</code> expose callable tools to Aria's tool-use loop. AI-provider connectors configure <em>which model answers</em>, not callable tools, so they have none. See <a href="../connectors.md">connectors.md</a> in the repo root for the full per-connector tool list (Gmail, Substack, BOM, SCX, Argyll, Copilot, Data.gov.au, Facebook, LinkedIn, Defender, Teams, OneDrive, Pega, Power BI, Salesforce, SAP S/4HANA, SAP SuccessFactors, ServiceNow, SharePoint, Stripe, Twilio, USASpending, VirusTotal, Woolworths, Workday, Xero, YouTube, AbuseIPDB, and the generic Microsoft connector).</p>
+    <p>Only connectors with non-empty <code>tool_definitions</code> expose callable tools to Aria's tool-use loop. AI-provider connectors configure <em>which model answers</em>, not callable tools, so they have none. See <a href="../connectors.md">connectors.md</a> in the repo root for the full per-connector tool list (Gmail, Substack, BOM, SCX, Argyll, Copilot, Data.gov.au, Facebook, LinkedIn, Defender, Teams, OneDrive, Pega, Power BI, Salesforce, SAP S/4HANA, SAP SuccessFactors, ServiceNow, SharePoint, Stripe, Twilio, USASpending, VirusTotal, Woolworths, Workday, Xero, YouTube, AbuseIPDB, AWS, Amazon Product Search, the seven news connectors — ABC, CNA, Japan Times, Jerusalem Post, NYT, Washington Post, Xinhua — and the generic Microsoft connector).</p>
 
     <h2>API Gateway &amp; Keys</h2>
     <p>Connectors are also reachable programmatically over a Bearer-authenticated proxy, unified tool-invocation, and OpenAI-compatible endpoint — without managing upstream OAuth tokens or API keys directly. See the dedicated <a href="api.html">API Gateway</a> page for endpoints, key management, auth resolution, and usage logging.</p>

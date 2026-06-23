@@ -2,7 +2,7 @@
 
 A full reference of every connector defined in the `connectors` table, how each one authenticates, and which tools it exposes to Aria's tool-use loop. For the conceptual model (data model, OAuth vs API-key, management routes), see [usage.md](usage.md#connectors) and [docs/connectors.html](docs/connectors.html).
 
-Connectors are seeded by `database/seeders/ConnectorSeeder.php` (29 connectors, auto-run) plus 25 standalone seeder classes (e.g. `php artisan db:seed --class=XeroConnectorSeeder`) that add full `tool_definitions` for specific integrations — some of these override a stub already present in `ConnectorSeeder.php` (matched by `slug` via `updateOrCreate`).
+Connectors are seeded by `database/seeders/ConnectorSeeder.php` (38 connectors, auto-run) plus ~34 standalone seeder classes (e.g. `php artisan db:seed --class=XeroConnectorSeeder`) that add full `tool_definitions` for specific integrations — some of these override a stub already present in `ConnectorSeeder.php` (matched by `slug` via `updateOrCreate`).
 
 ---
 
@@ -47,6 +47,7 @@ Connectors are seeded by `database/seeders/ConnectorSeeder.php` (29 connectors, 
 | `twilio` | Twilio | Communications | API key (account SID + auth token) | Send SMS/WhatsApp, lookup numbers, message/call history |
 | `shopify` | Shopify | E-commerce | API key (stub) | Manage products/orders/customers |
 | `woolworths` | Woolworths | E-commerce | (custom) | Search products, manage trolley, track orders |
+| `amazon-product-search` | Amazon Product Search | E-commerce | API key (PA-API) | Search products, compare prices, view bestsellers, find deals via the Amazon Product Advertising API |
 | `stripe` | Stripe | Finance | API key | Retrieve payments/subscriptions/customers |
 | `quickbooks` | QuickBooks | Finance | API key (stub) | Sync invoices/expenses |
 | `xero` | Xero | Finance | OAuth | Contacts, invoices, org details, create draft invoices |
@@ -65,6 +66,14 @@ Connectors are seeded by `database/seeders/ConnectorSeeder.php` (29 connectors, 
 | `facebook` | Facebook | Content | OAuth (Facebook Graph) | View/manage Pages, publish posts |
 | `linkedin` | LinkedIn | Content | OAuth | View profile, share posts |
 | `youtube` | YouTube | Content | OAuth (Google) | Search videos, channel/video stats, playlists |
+| `aws` | Amazon Web Services | Cloud | API key (IAM access key) | Read-only: month-to-date costs, EC2 instances, S3 buckets, account identity, CloudWatch alarms |
+| `abc-australia` | ABC News (Australia) | News & Media | None required | Latest ABC News (Australia) headlines & summaries by section, live from public RSS feeds |
+| `channel-news-asia` | Channel News Asia | News & Media | None required | Latest CNA headlines & summaries by section (best for Singapore/Asia news), live from RSS feeds |
+| `japan-times` | The Japan Times | News & Media | None required | Latest Japan Times headlines & summaries, live from the public RSS feed |
+| `jerusalem-post` | The Jerusalem Post | News & Media | None required | Latest JPost headlines & summaries by section, live from public RSS feeds |
+| `new-york-times` | The New York Times | News & Media | None required | Latest NYT headlines & summaries by section, live from public RSS feeds |
+| `washington-post` | The Washington Post | News & Media | None required | Latest Washington Post headlines & summaries by section, live from public RSS feeds |
+| `xinhua` | Xinhua News | News & Media | None required | Latest Xinhua (English) headlines by section (best for China-perspective news), live from english.news.cn |
 | `scx` | SCX AI | AI provider | API key | Powers Aria with SCX models + vector store search |
 | `argyll` | Argyll Data | AI provider | API key | Powers Aria with Argyll models + vector store search |
 | `mistral` | Mistral AI | AI provider | API key | Powers Aria with Mistral Large/Small |
@@ -74,7 +83,7 @@ Connectors are seeded by `database/seeders/ConnectorSeeder.php` (29 connectors, 
 | `custom-chat-api` | Custom Chat API | AI provider | Optional bearer | Bring your own chat API for the dashboard assistant |
 | `aria` | Aria | AI provider / gateway | Optional (`auth_optional: true`) | Branded gateway URL forwarding `/api/gateway/aria/{path}` to your own backend |
 
-> **54 connector slugs** are defined across the seeders. The connectors with "(stub)" next to their auth type have a `config_schema` but no `tool_definitions` yet — they appear in the catalogue but expose no callable tools until implemented.
+> **63 connector slugs** are defined across the seeders. The connectors with "(stub)" next to their auth type have a `config_schema` but no `tool_definitions` yet — they appear in the catalogue but expose no callable tools until implemented.
 
 ---
 
@@ -84,6 +93,15 @@ Only connectors with non-empty `tool_definitions` expose callable tools to Aria'
 
 | Connector | Tools |
 |---|---|
+| Amazon Web Services | `aws_get_costs`, `aws_list_ec2_instances`, `aws_list_s3_buckets`, `aws_whoami`, `aws_list_cloudwatch_alarms` |
+| Amazon Product Search | `amazon_search_products`, `amazon_get_product`, `amazon_get_deals`, `amazon_get_bestsellers` |
+| ABC News (Australia) | `abc_latest_news`, `abc_search_news` |
+| Channel News Asia | `cna_latest_news`, `cna_search_news` |
+| The Japan Times | `japantimes_latest_news`, `japantimes_search_news` |
+| The Jerusalem Post | `jpost_latest_news`, `jpost_search_news` |
+| The New York Times | `nyt_latest_news`, `nyt_search_news` |
+| The Washington Post | `washingtonpost_latest_news`, `washingtonpost_search_news` |
+| Xinhua News | `xinhua_latest_news`, `xinhua_search_news` |
 | Gmail | `gmail_list_messages`, `gmail_search_messages`, `gmail_send_email` |
 | Substack | `substack_get_posts`, `substack_search_posts`, `substack_create_draft`, `substack_publish_draft`, `substack_list_drafts` |
 | BOM Weather | `bom_get_observations`, `bom_get_forecast` |
