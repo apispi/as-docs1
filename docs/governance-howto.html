@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governance How-To — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents & AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link">Admin & Governance</a>
+      <a href="governance-howto.html" class="nav-link active">Governance How-To</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Governance How-To</h1>
+    <p class="page-lead">Practical guides for setting up and enforcing AI governance controls across your organisation.</p>
+
+    <h2>Block Keywords</h2>
+    <p>Prevent discussions on specific topics by adding blocked keywords to your org policy.</p>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>Scroll to the <strong>Guardrails</strong> section</li>
+      <li>Add keywords to the <code>blocked_keywords</code> list (comma-separated)</li>
+      <li>Choose the <strong>guardrail action</strong>: <code>block</code> (reject), <code>redact</code> (mask), or <code>warn</code> (proceed with warning)</li>
+      <li>Set <strong>guardrail scope</strong>: <code>input</code> (user messages), <code>output</code> (AI replies), or <code>both</code></li>
+      <li>Click <strong>Save Policy</strong></li>
+    </ol>
+
+    <h3>As a User</h3>
+    <ol>
+      <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Guardrails</strong> sub-tab</li>
+      <li>Add your personal blocked keywords (these stack on top of org policy — you can only add, not remove)</li>
+      <li>Your personal guardrail action applies to your overrides</li>
+    </ol>
+
+    <div class="callout">Keywords are case-insensitive by default. Enable <strong>whole word matching</strong> to prevent partial matches (e.g., "cat" won't match "category").</div>
+
+    <hr>
+
+    <h2>Set Daily Token Limits</h2>
+    <p>Cap how many tokens a user can consume per day to control costs.</p>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Limits</strong> section, set <code>daily_token_limit</code> to your desired cap</li>
+      <li>Save the policy</li>
+    </ol>
+    <p>Users who hit the limit receive a fixed "limit reached" message instead of an AI response.</p>
+
+    <h3>As a User</h3>
+    <ol>
+      <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Limits</strong> sub-tab</li>
+      <li>Set a personal daily limit (must be lower than org limit — you cannot exceed it)</li>
+    </ol>
+
+    <hr>
+
+    <h2>Enable the Connector Kill Switch</h2>
+    <p>Instantly disable all user connector integrations and fall back to the platform's default AI provider.</p>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>Toggle <code>connectors_disabled</code> ON</li>
+      <li>Save the policy</li>
+    </ol>
+    <p>All connector tools are stripped from Aria's tool set immediately. No user data is affected — only the connectors are bypassed.</p>
+
+    <div class="callout">To re-enable, toggle <code>connectors_disabled</code> OFF. Individual users cannot override the kill switch.</div>
+
+    <hr>
+
+    <h2>Block Connectors by Country</h2>
+    <p>Restrict connectors from specific countries for data sovereignty compliance.</p>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Sovereignty</strong> section, add country codes to <code>blocked_countries</code></li>
+      <li>Save the policy</li>
+    </ol>
+    <p>Connectors whose <code>country</code> field matches a blocked country are removed from Aria's candidate tool set before the model sees them.</p>
+
+    <h3>As a User</h3>
+    <ol>
+      <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Sovereignty</strong> sub-tab</li>
+      <li>Add additional country codes to your block list</li>
+    </ol>
+
+    <hr>
+
+    <h2>Detect Prompt Injection Attacks</h2>
+    <p>Enable injection detection to catch attempts to override Aria's instructions.</p>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Guardrails</strong> section, toggle <code>injection_detection</code> ON</li>
+      <li>Save the policy</li>
+    </ol>
+    <p>Known prompt injection patterns (DAN attacks, role-play overrides, system prompt extraction) are blocked and logged. Users see a rejection message.</p>
+
+    <hr>
+
+    <h2>Receive Guardrail Alerts</h2>
+    <p>Get notified when guardrails are triggered.</p>
+
+    <h3>As a User</h3>
+    <ol>
+      <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Guardrails</strong> sub-tab</li>
+      <li>Enable <strong>Guardrail alerts</strong> for in-app and/or email notifications</li>
+    </ol>
+
+    <h3>As an Admin</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Guardrails</strong> section, enable <strong>Admin alerts</strong></li>
+      <li>Save the policy</li>
+    </ol>
+    <p>Alerts are sent when any user triggers a guardrail (keyword match, injection attempt, output moderation flag).</p>
+
+    <hr>
+
+    <h2>Restrict Tool Access</h2>
+    <p>Control what tools users can invoke through Aria.</p>
+
+    <h3>Read-Only Mode</h3>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Tool Access</strong> section, set <code>tool_access</code> to <code>read_only</code></li>
+      <li>Save the policy</li>
+    </ol>
+    <p>State-changing tools (send email, create files, post messages) are dropped from the tool set.</p>
+
+    <h3>Approval Mode</h3>
+    <ol>
+      <li>Set <code>tool_access</code> to <code>approval</code></li>
+      <li>Configure <code>max_actions</code> (max tool calls before pause) and <code>action_time_budget</code> (seconds before forced stop)</li>
+    </ol>
+    <p>Tools that modify data require explicit user approval before execution.</p>
+
+    <h3>Block Specific Tools</h3>
+    <ol>
+      <li>Add tool names to the <code>blocked_tools</code> list in the admin policy</li>
+      <li>These tools are removed from every user's candidate set regardless of other settings</li>
+    </ol>
+
+    <hr>
+
+    <h2>Set Access Windows</h2>
+    <p>Restrict when Aria can be used (e.g., business hours only).</p>
+
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>In the <strong>Limits</strong> section:
+        <ul>
+          <li><code>access_days</code> — comma-separated days (e.g., <code>1,2,3,4,5</code> for Mon-Fri)</li>
+          <li><code>access_start</code> — start time in 24h format (e.g., <code>09:00</code>)</li>
+          <li><code>access_end</code> — end time in 24h format (e.g., <code>17:00</code>)</li>
+        </ul>
+      </li>
+      <li>Save the policy</li>
+    </ol>
+    <p>Users attempting to use Aria outside the access window receive a "not available" message.</p>
+
+    <hr>
+
+    <h2>Review Guardrail Activity</h2>
+    <p>Monitor what guardrails have been triggered.</p>
+
+    <h3>As a User</h3>
+    <p>View your own guardrail events at <code>/dashboard/profile</code> → <strong>Governance</strong> tab (shows recent blocks, injections, warnings).</p>
+
+    <h3>As an Admin</h3>
+    <p>View all guardrail activity in <code>ActivityLog</code> (filter by <code>aria.guardrail.*</code> or <code>gateway.guardrail.*</code> actions).</p>
+
+    <hr>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="admin.html">Admin & Governance</a> — full governance reference</li>
+      <li><a href="aria.html">Aria AI Assistant</a> — how Aria uses connectors and tools</li>
+      <li><a href="api.html">API Gateway</a> — OpenAI-compatible gateway controls</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>

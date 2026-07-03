@@ -61,6 +61,7 @@
         <tr><td>Sales / Affiliates</td><td><code>/admin/sales?tab=affiliates</code></td><td>Referral conversions and commission payouts.</td></tr>
       </tbody>
     </table>
+    <p>For step-by-step guides on configuring each control, see <a href="governance-howto.html">Governance How-To</a>.</p>
 
     <h2>Token Usage</h2>
     <p>Every Aria conversation turn is recorded in <code>token_usage</code> — user, connector, model, input/output tokens, prompt, reply, system prompt, and mode. The admin page shows a 30-day daily chart, totals by connector/model, and a filterable per-turn log. Connector tool-call activity is tracked separately in <code>connector_usage_log</code> (see <a href="connectors.html">Connectors</a>).</p>
@@ -79,6 +80,34 @@
       </tbody>
     </table>
     <div class="callout">Governance enforcement happens inline in the chat controllers at message-send time — it is not a separate request-blocking middleware. <code>daily_token_limit</code> is enforced in <code>ChatController</code>, <code>DashboardAriaChatController</code>, and <code>WorkspaceChatController</code> alike, but <code>blocked_keywords</code> and <code>connectors_disabled</code> are currently checked only in <code>ChatController</code> and <code>DashboardAriaChatController</code> — not in <a href="workspaces.html">Workspace</a> chat.</div>
+
+    <h3>Where Controls Are Applied</h3>
+    <p>Guardrails and governance controls are enforced at specific points across the codebase:</p>
+    <table>
+      <thead><tr><th>Surface</th><th>Controls Applied</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>OpenAI-compatible gateway</strong><br><code>OpenAiCompatController.php:120-156</code></td>
+          <td>Input keyword block/redact/warn (honouring <code>guardrail_scope</code>), prompt-injection/jailbreak detection via <code>PromptAttackDetector.php</code>, and output keyword scanning — all logged to <code>ActivityLog</code>. Provider resolution honours the kill switch and falls back to a tool-less Anthropic path when connectors are disabled.</td>
+        </tr>
+        <tr>
+          <td><strong>Dashboard Aria chat</strong><br><code>DashboardAriaChatController.php:332-383</code></td>
+          <td>The fullest enforcement: access window, daily/weekly/monthly token limits, PII redaction, input/output keyword guardrails, injection detection, output moderation, routing rules, and guardrail alerts to user/admins.</td>
+        </tr>
+        <tr>
+          <td><strong>Public Aria on /contact</strong><br><code>ChatController.php:91-131</code></td>
+          <td>Blocked-keyword checks on both input and reply.</td>
+        </tr>
+        <tr>
+          <td><strong>Agent tool loop</strong><br><code>RunsAgentTools.php:291-314</code></td>
+          <td>Kill switch strips all tools (builtins included), <code>isToolAllowed()</code> drops denied and state-changing tools in read-only/approval modes, and <code>max_actions</code>/<code>action_time_budget</code> cap autonomous runs. <code>/gateway/invoke</code> inherits this.</td>
+        </tr>
+        <tr>
+          <td><strong>Raw connector proxy</strong><br><code>ConnectorProxyService.php:40-60</code></td>
+          <td>Kill switch enforced; <code>AiFirewallService</code> scans requests but is log-only by design — it never blocks or modifies.</td>
+        </tr>
+      </tbody>
+    </table>
 
     <h3>Per-User Governance Overrides</h3>
     <p>Each user can stack their own governance rules on top of the org-wide policy from the <strong>Governance</strong> tab of <code>/dashboard/profile</code> (Policy, Guardrails, Sovereignty, and Limits sub-tabs; saved via <code>PUT /dashboard/profile/governance</code> to a <code>users.governance</code> JSON column). <code>App\Support\EffectiveGovernance</code> merges the two layers at request time:</p>
