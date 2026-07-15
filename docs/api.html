@@ -35,6 +35,7 @@
     <div class="nav-group">
       <div class="nav-group-title">API</div>
       <a href="api.html" class="nav-link active">API Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Services</div>
@@ -322,26 +323,10 @@ console.log(resp.choices[0].message.content);</code></pre>
       <strong>v1 limitations:</strong> non-streaming only (<code>stream:true</code> rejected) · model maps to Anthropic — non-<code>claude-*</code> models fall back to the platform default · client-supplied tools are ignored in favour of your connectors · <code>max_tokens</code> is fixed at 1024 · errors always render as JSON regardless of <code>Accept</code> header.
     </div>
 
-    <h2>MCP Server</h2>
-    <pre><code>POST https://apispi.com/api/gateway/mcp</code></pre>
-    <p>The gateway is also a <strong>Model Context Protocol (MCP) server</strong> (<code>McpController</code>, JSON-RPC): any MCP client — Claude Desktop/Code, or another agent — can connect and use your connected tools. Supported methods: <code>initialize</code>, <code>tools/list</code>, <code>tools/call</code>. Auth accepts either a <code>gw_</code> Bearer key or an OAuth access token obtained via the flow below.</p>
-    <p>MCP clients that expect OAuth can onboard with zero manual configuration:</p>
-    <table>
-      <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
-      <tbody>
-        <tr><td><code>GET /.well-known/oauth-authorization-server</code></td><td>Authorization-server metadata (served as static discovery documents).</td></tr>
-        <tr><td><code>GET /.well-known/oauth-protected-resource</code></td><td>Protected-resource metadata (RFC 9728).</td></tr>
-        <tr><td><code>POST /oauth/register</code></td><td>Dynamic client registration (RFC 7591).</td></tr>
-        <tr><td><code>GET/POST /oauth/authorize</code></td><td>User-facing consent (session-authenticated).</td></tr>
-        <tr><td><code>POST /oauth/token</code></td><td>Token exchange.</td></tr>
-      </tbody>
-    </table>
-    <p>A flag-gated <em>wire log</em> middleware (<code>McpWireLog</code>) captures the full MCP/OAuth handshake — including auth 401s — for debugging.</p>
-
-    <h2>A2A Endpoint</h2>
-    <pre><code>POST https://apispi.com/api/a2a
-GET  https://apispi.com/.well-known/agent-card.json</code></pre>
-    <p>An <strong>agent-to-agent (A2A)</strong> endpoint lets external agents discover ApiSpi via its published agent card and exchange tasks with it (<code>A2AController</code>). Admins can likewise register external MCP servers and A2A agents as connectors — see the <a href="connectors.html">Connectors</a> page.</p>
+    <h2>MCP Server &amp; A2A</h2>
+    <pre><code>POST https://apispi.com/api/gateway/mcp
+POST https://apispi.com/api/a2a</code></pre>
+    <p>The gateway is also a <strong>Model Context Protocol (MCP) server</strong> — any MCP client (Claude Desktop/Code, other agents) can connect with a <code>gw_</code> Bearer key or via a fully automatic OAuth flow (discovery documents, RFC 7591 dynamic registration, PKCE) — and an <strong>A2A</strong> server with a published agent card. ApiSpi can also <em>consume</em> remote MCP servers and A2A agents as connectors. See the dedicated <a href="mcp.html">MCP &amp; A2A</a> page for protocol details, authentication, client setup, and the wire-log debug facility.</p>
 
     <h2>Gateway Guardrails</h2>
     <p>Governance guardrails are enforced on <strong>every</strong> gateway path (proxy, invoke, OpenAI-compatible, MCP), not just Aria:</p>

@@ -440,7 +440,9 @@ console.log(value.map(m => m.subject));
 
 ## MCP Server
 
-The gateway doubles as a **Model Context Protocol server**: `POST /api/gateway/mcp` (`McpController`, JSON-RPC — `initialize`, `tools/list`, `tools/call`). Any MCP client (Claude Desktop/Code, other agents) can connect with a `gw_` Bearer key or an OAuth access token.
+The gateway doubles as a **Model Context Protocol server**: `POST /api/gateway/mcp` (`McpController`) — a stateless Streamable HTTP server speaking JSON-RPC 2.0 (`initialize`, `tools/list`, `tools/call`, `ping`; notifications get an empty 202; batch arrays are rejected). Protocol revisions `2025-06-18`, `2025-03-26`, `2024-11-05` are negotiated in `initialize`. It exposes the same governance-filtered tool set as the unified gateway and Aria's tool loop; `tools/call` returns a JSON text block plus `structuredContent`, with `isError` on failures, and governed tools may return `approval_required`. Any MCP client (Claude Desktop/Code, other agents) can connect with a `gw_` Bearer key or an OAuth access token (the issued access token *is* a gateway key).
+
+ApiSpi is also an **MCP client**: `McpClientService` consumes remote MCP servers as connectors (`mcp_url` + encrypted `mcp_auth_token` on the connector; bearer auth only for now) — `discoverTools()` normalises the server's `tools/list` into native `tool_definitions`, and tool calls are translated to MCP `tools/call`. Admins register servers at `/admin/connectors/mcp/add` and re-import with `POST /admin/connectors/{connector}/mcp/refresh`. The analogous `A2AClientService` consumes A2A agents (`a2a_url`/`a2a_auth_token`).
 
 OAuth-based MCP clients onboard with zero manual setup:
 
@@ -452,7 +454,7 @@ OAuth-based MCP clients onboard with zero manual setup:
 | `GET/POST /oauth/authorize` | User consent (session-authenticated) |
 | `POST /oauth/token` | Token exchange |
 
-A flag-gated wire-log middleware (`McpWireLog`) records the full MCP/OAuth handshake — including handshake 401s — for debugging.
+A flag-gated wire-log middleware (`McpWireLog`, enabled with `MCP_WIRE_LOG=true`) records the full MCP/OAuth handshake — including handshake 401s — to `storage/logs/mcp-wire.log`, masking gateway keys. It's a temporary debug aid: it logs request bodies, so keep it disabled in normal operation.
 
 ## A2A Endpoint
 

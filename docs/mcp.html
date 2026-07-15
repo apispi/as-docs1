@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+      <a href="mcp.html" class="nav-link active">MCP &amp; A2A</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Admin</div>
+      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">MCP &amp; A2A</h1>
+    <p class="page-lead">ApiSpi speaks the Model Context Protocol in both directions: it <strong>is</strong> an MCP server (any MCP client can use your connected tools) and it <strong>consumes</strong> remote MCP servers and A2A agents as connectors.</p>
+
+    <h2>MCP Server</h2>
+    <pre><code>POST https://apispi.com/api/gateway/mcp</code></pre>
+    <p><code>McpController</code> is a stateless <strong>Streamable HTTP</strong> MCP server speaking JSON-RPC 2.0 over a single POST endpoint — no server-side session. The caller's Bearer credential (via the <code>gateway.auth</code> middleware) is the only identity needed, so every request is self-contained. It exposes <em>the same tool set</em> as the unified gateway and Aria's own tool loop (<code>RunsAgentTools::buildTools()</code>), so MCP clients get your connectors without ApiSpi re-implementing each integration as an MCP server.</p>
+
+    <h3>Protocol Support</h3>
+    <table>
+      <thead><tr><th>Aspect</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>Protocol revisions</td><td><code>2025-06-18</code>, <code>2025-03-26</code>, <code>2024-11-05</code>. <code>initialize</code> echoes the client's revision if supported, otherwise answers with the newest and lets the client decide.</td></tr>
+        <tr><td>Methods</td><td><code>initialize</code>, <code>tools/list</code>, <code>tools/call</code>, <code>ping</code>. Anything else → JSON-RPC <code>-32601</code> Method not found.</td></tr>
+        <tr><td>Notifications</td><td>Requests without an <code>id</code> get an empty <code>202</code> and no response body (per JSON-RPC 2.0).</td></tr>
+        <tr><td>Batches</td><td>JSON-RPC batch arrays are rejected with <code>-32600</code> (removed in the 2025-06-18 revision).</td></tr>
+        <tr><td>Server info</td><td><code>apispi-gateway</code> ("ApiSpi Gateway"), capabilities <code>tools.listChanged: false</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tool Calls &amp; Governance</h3>
+    <ul>
+      <li><code>tools/list</code> returns each tool's <code>name</code>, <code>description</code>, and <code>inputSchema</code> — the candidate set already filtered by governance (kill switch, sovereignty, disabled tools; see <a href="aria.html">Tool Selection</a>).</li>
+      <li><code>tools/call</code> results carry a JSON <code>content</code> text block for every client <em>plus</em> <code>structuredContent</code> for 2025-06-18 clients, with <code>isError</code> set on failures. An unknown/unavailable tool returns an in-band tool error, not a protocol error.</li>
+      <li>Governance can require approval: a call may return status <code>approval_required</code> — the server's <code>instructions</code> tell the model to inform the user and retry after approval.</li>
+    </ul>
+
+    <h3>Authentication</h3>
+    <p>Two options, both resolved by <code>gateway.auth</code>:</p>
+    <ol>
+      <li><strong>Gateway API key</strong> — <code>Authorization: Bearer gw_…</code> (see <a href="api.html">API Gateway</a>). The prefix-less form is also accepted.</li>
+      <li><strong>OAuth</strong> — for MCP clients that expect an OAuth flow (e.g. adding ApiSpi as a Claude connector). The access token issued <em>is</em> a gateway API key under the hood.</li>
+    </ol>
+    <p>Unauthenticated requests get a <code>401</code> with a <code>WWW-Authenticate</code> header pointing at the protected-resource metadata, which lets clients bootstrap the whole flow automatically:</p>
+    <table>
+      <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET /.well-known/oauth-authorization-server</code></td><td>Server metadata: <code>authorization_code</code> grant only, PKCE <code>S256</code> only, scope <code>tools</code>. Served as static discovery documents.</td></tr>
+        <tr><td><code>GET /.well-known/oauth-protected-resource</code></td><td>Protected-resource metadata (RFC 9728).</td></tr>
+        <tr><td><code>POST /oauth/register</code></td><td>Dynamic client registration (RFC 7591) — public clients only, no client secret.</td></tr>
+        <tr><td><code>GET/POST /oauth/authorize</code></td><td>Session-authenticated consent screen.</td></tr>
+        <tr><td><code>POST /oauth/token</code></td><td>Exchanges the code + PKCE verifier for an access token (a gateway key).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Connecting a Client</h3>
+    <p>Claude Code (API-key auth):</p>
+    <pre><code>claude mcp add apispi --transport http https://apispi.com/api/gateway/mcp \
+  --header "Authorization: Bearer gw_&lt;your-key&gt;"</code></pre>
+    <p>Claude Desktop / claude.ai custom connector (OAuth): add <code>https://apispi.com/api/gateway/mcp</code> as a remote MCP server — discovery, registration, and consent happen automatically; approve access when the ApiSpi consent page appears.</p>
+
+    <h3>Wire Logging (Debug)</h3>
+    <p>Setting <code>MCP_WIRE_LOG=true</code> enables the <code>McpWireLog</code> middleware on the whole MCP/OAuth surface: one entry per request/response pair (method, URL, status, UA/Origin/Accept headers, truncated bodies) written to <code>storage/logs/mcp-wire.log</code>. Anything shaped like a gateway key is masked before logging. It is intended as a temporary handshake-debugging aid — leave it disabled in normal operation, since it logs request bodies.</p>
+
+    <hr>
+
+    <h2>MCP Client — Remote Servers as Connectors</h2>
+    <p><code>McpClientService</code> lets ApiSpi <em>consume</em> any remote MCP server as a first-class connector, so its tools appear in Aria's tool loop and the gateway exactly like native ones:</p>
+    <ul>
+      <li><strong>Registration</strong> — an admin adds the server at <code>/admin/connectors/mcp/add</code> (URL + optional bearer token). The connector rows gain <code>transport</code>, <code>mcp_url</code>, and an encrypted <code>mcp_auth_token</code>.</li>
+      <li><strong>Discovery</strong> — <code>discoverTools()</code> performs <code>initialize</code> then <code>tools/list</code> and normalises the result into the same <code>tool_definitions</code> shape native connectors use. Re-import any time with <code>POST /admin/connectors/{connector}/mcp/refresh</code>.</li>
+      <li><strong>Execution</strong> — an Aria/gateway tool call is translated into an MCP <code>tools/call</code>; text content is surfaced, <code>structuredContent</code> is preferred when present, and <code>isError</code> results are returned as failures so the model sees them as such.</li>
+      <li><strong>Transport</strong> — stateless Streamable HTTP via <code>RemoteJsonRpc</code>, bearer-token auth. OAuth-secured remote MCP servers are not yet supported.</li>
+    </ul>
+
+    <h2>A2A — Agent-to-Agent</h2>
+    <p>The same pattern exists for the A2A protocol:</p>
+    <ul>
+      <li><strong>As a server</strong> — <code>POST /api/a2a</code> (<code>A2AController</code>), with a published agent card at <code>GET /.well-known/agent-card.json</code> so external agents can discover ApiSpi and exchange tasks with it.</li>
+      <li><strong>As a client</strong> — <code>A2AClientService</code> consumes external A2A agents as connectors (<code>a2a_url</code> + encrypted <code>a2a_auth_token</code>), registered at <code>/admin/connectors/a2a/add</code> with an agent-card refresh at <code>POST /admin/connectors/{connector}/a2a/refresh</code>.</li>
+    </ul>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="api.html">API Gateway</a> — keys, unified tools/invoke endpoints, guardrails</li>
+      <li><a href="connectors.html">Connectors</a> — the catalogue MCP/A2A connectors join</li>
+      <li><a href="aria.html">Aria AI Assistant</a> — how the shared tool loop selects and executes tools</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>
