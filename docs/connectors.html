@@ -43,8 +43,8 @@
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Admin</div>
-      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -136,8 +136,6 @@
       </tbody>
     </table>
 
-    <h3>Admin management</h3>
-    <p>Admins manage the connector catalogue at <code>/admin/connectors</code> and assign connectors to users at <code>/admin/users/{user}/connectors</code>.</p>
 
     <h2>Tool Definitions Format</h2>
     <p>A connector's <code>tool_definitions</code> field is a JSON array of tool schemas in Anthropic's tool format. When Aria builds its tool list it merges definitions from all active connectors. The internal fields <code>_connector_slug</code> and <code>_connector_config</code> are stripped before being sent to any LLM.</p>
@@ -247,17 +245,8 @@
     <h2>Starter Connectors</h2>
     <p>New accounts are provisioned with a set of no-key starter connectors (news, BOM and Open-Meteo weather, World Time) so Aria is useful before any credentials are configured. Existing accounts were backfilled when starters were introduced.</p>
 
-    <h2>Admin-Added MCP &amp; A2A Connectors</h2>
-    <p>Admins can now register external MCP servers and A2A (agent-to-agent) endpoints as first-class connectors, importing their tool lists into the catalogue:</p>
-    <table>
-      <thead><tr><th>Route</th><th>Action</th></tr></thead>
-      <tbody>
-        <tr><td><code>GET/POST /admin/connectors/mcp/add</code></td><td>Register an MCP server as a connector.</td></tr>
-        <tr><td><code>POST /admin/connectors/{connector}/mcp/refresh</code></td><td>Re-import the MCP server's tool list.</td></tr>
-        <tr><td><code>GET/POST /admin/connectors/a2a/add</code></td><td>Register an A2A agent endpoint.</td></tr>
-        <tr><td><code>POST /admin/connectors/{connector}/a2a/refresh</code></td><td>Refresh the agent card.</td></tr>
-      </tbody>
-    </table>
+    <h2>MCP &amp; A2A Connectors</h2>
+    <p>External MCP servers and A2A (agent-to-agent) endpoints can be registered as first-class connectors, importing their tool lists into the catalogue so their tools behave exactly like native ones. See <a href="mcp.html">MCP &amp; A2A</a> for how discovery and execution work.</p>
 
     <h2>API Gateway &amp; Keys</h2>
     <p>Connectors are also reachable programmatically over a Bearer-authenticated proxy, unified tool-invocation, and OpenAI-compatible endpoint — without managing upstream OAuth tokens or API keys directly. See the dedicated <a href="api.html">API Gateway</a> page for endpoints, key management, auth resolution, and usage logging.</p>

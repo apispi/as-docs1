@@ -43,8 +43,8 @@
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Admin</div>
-      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -107,8 +107,8 @@
     <h2>MCP Client — Remote Servers as Connectors</h2>
     <p><code>McpClientService</code> lets ApiSpi <em>consume</em> any remote MCP server as a first-class connector, so its tools appear in Aria's tool loop and the gateway exactly like native ones:</p>
     <ul>
-      <li><strong>Registration</strong> — an admin adds the server at <code>/admin/connectors/mcp/add</code> (URL + optional bearer token). The connector rows gain <code>transport</code>, <code>mcp_url</code>, and an encrypted <code>mcp_auth_token</code>.</li>
-      <li><strong>Discovery</strong> — <code>discoverTools()</code> performs <code>initialize</code> then <code>tools/list</code> and normalises the result into the same <code>tool_definitions</code> shape native connectors use. Re-import any time with <code>POST /admin/connectors/{connector}/mcp/refresh</code>.</li>
+      <li><strong>Registration</strong> — your ApiSpi administrator registers the server (URL + optional bearer token). The connector stores <code>transport</code>, <code>mcp_url</code>, and an encrypted <code>mcp_auth_token</code>.</li>
+      <li><strong>Discovery</strong> — <code>discoverTools()</code> performs <code>initialize</code> then <code>tools/list</code> and normalises the result into the same <code>tool_definitions</code> shape native connectors use; the tool list can be re-imported at any time.</li>
       <li><strong>Execution</strong> — an Aria/gateway tool call is translated into an MCP <code>tools/call</code>; text content is surfaced, <code>structuredContent</code> is preferred when present, and <code>isError</code> results are returned as failures so the model sees them as such.</li>
       <li><strong>Transport</strong> — stateless Streamable HTTP via <code>RemoteJsonRpc</code>, bearer-token auth. OAuth-secured remote MCP servers are not yet supported.</li>
     </ul>
@@ -117,7 +117,7 @@
     <p>The same pattern exists for the A2A protocol:</p>
     <ul>
       <li><strong>As a server</strong> — <code>POST /api/a2a</code> (<code>A2AController</code>), with a published agent card at <code>GET /.well-known/agent-card.json</code> so external agents can discover ApiSpi and exchange tasks with it.</li>
-      <li><strong>As a client</strong> — <code>A2AClientService</code> consumes external A2A agents as connectors (<code>a2a_url</code> + encrypted <code>a2a_auth_token</code>), registered at <code>/admin/connectors/a2a/add</code> with an agent-card refresh at <code>POST /admin/connectors/{connector}/a2a/refresh</code>.</li>
+      <li><strong>As a client</strong> — <code>A2AClientService</code> consumes external A2A agents as connectors (<code>a2a_url</code> + encrypted <code>a2a_auth_token</code>), registered by your ApiSpi administrator, with the agent card refreshable at any time.</li>
     </ul>
 
     <h2>See Also</h2>

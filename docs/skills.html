@@ -43,8 +43,8 @@
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Admin</div>
-      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -135,7 +135,7 @@
     <p>Example — <strong>Bid &amp; Tender Response</strong> draws on: RFQ/RFT Parsing, CV Parsing, Document Analysis, STAR Response Generation, Executive Summary Writing, Capability Statement Writing, Compliance Matrix Generation, and Gap Analysis. The pattern repeats for the other agents — each draws on the skill category closest to its domain.</p>
 
     <h2>Skill Entitlement (Subscriptions)</h2>
-    <p>Skills carry <strong>no price</strong> of their own. Entitlement is managed per subscription tier via the <code>subscription_skill</code> pivot (with an <code>is_disabled</code> flag), editable by admins via the Subscription Skills controller — gating which packaged capabilities a subscriber's agents can use, independent of which connectors that agent can call.</p>
+    <p>Skills carry <strong>no price</strong> of their own. Entitlement is managed per subscription tier via the <code>subscription_skill</code> pivot (with an <code>is_disabled</code> flag) — gating which packaged capabilities a subscriber's agents can use, independent of which connectors that agent can call.</p>
 
     <h2>Relationship Summary</h2>
     <pre><code>Agent ──&lt; agent_skill &gt;── Skill          (which packaged capabilities an agent has)

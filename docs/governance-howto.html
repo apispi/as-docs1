@@ -25,7 +25,7 @@
       <a href="overview.html" class="nav-link">Overview</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Agents & AI</div>
+      <div class="nav-group-title">Agents &amp; AI</div>
       <a href="agents.html" class="nav-link">Agents Catalogue</a>
       <a href="skills.html" class="nav-link">Skills</a>
       <a href="aria.html" class="nav-link">Aria AI Assistant</a>
@@ -43,205 +43,74 @@
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Admin</div>
-      <a href="admin.html" class="nav-link">Admin & Governance</a>
+      <div class="nav-group-title">Governance</div>
       <a href="governance-howto.html" class="nav-link active">Governance How-To</a>
     </div>
   </nav>
 
   <main class="content">
     <h1 class="page-title">Governance How-To</h1>
-    <p class="page-lead">Practical guides for setting up and enforcing AI governance controls across your organisation.</p>
+    <p class="page-lead">Practical guides for setting up your personal AI governance controls. Two layers apply to every conversation: an <strong>org-wide policy</strong> managed by your organisation's ApiSpi administrator, and your own overrides on the <strong>Governance</strong> tab of <code>/dashboard/profile</code>. Your rules can only add to or tighten the org policy — never loosen it.</p>
 
     <h2>Block Keywords</h2>
-    <p>Prevent discussions on specific topics by adding blocked keywords to your org policy.</p>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>Scroll to the <strong>Guardrails</strong> section</li>
-      <li>Add keywords to the <code>blocked_keywords</code> list (comma-separated)</li>
-      <li>Choose the <strong>guardrail action</strong>: <code>block</code> (reject), <code>redact</code> (mask), or <code>warn</code> (proceed with warning)</li>
-      <li>Set <strong>guardrail scope</strong>: <code>input</code> (user messages), <code>output</code> (AI replies), or <code>both</code></li>
-      <li>Click <strong>Save Policy</strong></li>
-    </ol>
-
-    <h3>As a User</h3>
+    <p>Prevent discussions on specific topics by adding blocked keywords.</p>
     <ol>
       <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Guardrails</strong> sub-tab</li>
-      <li>Add your personal blocked keywords (these stack on top of org policy — you can only add, not remove)</li>
-      <li>Your personal guardrail action applies to your overrides</li>
+      <li>Add your personal blocked keywords (these stack on top of the org policy — you can only add, not remove)</li>
+      <li>Choose your <strong>guardrail action</strong>: <code>block</code> (reject), <code>redact</code> (mask), or <code>warn</code> (proceed with warning) — it applies to your overrides</li>
     </ol>
-
     <div class="callout">Keywords are case-insensitive by default. Enable <strong>whole word matching</strong> to prevent partial matches (e.g., "cat" won't match "category").</div>
 
     <hr>
 
     <h2>Set Daily Token Limits</h2>
-    <p>Cap how many tokens a user can consume per day to control costs.</p>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Limits</strong> section, set <code>daily_token_limit</code> to your desired cap</li>
-      <li>Save the policy</li>
-    </ol>
-    <p>Users who hit the limit receive a fixed "limit reached" message instead of an AI response.</p>
-
-    <h3>As a User</h3>
+    <p>Cap how many tokens you can consume per day to control costs.</p>
     <ol>
       <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Limits</strong> sub-tab</li>
-      <li>Set a personal daily limit (must be lower than org limit — you cannot exceed it)</li>
+      <li>Set a personal daily limit — if your organisation also sets one, the stricter (lower) limit wins</li>
     </ol>
-
-    <hr>
-
-    <h2>Enable the Connector Kill Switch</h2>
-    <p>Instantly disable all user connector integrations and fall back to the platform's default AI provider.</p>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>Toggle <code>connectors_disabled</code> ON</li>
-      <li>Save the policy</li>
-    </ol>
-    <p>All connector tools are stripped from Aria's tool set immediately. No user data is affected — only the connectors are bypassed.</p>
-
-    <div class="callout">To re-enable, toggle <code>connectors_disabled</code> OFF. Individual users cannot override the kill switch.</div>
+    <p>Once the limit is reached, further Aria requests get a fixed "limit reached" message instead of an AI response until the next day.</p>
 
     <hr>
 
     <h2>Block Connectors by Country</h2>
-    <p>Restrict connectors from specific countries for data sovereignty compliance.</p>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Sovereignty</strong> section, add country codes to <code>blocked_countries</code></li>
-      <li>Save the policy</li>
-    </ol>
-    <p>Connectors whose <code>country</code> field matches a blocked country are removed from Aria's candidate tool set before the model sees them.</p>
-
-    <h3>As a User</h3>
+    <p>Restrict connectors from specific countries for data-sovereignty compliance.</p>
     <ol>
       <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Sovereignty</strong> sub-tab</li>
-      <li>Add additional country codes to your block list</li>
+      <li>Add country codes to your block list (merged with any org-wide list)</li>
     </ol>
-
-    <hr>
-
-    <h2>Detect Prompt Injection Attacks</h2>
-    <p>Enable injection detection to catch attempts to override Aria's instructions.</p>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Guardrails</strong> section, toggle <code>injection_detection</code> ON</li>
-      <li>Save the policy</li>
-    </ol>
-    <p>Known prompt injection patterns (DAN attacks, role-play overrides, system prompt extraction) are blocked and logged. Users see a rejection message.</p>
+    <p>Connectors whose <code>country</code> field matches a blocked country are removed from Aria's candidate tool set before the model ever sees them — model providers carry country labels for exactly this purpose (see <a href="connectors.html">Connectors</a>).</p>
 
     <hr>
 
     <h2>Receive Guardrail Alerts</h2>
-    <p>Get notified when guardrails are triggered.</p>
-
-    <h3>As a User</h3>
+    <p>Get notified when your guardrails are triggered.</p>
     <ol>
       <li>Go to <code>/dashboard/profile</code> → <strong>Governance</strong> tab → <strong>Guardrails</strong> sub-tab</li>
       <li>Enable <strong>Guardrail alerts</strong> for in-app and/or email notifications</li>
     </ol>
-
-    <h3>As an Admin</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Guardrails</strong> section, enable <strong>Admin alerts</strong></li>
-      <li>Save the policy</li>
-    </ol>
-    <p>Alerts are sent when any user triggers a guardrail (keyword match, injection attempt, output moderation flag).</p>
-
-    <hr>
-
-    <h2>Restrict Tool Access</h2>
-    <p>Control what tools users can invoke through Aria.</p>
-
-    <h3>Read-Only Mode</h3>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Tool Access</strong> section, set <code>tool_access</code> to <code>read_only</code></li>
-      <li>Save the policy</li>
-    </ol>
-    <p>State-changing tools (send email, create files, post messages) are dropped from the tool set.</p>
-
-    <h3>Approval Mode</h3>
-    <ol>
-      <li>Set <code>tool_access</code> to <code>approval</code></li>
-      <li>Configure <code>max_actions</code> (max tool calls before pause) and <code>action_time_budget</code> (seconds before forced stop)</li>
-    </ol>
-    <p>Tools that modify data require explicit user approval before execution.</p>
-
-    <h3>Block Specific Tools</h3>
-    <ol>
-      <li>Add tool names to the <code>blocked_tools</code> list in the admin policy</li>
-      <li>These tools are removed from every user's candidate set regardless of other settings</li>
-    </ol>
-
-    <hr>
-
-    <h2>Use the Emergency Stop</h2>
-    <p>The org-level emergency stop halts all connector tool traffic at once — Aria, the gateway, MCP, everything.</p>
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>Engage the <strong>Emergency stop</strong> control (its endpoint is the single writer of the flag, and the action is idempotent — engaging it twice is safe)</li>
-    </ol>
-    <p>While engaged, a banner is shown across the admin shell, and affected users are told an org-level emergency stop is active (rather than seeing generic connector errors).</p>
-
-    <hr>
-
-    <h2>Set Access Windows</h2>
-    <p>Restrict when Aria can be used (e.g., business hours only).</p>
-
-    <ol>
-      <li>Go to <code>/admin/policy</code></li>
-      <li>In the <strong>Limits</strong> section:
-        <ul>
-          <li><code>access_days</code> — comma-separated days (e.g., <code>1,2,3,4,5</code> for Mon-Fri)</li>
-          <li><code>access_start</code> — start time in 24h format (e.g., <code>09:00</code>)</li>
-          <li><code>access_end</code> — end time in 24h format (e.g., <code>17:00</code>)</li>
-        </ul>
-      </li>
-      <li>Save the policy</li>
-    </ol>
-    <p>Users attempting to use Aria outside the access window receive a "not available" message.</p>
+    <p>Alerts fire on keyword matches, injection attempts, and output-moderation flags.</p>
 
     <hr>
 
     <h2>Review Guardrail Activity</h2>
-    <p>Monitor what guardrails have been triggered.</p>
-
-    <h3>As a User</h3>
     <p>View your own guardrail events at <code>/dashboard/profile</code> → <strong>Governance</strong> tab (shows recent blocks, injections, warnings).</p>
-
-    <h3>As an Admin</h3>
-    <p>Use the <strong>Audit</strong> tab on the Governance page (<code>/admin/policy?tab=audit</code>) for the governance audit trail, or query <code>ActivityLog</code> directly (filter by <code>aria.guardrail.*</code> or <code>gateway.guardrail.*</code> actions).</p>
 
     <hr>
 
-    <h2>Editing Notes</h2>
+    <h2>Good to Know</h2>
     <ul>
       <li>Governance applies to <strong>every account</strong> — no plan gating on enforcement.</li>
       <li>Policy free-text notes accept up to <strong>50,000 characters</strong>.</li>
       <li>Saving from a governance sub-tab keeps you on that sub-tab.</li>
-      <li>Guardrails (blocked keywords, injection detection, output scanning — including an LLM-based moderation classifier as a second line of defence) are enforced on <strong>all API gateway paths</strong>, not just Aria chat.</li>
+      <li>Guardrails (blocked keywords, injection detection, output scanning) are enforced on <strong>all API gateway paths</strong>, not just Aria chat.</li>
+      <li>Your organisation may additionally enforce a connector kill switch, tool-access restrictions (read-only/approval modes), access windows, or an emergency stop. When one of these blocks something, Aria explains the restriction in its reply; contact your administrator to change org-wide settings.</li>
     </ul>
-
-    <hr>
 
     <h2>See Also</h2>
     <ul>
-      <li><a href="admin.html">Admin & Governance</a> — full governance reference</li>
-      <li><a href="aria.html">Aria AI Assistant</a> — how Aria uses connectors and tools</li>
-      <li><a href="api.html">API Gateway</a> — OpenAI-compatible gateway controls</li>
+      <li><a href="aria.html">Aria AI Assistant</a> — how Aria uses connectors and tools, and how governance filters the tool set</li>
+      <li><a href="api.html">API Gateway</a> — gateway guardrails</li>
     </ul>
   </main>
 </div>

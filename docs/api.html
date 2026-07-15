@@ -43,8 +43,8 @@
       <a href="partners.html" class="nav-link">Partner Program</a>
     </div>
     <div class="nav-group">
-      <div class="nav-group-title">Admin</div>
-      <a href="admin.html" class="nav-link">Admin &amp; Governance</a>
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -58,16 +58,15 @@
     <h2>Authentication</h2>
     <p>All gateway requests are authenticated with a <strong>Bearer API key</strong>:</p>
     <pre><code>Authorization: Bearer gw_&lt;your-key&gt;</code></pre>
-    <p>Keys are prefixed <code>gw_</code> and 51 characters long. The raw key is shown <strong>once</strong> at creation — ApiSpi stores only a SHA-256 hash and cannot recover it. Keys do not expire by default; an admin may set an explicit expiry when issuing one.</p>
+    <p>Keys are prefixed <code>gw_</code> and 51 characters long. The raw key is shown <strong>once</strong> at creation — ApiSpi stores only a SHA-256 hash and cannot recover it. Keys do not expire by default; an explicit expiry can be set when a key is issued.</p>
 
     <h2>Issuing API Keys</h2>
-    <p>There are three places to manage keys, all session-authenticated (the Bearer key itself is only used against the proxy/invoke endpoints below):</p>
+    <p>There are two places to manage keys, both session-authenticated (the Bearer key itself is only used against the proxy/invoke endpoints below):</p>
     <table>
       <thead><tr><th>Surface</th><th>Route</th><th>Notes</th></tr></thead>
       <tbody>
         <tr><td>Dashboard UI (primary)</td><td><code>/dashboard/profile#api-keys</code></td><td>Create, name, set an optional <code>expires_at</code>, revoke.</td></tr>
         <tr><td>Self-service JSON API</td><td><code>GET / POST / DELETE /api/gateway/keys</code></td><td>Same flow, scriptable. List returns <code>id, name, key_prefix, last_used_at, expires_at, created_at</code> — never the raw key.</td></tr>
-        <tr><td>Admin-issued</td><td><code>/admin/api-keys</code></td><td>Admin picks a user, issues a key on their behalf.</td></tr>
       </tbody>
     </table>
     <pre><code>POST /api/gateway/keys
@@ -365,7 +364,7 @@ POST https://apispi.com/api/a2a</code></pre>
     </table>
 
     <h2>Usage Logging</h2>
-    <p>Every proxy request is logged to <code>connector_usage_log</code>, success or failure, reviewable at <code>/admin/token-usage</code>:</p>
+    <p>Every proxy request is logged to <code>connector_usage_log</code>, success or failure:</p>
     <ul>
       <li><code>user_id</code>, <code>connector_slug</code></li>
       <li><code>tool_name</code> — the upstream path/tool called</li>
@@ -379,7 +378,7 @@ POST https://apispi.com/api/a2a</code></pre>
       <li>Keys are hashed with SHA-256 before storage — the plain key cannot be retrieved</li>
       <li><code>key_prefix</code> identifies which key was used without exposing the full value</li>
       <li><code>last_used_at</code> updates on every request — use it to spot unused keys</li>
-      <li>Revoke immediately via the dashboard or admin panel if a key is compromised</li>
+      <li>Revoke immediately via the dashboard if a key is compromised</li>
       <li>Use one key per integration so individual keys can be revoked independently</li>
     </ul>
   </main>
