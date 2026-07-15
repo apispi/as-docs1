@@ -14,9 +14,11 @@ ApiSpi is an AI agents SaaS platform that builds and deploys enterprise-grade au
 6. [Training](#training)
 7. [Digital Avatars](#digital-avatars)
 8. [Aria — AI Assistant](#aria--ai-assistant)
-9. [Workspaces](#workspaces)
-10. [Account & Profile](#account--profile)
-11. [Admin Panel](#admin-panel)
+9. [My Schedule](#my-schedule)
+10. [Token Bank](#token-bank)
+11. [Workspaces](#workspaces)
+12. [Account & Profile](#account--profile)
+13. [Admin Panel](#admin-panel)
 
 ---
 
@@ -65,9 +67,14 @@ Click any agent to open its detail page at `/agents/{slug}`. The page displays:
 
 ### Subscribe to an Agent
 
-From the agent detail page, click the **Get Started** (or equivalent CTA) button. You are taken to `/checkout` where you select a plan and complete payment via Stripe. After a successful payment you are redirected to `/checkout/success` and your subscription is activated.
+Purchase CTAs (agent detail pages, onboarding agent-pickers, and the public pricing page's **Subscribe** button) all lead to the focused **platform payment page** at `/dashboard/checkout/platform` — a distraction-free page (no sidebar or nav) where you can apply a promo code (`POST /dashboard/checkout/promo`; the Stripe button reflects the discounted amount) and complete payment via Stripe. After payment you land on `/dashboard/checkout/platform/success` and activate agents into your plan slots (`POST /dashboard/plan/agents/{slug}/activate`).
 
 > Authenticated users can also browse and subscribe directly from the dashboard catalog at `/dashboard/catalog`.
+
+### Pricing, Plan & Free Trial
+
+- Public pricing (`/pricing`) is framed as a **pick-3 platform plan** — one subscription with agent slots, not per-agent pricing. Prices are AUD with USD equivalents shown. The legacy `/base-plan` URL redirects to `/pricing`.
+- The free week is a real **7-day trial** (`users.trial_ends_at`, set on first entry). When it expires, the `trial.gate` middleware routes you to the payment page, and a reminder email is sent before expiry. Accounts created before the trial system are never gated.
 
 ---
 
@@ -83,7 +90,9 @@ After logging in you land on `/dashboard`. The dashboard is split into several s
 | Connectors | `/dashboard/connectors` | OAuth integrations linked to your agents |
 | Training | `/dashboard/training` | Training courses available to you |
 | Aria | `/dashboard/aria` | Chat with the ApiSpi AI assistant |
-| Profile | `/dashboard/profile` | Account settings |
+| My Schedule | `/dashboard/schedule` | Run saved Prompts on a recurring schedule |
+| Token Bank | `/dashboard/credit` | Buy token credit, view usage, auto top-up |
+| Profile | `/dashboard/profile` | Account settings (settings-hub tiles; subscription-gated tiles show a lock icon) |
 
 ---
 
@@ -309,6 +318,8 @@ Connect the **Gmail** connector to let Aria work with your Google inbox.
 | `gmail_list_messages` | Lists recent messages from a label (default: INBOX) with subject, sender, date, and snippet |
 | `gmail_search_messages` | Searches Gmail using standard Gmail query syntax (e.g. `from:someone subject:meeting`) |
 | `gmail_send_email` | Sends a plain-text email on your behalf |
+| `gmail_read_message` | Reads a full message body (with header-injection defence) |
+| `gmail_create_draft` | Creates a draft, including threaded replies |
 
 #### YouTube
 
@@ -389,6 +400,29 @@ All Aria dashboard conversations are tracked. Admins can view token consumption 
 You can see your own usage on the **Usage**/**Token** tabs of `/dashboard/profile` — remaining, lifetime, and consumed token counts per AI provider, plus your recent usage history.
 
 If an org-wide **daily token limit** is set (see [Governance](#governance--ai-firewall) below) and you exceed it, Aria responds with a fixed "you've reached your daily AI usage limit" message instead of calling the model for the rest of that day.
+
+---
+
+## My Schedule
+
+Run any of your saved Prompts automatically on a recurring schedule (`/dashboard/schedule`).
+
+- **Create** a schedule by picking a saved Prompt and a recurrence; times are anchored to the timezone of your saved profile location, and the "Next" run time is shown in the schedule's own timezone
+- Each schedule has its **own page** (`/dashboard/schedule/{id}`) with a collapsible **Run History**
+- **Toggle** a schedule on/off, **Run now** (`POST /dashboard/schedule/{id}/run`, rate-limited), edit, or delete it
+- Results surface in the **Aria chat**, badged as *scheduled*
+- Admins can see all users' schedules with health stats and pause/resume them at `/admin/schedules`
+
+---
+
+## Token Bank
+
+Buy token credit and track spend at `/dashboard/credit`.
+
+- Balances are ledgered in **USD** but presented in **AUD** via a configured FX rate
+- **Market rates** ($/M tokens, labelled USD) are shown per provider — including a flat USD $1/M SCX rate — and token purchasing covers SCX plus Qwen, Argyll, Z.ai, Mistral, Grok, and DeepSeek (`/dashboard/tokens/{slug}`)
+- **Auto top-up** can be enabled (`PUT /dashboard/credit/auto-topup`); a saved card can be removed
+- Daily token usage is shown as a **Mon–Sun weekly heatmap** over a 6-month window (no-activity days are black squares with a grey outline)
 
 ---
 

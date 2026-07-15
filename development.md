@@ -426,6 +426,22 @@ composer test -- --coverage-html coverage/
 composer test -- --parallel
 ```
 
+### Frontend Tests (Vitest)
+
+A Vitest harness (with `@vue/test-utils`) covers Vue regressions — specs live in `tests/js/` (e.g. `user-profile-governance.spec.js`, pinning the July 2026 governance-tab regressions):
+
+```bash
+npm run test:js
+```
+
+### Continuous Integration
+
+`.github/workflows/ci.yml` runs three legs:
+
+- **PHP (SQLite)** — lint + full test suite on a PHP version matrix
+- **MySQL 8** — the same suite against a MySQL 8 service, catching MySQL-only issues (reserved words like `out`, `DISTINCT`/`ORDER BY` strictness)
+- **Frontend** — Node 24; uses `npm install` (not `npm ci`) because macOS-generated lockfile wasm optionals fail `npm ci`'s strict sync check on Linux, then runs Vitest and the Vite build
+
 ### Writing a Test
 
 ```php

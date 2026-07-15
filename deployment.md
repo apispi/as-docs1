@@ -77,6 +77,17 @@ ls -la public_html/build/
 # Should show .js, .css, and .json files
 ```
 
+## deploy.sh (Preferred)
+
+The app repo now ships `deploy.sh` — run it **on the server** (`~/www/apispi.com`) to make pull + migrate + cache-clear a single command (pull-without-migrate has caused production 500s before):
+
+```bash
+./deploy.sh                  # pull + migrate + clear caches
+./deploy.sh ConnectorSeeder  # …and re-run one specific seeder
+```
+
+It deliberately does **not** run a full `db:seed` — admins edit agents/trainings in the DB, and a blanket re-seed would clobber those edits. Pass the specific seeder class instead (seeders are `updateOrCreate`-safe).
+
 ## Deployment Steps (5 Steps)
 
 ### Step 1: Build Frontend Assets Locally

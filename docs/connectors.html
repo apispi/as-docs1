@@ -98,15 +98,27 @@
     </table>
 
     <h2>AI Provider Connectors</h2>
-    <p>These connectors configure which LLM Aria uses on the dashboard. A user's connector key takes precedence over the platform's fallback key.</p>
+    <p>These connectors configure which LLM Aria uses on the dashboard. A user's connector key takes precedence over the platform's fallback key. The provider line-up has grown well beyond the original three:</p>
     <table>
-      <thead><tr><th>Connector</th><th>Slug</th><th>Config Keys</th></tr></thead>
+      <thead><tr><th>Connector</th><th>Slug</th><th>Notes</th></tr></thead>
       <tbody>
         <tr><td>Anthropic</td><td><code>anthropic</code></td><td><code>api_key</code>, <code>model</code></td></tr>
-        <tr><td>Google Gemini</td><td><code>gemini</code></td><td><code>api_key</code>, <code>model</code></td></tr>
+        <tr><td>Google Gemini</td><td><code>gemini</code></td><td><code>api_key</code>, <code>model</code>; also powers Aria's image-generation tool</td></tr>
         <tr><td>SCX AI</td><td><code>scx</code></td><td><code>api_key</code>, <code>model</code>, <code>vector_store_id</code></td></tr>
+        <tr><td>Argyll Data</td><td><code>argyll</code></td><td>Models + vector store search</td></tr>
+        <tr><td>Mistral AI</td><td><code>mistral</code></td><td>Mistral Large/Small</td></tr>
+        <tr><td>OpenAI</td><td><code>openai</code></td><td>GPT-4o, o1 family via chat tools</td></tr>
+        <tr><td>DeepSeek</td><td><code>deepseek</code></td><td>DeepSeek-V3 chat, DeepSeek-R1 reasoner</td></tr>
+        <tr><td>Groq</td><td><code>groq</code></td><td>LPU-accelerated inference (Llama, Kimi, …)</td></tr>
+        <tr><td>Grok (xAI)</td><td><code>grok</code></td><td>Grok models</td></tr>
+        <tr><td>Z.ai (GLM)</td><td><code>zai</code></td><td>Zhipu GLM models</td></tr>
+        <tr><td>Qwen (Alibaba Cloud)</td><td><code>qwen</code></td><td>Qwen models via DashScope</td></tr>
+        <tr><td>Moonshot AI (Kimi)</td><td><code>moonshot</code></td><td>Kimi models incl. Kimi K2</td></tr>
+        <tr><td>AWS Bedrock</td><td><code>aws-bedrock</code></td><td>Runs inference in your own AWS account/region (incl. Sydney for Australian data residency)</td></tr>
+        <tr><td>Local LLM</td><td><code>local-llm</code></td><td>Ollama / LM Studio / any OpenAI-compatible server</td></tr>
       </tbody>
     </table>
+    <p><strong>Data sovereignty:</strong> model-provider connectors now carry a <code>country</code> field. Chinese-hosted providers (DeepSeek, Qwen, Z.ai, Moonshot) are labelled <em>China</em> so governance sovereignty rules can allow or block them per policy. Production seeding does not attach <code>tool_definitions</code> to model providers — they select <em>which model answers</em>, they are not callable tools.</p>
 
     <h2>Managing Connectors</h2>
 
@@ -143,8 +155,8 @@
 ]</code></pre>
 
     <h2>Full Connector List</h2>
-    <p><strong>63 connector slugs</strong> are defined across <code>ConnectorSeeder.php</code> (38, auto-run) and ~34 standalone per-integration seeders. Entries marked "(stub)" have a <code>config_schema</code> but no <code>tool_definitions</code> yet — connectable, but expose no callable tools until implemented.</p>
-    <details class="code-tabs"><summary>Show full table (63 connectors)</summary>
+    <p><strong>76 connector slugs</strong> are defined across <code>ConnectorSeeder.php</code> (47, auto-run) and ~43 standalone per-integration seeders. Entries marked "(stub)" have a <code>config_schema</code> but no <code>tool_definitions</code> yet — connectable, but expose no callable tools until implemented. The catalogue UI labels stubs "Coming soon" and lists each connector's tool capabilities honestly.</p>
+    <details class="code-tabs"><summary>Show full table (76 connectors)</summary>
     <table>
       <thead><tr><th>Slug</th><th>Name</th><th>Category</th><th>Auth</th><th>Description</th></tr></thead>
       <tbody>
@@ -189,6 +201,13 @@
         <tr><td><code>usaspending</code></td><td>USASpending.gov</td><td>Government</td><td>None required</td><td>Query federal spending/contracts/grants</td></tr>
         <tr><td><code>datagovau</code></td><td>Data.gov.au</td><td>Government</td><td>None required</td><td>Search the Australian Government open-data portal</td></tr>
         <tr><td><code>bom</code></td><td>BOM Weather</td><td>Weather</td><td>None required</td><td>Australian Bureau of Meteorology observations &amp; forecasts</td></tr>
+        <tr><td><code>open-meteo</code></td><td>Open-Meteo</td><td>Weather</td><td>None required</td><td>Free global current conditions &amp; multi-day forecasts for any location</td></tr>
+        <tr><td><code>accuweather</code></td><td>AccuWeather</td><td>Weather</td><td>API key (free dev key)</td><td>Global current conditions &amp; multi-day forecasts for any city</td></tr>
+        <tr><td><code>world-time</code></td><td>World Time API</td><td>Utilities</td><td>None required</td><td>Accurate current time for any timezone/city, DST-aware</td></tr>
+        <tr><td><code>whatsapp</code></td><td>WhatsApp</td><td>Messaging</td><td>API key (Twilio credentials)</td><td>Send/receive WhatsApp messages via Twilio, conversation history, templated messages</td></tr>
+        <tr><td><code>generic-website</code></td><td>Generic Website</td><td>Information</td><td>None required</td><td>Fetch any webpage by URL; keyword search within a site</td></tr>
+        <tr><td><code>neo4j</code></td><td>Neo4j</td><td>Database</td><td>Basic/API key</td><td>Cypher queries, relationship traversal over Neo4j graph data</td></tr>
+        <tr><td><code>ground-news</code></td><td>Ground News</td><td>News &amp; Media</td><td>API key (official)</td><td>Multi-perspective news with political-bias &amp; factuality ratings</td></tr>
         <tr><td><code>substack</code></td><td>Substack</td><td>Content</td><td>Optional email/password</td><td>Read/search/draft/publish Substack posts</td></tr>
         <tr><td><code>facebook</code></td><td>Facebook</td><td>Content</td><td>OAuth (Facebook Graph)</td><td>View/manage Pages, publish posts</td></tr>
         <tr><td><code>linkedin</code></td><td>LinkedIn</td><td>Content</td><td>OAuth</td><td>View profile, share posts</td></tr>
@@ -204,6 +223,14 @@
         <tr><td><code>scx</code></td><td>SCX AI</td><td>AI provider</td><td>API key</td><td>Powers Aria with SCX models + vector store search</td></tr>
         <tr><td><code>argyll</code></td><td>Argyll Data</td><td>AI provider</td><td>API key</td><td>Powers Aria with Argyll models + vector store search</td></tr>
         <tr><td><code>mistral</code></td><td>Mistral AI</td><td>AI provider</td><td>API key</td><td>Powers Aria with Mistral Large/Small</td></tr>
+        <tr><td><code>openai</code></td><td>OpenAI</td><td>AI provider</td><td>API key</td><td>GPT-4o, GPT-4o-mini, o1 family via chat tools</td></tr>
+        <tr><td><code>deepseek</code></td><td>DeepSeek</td><td>AI provider (China)</td><td>API key</td><td>DeepSeek-V3 chat and DeepSeek-R1 reasoner</td></tr>
+        <tr><td><code>groq</code></td><td>Groq</td><td>AI provider</td><td>API key</td><td>LPU-accelerated inference (Llama, Kimi, and more)</td></tr>
+        <tr><td><code>grok</code></td><td>Grok (xAI)</td><td>AI provider</td><td>API key</td><td>Powers Aria with Grok models</td></tr>
+        <tr><td><code>zai</code></td><td>Z.ai (GLM)</td><td>AI provider (China)</td><td>API key</td><td>Zhipu GLM models</td></tr>
+        <tr><td><code>qwen</code></td><td>Qwen (Alibaba Cloud)</td><td>AI provider (China)</td><td>API key</td><td>Qwen models via Alibaba Cloud DashScope</td></tr>
+        <tr><td><code>moonshot</code></td><td>Moonshot AI (Kimi)</td><td>AI provider (China)</td><td>API key</td><td>Kimi models, incl. Kimi K2 for agentic/long-context work</td></tr>
+        <tr><td><code>aws-bedrock</code></td><td>AWS Bedrock</td><td>AI provider</td><td>API key (Bedrock)</td><td>Bedrock-hosted models in your own AWS account &amp; region (Sydney data residency)</td></tr>
         <tr><td><code>gemini</code></td><td>Google Gemini</td><td>AI provider</td><td>API key</td><td>Powers Aria with Gemini Flash/Pro</td></tr>
         <tr><td><code>anthropic</code></td><td>Anthropic</td><td>AI provider</td><td>API key</td><td>Bring-your-own Anthropic API key for Aria</td></tr>
         <tr><td><code>local-llm</code></td><td>Local LLM</td><td>AI provider</td><td>None (base_url + model)</td><td>Connects Aria to a local Ollama/LM Studio/OpenAI-compatible server</td></tr>
@@ -214,7 +241,22 @@
     </details>
 
     <h2>Tools Exposed Per Connector</h2>
-    <p>Only connectors with non-empty <code>tool_definitions</code> expose callable tools to Aria's tool-use loop. AI-provider connectors configure <em>which model answers</em>, not callable tools, so they have none. See <a href="../connectors.md">connectors.md</a> in the repo root for the full per-connector tool list (Gmail, Substack, BOM, SCX, Argyll, Copilot, Data.gov.au, Facebook, LinkedIn, Defender, Teams, OneDrive, Pega, Power BI, Salesforce, SAP S/4HANA, SAP SuccessFactors, ServiceNow, SharePoint, Stripe, Twilio, USASpending, VirusTotal, Woolworths, Workday, Xero, YouTube, AbuseIPDB, AWS, Amazon Product Search, the seven news connectors — ABC, CNA, Japan Times, Jerusalem Post, NYT, Washington Post, Xinhua — and the generic Microsoft connector).</p>
+    <p>Only connectors with non-empty <code>tool_definitions</code> expose callable tools to Aria's tool-use loop. AI-provider connectors configure <em>which model answers</em>, not callable tools, so they have none. See <a href="../connectors.md">connectors.md</a> in the repo root for the full per-connector tool list (Gmail, Substack, BOM, Open-Meteo, AccuWeather, World Time, WhatsApp, Generic Website, Neo4j, SCX, Argyll, OpenAI, Copilot, Data.gov.au, Facebook, LinkedIn, Defender, Teams, OneDrive, Pega, Power BI, Salesforce, SAP S/4HANA, SAP SuccessFactors, ServiceNow, SharePoint, Stripe, Twilio, USASpending, VirusTotal, Woolworths, Workday, Xero, YouTube, AbuseIPDB, AWS, Amazon Product Search, the news connectors — ABC, CNA, Japan Times, Jerusalem Post, NYT, Washington Post, Xinhua, Ground News — and the generic Microsoft connector). Gmail now supports reading full messages, threaded replies, and drafts, with header-injection defence.</p>
+
+    <h2>Starter Connectors</h2>
+    <p>New accounts are provisioned with a set of no-key starter connectors (news, BOM and Open-Meteo weather, World Time) so Aria is useful before any credentials are configured. Existing accounts were backfilled when starters were introduced.</p>
+
+    <h2>Admin-Added MCP &amp; A2A Connectors</h2>
+    <p>Admins can now register external MCP servers and A2A (agent-to-agent) endpoints as first-class connectors, importing their tool lists into the catalogue:</p>
+    <table>
+      <thead><tr><th>Route</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET/POST /admin/connectors/mcp/add</code></td><td>Register an MCP server as a connector.</td></tr>
+        <tr><td><code>POST /admin/connectors/{connector}/mcp/refresh</code></td><td>Re-import the MCP server's tool list.</td></tr>
+        <tr><td><code>GET/POST /admin/connectors/a2a/add</code></td><td>Register an A2A agent endpoint.</td></tr>
+        <tr><td><code>POST /admin/connectors/{connector}/a2a/refresh</code></td><td>Refresh the agent card.</td></tr>
+      </tbody>
+    </table>
 
     <h2>API Gateway &amp; Keys</h2>
     <p>Connectors are also reachable programmatically over a Bearer-authenticated proxy, unified tool-invocation, and OpenAI-compatible endpoint — without managing upstream OAuth tokens or API keys directly. See the dedicated <a href="api.html">API Gateway</a> page for endpoints, key management, auth resolution, and usage logging.</p>

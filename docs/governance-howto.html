@@ -187,6 +187,16 @@
 
     <hr>
 
+    <h2>Use the Emergency Stop</h2>
+    <p>The org-level emergency stop halts all connector tool traffic at once — Aria, the gateway, MCP, everything.</p>
+    <ol>
+      <li>Go to <code>/admin/policy</code></li>
+      <li>Engage the <strong>Emergency stop</strong> control (its endpoint is the single writer of the flag, and the action is idempotent — engaging it twice is safe)</li>
+    </ol>
+    <p>While engaged, a banner is shown across the admin shell, and affected users are told an org-level emergency stop is active (rather than seeing generic connector errors).</p>
+
+    <hr>
+
     <h2>Set Access Windows</h2>
     <p>Restrict when Aria can be used (e.g., business hours only).</p>
 
@@ -212,7 +222,17 @@
     <p>View your own guardrail events at <code>/dashboard/profile</code> → <strong>Governance</strong> tab (shows recent blocks, injections, warnings).</p>
 
     <h3>As an Admin</h3>
-    <p>View all guardrail activity in <code>ActivityLog</code> (filter by <code>aria.guardrail.*</code> or <code>gateway.guardrail.*</code> actions).</p>
+    <p>Use the <strong>Audit</strong> tab on the Governance page (<code>/admin/policy?tab=audit</code>) for the governance audit trail, or query <code>ActivityLog</code> directly (filter by <code>aria.guardrail.*</code> or <code>gateway.guardrail.*</code> actions).</p>
+
+    <hr>
+
+    <h2>Editing Notes</h2>
+    <ul>
+      <li>Governance applies to <strong>every account</strong> — no plan gating on enforcement.</li>
+      <li>Policy free-text notes accept up to <strong>50,000 characters</strong>.</li>
+      <li>Saving from a governance sub-tab keeps you on that sub-tab.</li>
+      <li>Guardrails (blocked keywords, injection detection, output scanning — including an LLM-based moderation classifier as a second line of defence) are enforced on <strong>all API gateway paths</strong>, not just Aria chat.</li>
+    </ul>
 
     <hr>
 

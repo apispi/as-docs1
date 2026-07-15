@@ -58,9 +58,12 @@
         <tr><td>Token Usage</td><td><code>/admin/token-usage</code></td><td>AI token consumption and connector tool-call activity.</td></tr>
         <tr><td>Governance</td><td><code>/admin/policy</code></td><td>Org-wide AI policy: blocked keywords, daily token limit, connector kill switch.</td></tr>
         <tr><td>AI Firewall</td><td><code>/admin/firewall</code></td><td>PII/prompt-injection detection rules and match log.</td></tr>
-        <tr><td>Sales / Affiliates</td><td><code>/admin/sales?tab=affiliates</code></td><td>Referral conversions and commission payouts.</td></tr>
+        <tr><td>Governance / Audit</td><td><code>/admin/policy?tab=audit</code></td><td>Governance audit log — now a tab on the Governance page (formerly a separate "Gov Audit" nav item).</td></tr>
+        <tr><td>Sales</td><td><code>/admin/sales</code></td><td>Sales hub — <strong>Promos</strong>, <strong>Billing</strong>, <strong>Funnel</strong>, and <strong>Affiliates</strong> are tabs under this section.</td></tr>
+        <tr><td>Active Schedules</td><td><code>/admin/schedules</code></td><td>All user schedules with health stats; pause/resume any schedule.</td></tr>
       </tbody>
     </table>
+    <p>The admin dashboard (<code>/admin</code>) now shows a <strong>system-health card</strong>, and an <strong>org-wide emergency-stop banner</strong> appears across the admin shell whenever the emergency stop is engaged.</p>
     <p>For step-by-step guides on configuring each control, see <a href="governance-howto.html">Governance How-To</a>.</p>
 
     <h2>Token Usage</h2>
@@ -126,6 +129,13 @@
     <p>A separate, pattern-based detector (<code>AiFirewallService::inspectRequest()</code>) scans outbound gateway/connector request bodies for prompt injection and PII (email, credit card, API key patterns).</p>
     <div class="callout"><strong>Detection only:</strong> the firewall never blocks or modifies a request — it logs matches for review and nothing more.</div>
     <p><code>FirewallRule</code> toggles each category on or off, either globally or scoped to a specific connector (a connector-level rule overrides the global one). Every match is recorded in <code>FirewallLog</code> — user, connector, direction, category, and a 200-character snippet — and reviewed in a filterable activity log on the same admin page.</p>
+
+    <h2>Promo Codes</h2>
+    <p>ApiSpi-tracked promo codes (distinct from Stripe coupons) are managed at <code>/admin/promos</code> (CRUD). Users redeem a code on the checkout/payment page (<code>POST /dashboard/checkout/promo</code>); the Stripe button reflects the discounted amount, and redemptions are tracked per code.</p>
+
+    <h2>Trials &amp; Sales Funnel</h2>
+    <p>The free week is a real <strong>7-day trial</strong>: <code>users.trial_ends_at</code> is set on first entry (existing users are grandfathered — a NULL value is never gated), the <code>EnsureTrialActive</code> middleware (<code>trial.gate</code>) blocks expired trialists into the payment flow, and a scheduled <code>SendTrialNudges</code> command emails a reminder before expiry.</p>
+    <p>Instrumentation lives on <strong>Sales → Funnel</strong>: trial cohort stats and a list of soon-expiring trials. Abandoned checkouts are tracked as intents and get a one-time nudge email, with an admin list of abandoned checkouts. Purchase-funnel users are gated to a distraction-free payment page (no sidebar/nav) until paid.</p>
 
     <h2>Affiliate Program</h2>
     <p>Distinct from the formal <a href="partners.html">Partner Program</a> application, every registered user automatically gets a referral code (<code>users.referral_code</code>) and a shareable link: <code>https://apispi.com/register?ref=&lt;code&gt;</code>.</p>

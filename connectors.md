@@ -2,7 +2,7 @@
 
 A full reference of every connector defined in the `connectors` table, how each one authenticates, and which tools it exposes to Aria's tool-use loop. For the conceptual model (data model, OAuth vs API-key, management routes), see [usage.md](usage.md#connectors) and [docs/connectors.html](docs/connectors.html).
 
-Connectors are seeded by `database/seeders/ConnectorSeeder.php` (38 connectors, auto-run) plus ~34 standalone seeder classes (e.g. `php artisan db:seed --class=XeroConnectorSeeder`) that add full `tool_definitions` for specific integrations — some of these override a stub already present in `ConnectorSeeder.php` (matched by `slug` via `updateOrCreate`).
+Connectors are seeded by `database/seeders/ConnectorSeeder.php` (47 connectors, auto-run) plus ~43 standalone seeder classes (e.g. `php artisan db:seed --class=XeroConnectorSeeder`) that add full `tool_definitions` for specific integrations — some of these override a stub already present in `ConnectorSeeder.php` (matched by `slug` via `updateOrCreate`).
 
 ---
 
@@ -62,6 +62,13 @@ Connectors are seeded by `database/seeders/ConnectorSeeder.php` (38 connectors, 
 | `usaspending` | USASpending.gov | Government | None required | Query federal spending/contracts/grants |
 | `datagovau` | Data.gov.au | Government | None required | Search the Australian Government open-data portal |
 | `bom` | BOM Weather | Weather | None required | Australian Bureau of Meteorology observations & forecasts |
+| `open-meteo` | Open-Meteo | Weather | None required | Free global current conditions & multi-day forecasts for any location |
+| `accuweather` | AccuWeather | Weather | API key (free dev key) | Global current conditions & multi-day forecasts for any city |
+| `world-time` | World Time API | Utilities | None required | Accurate current time for any timezone/city, DST-aware |
+| `whatsapp` | WhatsApp | Messaging | API key (Twilio credentials) | Send/receive WhatsApp messages via Twilio, history, templated messages |
+| `generic-website` | Generic Website | Information | None required | Fetch any webpage by URL; keyword search within a site |
+| `neo4j` | Neo4j | Database | Basic/API key | Cypher queries and schema inspection over Neo4j graph data |
+| `ground-news` | Ground News | News & Media | API key (official) | Multi-perspective news with political-bias & factuality ratings |
 | `substack` | Substack | Content | Optional email/password (unofficial API) | Read/search/draft/publish Substack posts |
 | `facebook` | Facebook | Content | OAuth (Facebook Graph) | View/manage Pages, publish posts |
 | `linkedin` | LinkedIn | Content | OAuth | View profile, share posts |
@@ -77,13 +84,21 @@ Connectors are seeded by `database/seeders/ConnectorSeeder.php` (38 connectors, 
 | `scx` | SCX AI | AI provider | API key | Powers Aria with SCX models + vector store search |
 | `argyll` | Argyll Data | AI provider | API key | Powers Aria with Argyll models + vector store search |
 | `mistral` | Mistral AI | AI provider | API key | Powers Aria with Mistral Large/Small |
+| `openai` | OpenAI | AI provider | API key | GPT-4o/o1 family; also exposes chat/vision/embeddings/transcription tools |
+| `deepseek` | DeepSeek | AI provider (China) | API key | DeepSeek-V3 chat and DeepSeek-R1 reasoner |
+| `groq` | Groq | AI provider | API key | LPU-accelerated inference (Llama, Kimi, and more) |
+| `grok` | Grok (xAI) | AI provider | API key | Powers Aria with Grok models |
+| `zai` | Z.ai (GLM) | AI provider (China) | API key | Zhipu GLM models |
+| `qwen` | Qwen (Alibaba Cloud) | AI provider (China) | API key | Qwen models via Alibaba Cloud DashScope |
+| `moonshot` | Moonshot AI (Kimi) | AI provider (China) | API key | Kimi models, incl. Kimi K2 |
+| `aws-bedrock` | AWS Bedrock | AI provider | API key (Bedrock) | Bedrock-hosted models in your own AWS account & region (Sydney data residency) |
 | `gemini` | Google Gemini | AI provider | API key | Powers Aria with Gemini Flash/Pro |
 | `anthropic` | Anthropic | AI provider | API key | Bring-your-own Anthropic API key for Aria |
 | `local-llm` | Local LLM | AI provider | None (base_url + model) | Connects Aria to a local Ollama/LM Studio/OpenAI-compatible server |
 | `custom-chat-api` | Custom Chat API | AI provider | Optional bearer | Bring your own chat API for the dashboard assistant |
 | `aria` | Aria | AI provider / gateway | Optional (`auth_optional: true`) | Branded gateway URL forwarding `/api/gateway/aria/{path}` to your own backend |
 
-> **63 connector slugs** are defined across the seeders. The connectors with "(stub)" next to their auth type have a `config_schema` but no `tool_definitions` yet — they appear in the catalogue but expose no callable tools until implemented.
+> **76 connector slugs** are defined across the seeders. Model-provider connectors carry a `country` field (DeepSeek, Qwen, Z.ai, Moonshot are labelled China) so governance sovereignty rules can allow/block them, and production seeding gives model providers no `tool_definitions`. The connectors with "(stub)" next to their auth type have a `config_schema` but no `tool_definitions` yet — they appear in the catalogue but expose no callable tools until implemented.
 
 ---
 
@@ -102,7 +117,15 @@ Only connectors with non-empty `tool_definitions` expose callable tools to Aria'
 | The New York Times | `nyt_latest_news`, `nyt_search_news` |
 | The Washington Post | `washingtonpost_latest_news`, `washingtonpost_search_news` |
 | Xinhua News | `xinhua_latest_news`, `xinhua_search_news` |
-| Gmail | `gmail_list_messages`, `gmail_search_messages`, `gmail_send_email` |
+| Gmail | `gmail_list_messages`, `gmail_search_messages`, `gmail_read_message`, `gmail_send_email`, `gmail_create_draft` |
+| WhatsApp | `whatsapp_send_message`, `whatsapp_list_messages`, `whatsapp_send_template` |
+| Generic Website | `generic_website_get_page`, `generic_website_search` |
+| World Time API | `worldtime_get_time`, `worldtime_list_timezones` |
+| Open-Meteo | `open_meteo_current_weather`, `open_meteo_forecast` |
+| AccuWeather | `accuweather_current_conditions`, `accuweather_forecast` |
+| Neo4j | `neo4j_query`, `neo4j_schema` |
+| Ground News | `ground_news_search`, `ground_news_top`, `ground_news_blindspot` |
+| OpenAI | `openai_chat`, `openai_vision`, `openai_embeddings`, `openai_audio_transcribe` |
 | Substack | `substack_get_posts`, `substack_search_posts`, `substack_create_draft`, `substack_publish_draft`, `substack_list_drafts` |
 | BOM Weather | `bom_get_observations`, `bom_get_forecast` |
 | SCX AI | `scx_vector_search` |

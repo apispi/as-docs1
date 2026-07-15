@@ -438,6 +438,36 @@ console.log(value.map(m => m.subject));
 
 ---
 
+## MCP Server
+
+The gateway doubles as a **Model Context Protocol server**: `POST /api/gateway/mcp` (`McpController`, JSON-RPC — `initialize`, `tools/list`, `tools/call`). Any MCP client (Claude Desktop/Code, other agents) can connect with a `gw_` Bearer key or an OAuth access token.
+
+OAuth-based MCP clients onboard with zero manual setup:
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /.well-known/oauth-authorization-server` | Authorization-server metadata (static discovery documents) |
+| `GET /.well-known/oauth-protected-resource` | Protected-resource metadata (RFC 9728) |
+| `POST /oauth/register` | Dynamic client registration (RFC 7591) |
+| `GET/POST /oauth/authorize` | User consent (session-authenticated) |
+| `POST /oauth/token` | Token exchange |
+
+A flag-gated wire-log middleware (`McpWireLog`) records the full MCP/OAuth handshake — including handshake 401s — for debugging.
+
+## A2A Endpoint
+
+`POST /api/a2a` plus a published agent card at `/.well-known/agent-card.json` (`A2AController`) let external agents discover and exchange tasks with ApiSpi. Admins can also register external MCP servers and A2A agents as connectors (`/admin/connectors/mcp/add`, `/admin/connectors/a2a/add`).
+
+## Gateway Guardrails
+
+Governance guardrails run on **all** gateway paths (proxy, invoke, OpenAI-compatible, MCP): blocked keywords, prompt-injection detection (`PromptAttackDetector` plus the LLM-based `LlmSecurityClassifier` as a second line of defence), output scanning, and the org-level emergency stop.
+
+## ChatGPT Custom GPT
+
+A public OpenAPI spec (`https://apispi.com/openapi/gpt-actions.json`, "ApiSpi Gateway Actions") exposes `listTools` / `invokeTool` actions over the unified gateway so users can build an "ApiSpi Workspace" Custom GPT in ChatGPT, authenticated with a static gateway key. Setup guide: `docs/chatgpt-custom-gpt.md` in the app repo.
+
+---
+
 ## How Auth is Resolved
 
 The gateway determines upstream authentication based on the connector type:

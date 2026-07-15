@@ -86,6 +86,7 @@
       </tbody>
     </table>
     <p>If no provider is configured, Aria falls back to keyword-matching static responses and shows a notice to connect a provider.</p>
+    <p>Beyond the three core providers, users can power Aria with any bring-your-own model-provider connector — Mistral, OpenAI, DeepSeek, Groq, Grok (xAI), Z.ai, Qwen, Moonshot (Kimi), AWS Bedrock, or a Local LLM. Picking a non-SCX provider routes the request through that connector directly (the dashboard no longer sends a literal model sentinel to SCX for these). Aria remembers the selected model and mode across page loads.</p>
 
     <h3>Model Selection</h3>
     <p>The resolved model follows this hierarchy per provider:</p>
@@ -108,8 +109,10 @@
       </tbody>
     </table>
 
-    <h3>Personalisation</h3>
-    <p>Aria injects user profile data into the system prompt when available: preferred name, job title, industry, organisation, communication style, preferred response length, and custom instructions.</p>
+    <p>When a mode's tool restriction (or a governance control) blocks something, the mode now explains its own limits in the reply rather than surfacing a generic connector error.</p>
+
+    <h3>Personalisation &amp; Grounding</h3>
+    <p>Aria injects user profile data into the system prompt when available: preferred name, job title, industry, organisation, communication style, preferred response length, and custom instructions. The system prompt also grounds Aria in the user's <strong>local date/time and saved profile location</strong>, so "today", "this weekend", and weather/news questions resolve correctly (the Good Morning prompt uses the same localisation).</p>
 
     <h3>Disclosure Handling</h3>
     <p>Aria intercepts self-referential questions and answers directly — bypassing the LLM to ensure accuracy:</p>
@@ -147,7 +150,7 @@
     <div class="callout">The tool <strong>description</strong> is the steering wheel. Connector authors write descriptions like <em>"Always use this tool for current X news — do not answer from training data"</em> to bias selection. The system prompt nudges further — it lists the user's active connectors/agents, the current mode's instruction, and the governance policy text.</div>
 
     <h4>3. The loop executes tool calls and feeds results back</h4>
-    <p>On each iteration: call the model → if <code>stop_reason !== 'tool_use'</code>, return its text answer (done) → otherwise, for each <code>tool_use</code> block, look up the connector by slug in <code>CONNECTOR_TOOL_HANDLERS</code>, run <code>-&gt;execute()</code>, append the result, and loop.</p>
+    <p>On each iteration: call the model → if <code>stop_reason !== 'tool_use'</code>, return its text answer (done) → otherwise, for each <code>tool_use</code> block, look up the connector by slug in <code>CONNECTOR_TOOL_HANDLERS</code>, run <code>-&gt;execute()</code>, append the result, and loop. If the model calls a tool name that doesn't exist, the error result names the valid tools so the model can self-correct on the next iteration instead of failing the request.</p>
 
     <h4>What this means in practice</h4>
     <ul>
@@ -174,6 +177,19 @@
     <p>Input and output tokens are recorded per request in the <code>token_usage</code> table, attributed to the user, provider, and model. Admins can view usage at <code>/admin/token-usage</code>.</p>
 
     <div class="callout">For a <strong>shared, multi-user</strong> Aria conversation visible to a whole team, see <a href="workspaces.html">Workspaces</a> — it reuses the same connector/tool pipeline as Dashboard Aria but is not subject to the keyword guardrail or connector kill switch.</div>
+
+    <h3>Built-in Tools</h3>
+    <p>Built-in tools (in <code>BuiltinTool</code>) are always in the candidate set regardless of connectors:</p>
+    <ul>
+      <li><strong>Document generation</strong> — Word (<code>.docx</code>) and Excel (<code>.xlsx</code>) files, downloadable via <code>GET /dashboard/aria/documents/{filename}</code> (also serves <code>.png</code>/<code>.jpg</code>).</li>
+      <li><strong>Image/graphic generation</strong> — available when the user has an active <strong>Gemini connector</strong>; images are generated with the user's own Gemini key and rendered inline in the chat.</li>
+    </ul>
+
+    <h3>Scheduled Runs in Aria</h3>
+    <p>Results from <strong>My Schedule</strong> (<code>/dashboard/schedule</code> — saved Prompts run on a recurring schedule) surface directly in the Aria chat, badged as <em>scheduled</em>. The frontend polls <code>POST /dashboard/aria/scheduled-results</code> for pending results. Each schedule has its own detail page with a collapsible run history, and schedule times are anchored to the user's saved profile location's timezone (with "Next run" rendered in the schedule's own timezone).</p>
+
+    <h3>Reply Rendering</h3>
+    <p>Bare URLs in Aria replies are auto-linked, so sources (e.g. news links) are clickable.</p>
 
     <hr>
 
