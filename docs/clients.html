@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compatible Clients — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="clients.html" class="nav-link active">Compatible Clients</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Compatible Clients</h1>
+    <p class="page-lead">Every terminal agent, IDE extension, workflow tool, and chat platform that works with the ApiSpi LLM Gateway. The gateway is <strong>OpenAI-compatible</strong>, so anything that lets you set a custom base URL and API key works unmodified — one ApiSpi key instead of per-provider credentials.</p>
+
+    <h2>Connecting Any Client</h2>
+    <p>Two settings, the same for every tool below:</p>
+    <table>
+      <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Base URL</td><td><code>https://apispi.com/api/gateway/v1</code></td></tr>
+        <tr><td>API key</td><td>Your gateway key (<code>gw_…</code>) — create one at <code>/dashboard/profile#api-keys</code></td></tr>
+      </tbody>
+    </table>
+    <p>Requests route through the gateway with your <a href="governance-howto.html">governance</a> applied and usage logged. Model choice follows the <a href="aria.html">model resolution</a> rules; see the <a href="https://apispi.com/models">Model Library</a> for what's available. The live, maintained list with per-client setup guides is at <a href="https://apispi.com/clients">apispi.com/clients</a>.</p>
+
+    <h2>Terminal Agents</h2>
+    <p>CLI-based coding agents — point the base URL at ApiSpi's gateway and the API key at your ApiSpi key.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Claude Code</strong></td><td>AI-powered terminal assistance and coding. Can also connect over <a href="mcp.html">MCP</a> to use your connected ApiSpi tools directly.</td></tr>
+        <tr><td><strong>Codex CLI</strong></td><td>OpenAI's Codex CLI for AI-powered terminal coding.</td></tr>
+        <tr><td><strong>Cline</strong></td><td>AI-powered coding assistance in VS Code.</td></tr>
+        <tr><td><strong>Continue CLI</strong></td><td>Open-source AI code assistant CLI.</td></tr>
+        <tr><td><strong>Hermes Agent</strong></td><td>Nous Research's Hermes Agent for terminal-based AI coding.</td></tr>
+        <tr><td><strong>Kimi Code</strong></td><td>CLI for autonomous terminal-based AI coding.</td></tr>
+        <tr><td><strong>OpenCode</strong></td><td>CLI for AI-powered development workflows.</td></tr>
+        <tr><td><strong>Pi</strong></td><td>Coding agent for AI-powered terminal coding with any model.</td></tr>
+        <tr><td><strong>Autohand Code</strong></td><td>Autonomous AI-powered coding across terminal, IDE, and Slack.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>IDEs &amp; Editor Extensions</h2>
+    <p>Editor-native integrations. Note that some editor features stay on the editor's own backend even when chat/agent requests route through ApiSpi.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cursor</strong></td><td>IDE supporting plan and agent mode; tab autocomplete and inline edit remain on Cursor's own backend.</td></tr>
+        <tr><td><strong>Kilo Code</strong></td><td>VS Code integration for autonomous AI coding with built-in provider support.</td></tr>
+        <tr><td><strong>VS Code</strong> <em>(coming soon)</em></td><td>Native VS Code integration for AI-powered code completion and chat.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Desktop Apps</h2>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OpenCode Desktop</strong></td><td>GUI-based app — no configuration file editing required.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Workflow Automation</h2>
+    <p>Point automation platforms at the gateway to add AI steps to existing workflows.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>n8n</strong></td><td>Workflow automation platform — connect any node to the ApiSpi LLM Gateway.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Chat Platforms</h2>
+    <p>Bring AI chat to where your team already talks.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OpenClaw</strong></td><td>AI-powered chat across Discord, WhatsApp, Telegram, and more.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Beyond OpenAI-Compatible</h2>
+    <p>Clients that speak richer protocols get more than chat completions:</p>
+    <ul>
+      <li><strong>MCP clients</strong> (Claude Desktop, Claude Code, claude.ai custom connectors) — connect to <code>/api/gateway/mcp</code> and call your connected ApiSpi tools directly. See <a href="mcp.html">MCP &amp; A2A</a>.</li>
+      <li><strong>ChatGPT</strong> — a Custom GPT with Actions from <code>/openapi/gpt-actions.json</code>. See <a href="api.html">API Gateway</a>.</li>
+      <li><strong>A2A agents</strong> — task exchange via <code>/api/a2a</code> with discovery through the published agent card.</li>
+    </ul>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="api.html">API Gateway</a> — keys, endpoints, and the full supported-clients matrix</li>
+      <li><a href="mcp.html">MCP &amp; A2A</a> — protocol-level integration</li>
+      <li><a href="https://apispi.com/clients">apispi.com/clients</a> — the live list with per-client setup guides</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>
