@@ -51,10 +51,10 @@
 
   <main class="content">
     <h1 class="page-title">Compatible Clients</h1>
-    <p class="page-lead">Installation guides for every terminal agent, IDE extension, workflow tool, and chat platform that works with the ApiSpi LLM Gateway. The gateway is <strong>OpenAI-compatible</strong>, so anything that lets you set a custom base URL and API key works — one ApiSpi key instead of per-provider credentials.</p>
+    <p class="page-lead">Every terminal agent, IDE extension, workflow tool, and chat platform that works with the ApiSpi LLM Gateway — each with its own installation guide. The gateway is <strong>OpenAI-compatible</strong>, so anything that lets you set a custom base URL and API key works: one ApiSpi key instead of per-provider credentials.</p>
 
     <h2>Connecting Any Client</h2>
-    <p>Every guide below boils down to the same two settings:</p>
+    <p>Every guide boils down to the same two settings:</p>
     <table>
       <thead><tr><th>Setting</th><th>Value</th></tr></thead>
       <tbody>
@@ -65,173 +65,56 @@
     <div class="callout"><strong>Current v1 caveats</strong> (see <a href="api.html">API Gateway</a>): responses are <strong>non-streaming</strong> (clients that hard-require streaming may not work yet), the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported — use chat-completions mode wherever a client offers the choice. Model IDs are case-sensitive; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
 
     <h2>Terminal Agents</h2>
-
-    <h3>Claude Code</h3>
-    <p>No installation needed beyond Claude Code itself — it speaks the Anthropic wire format, so point it at the gateway's Anthropic proxy (your Anthropic key is injected server-side):</p>
-    <pre><code>export ANTHROPIC_BASE_URL=https://apispi.com/api/gateway/anthropic
-export ANTHROPIC_AUTH_TOKEN=gw_your_api_key_here
-export ANTHROPIC_MODEL=claude-sonnet-4-6   # optional
-
-claude</code></pre>
-    <p>Alternatively (or additionally), connect over <a href="mcp.html">MCP</a> so Claude Code can call your connected ApiSpi tools directly:</p>
-    <pre><code>claude mcp add apispi --transport http https://apispi.com/api/gateway/mcp \
-  --header "Authorization: Bearer gw_your_api_key_here"</code></pre>
-
-    <h3>Codex CLI</h3>
-    <p>Log out of any existing session, then point the config at the gateway (<code>~/.codex/config.toml</code>):</p>
-    <pre><code>codex logout</code></pre>
-    <pre><code># ~/.codex/config.toml
-model = "claude-sonnet-4-6"
-openai_base_url = "https://apispi.com/api/gateway/v1"</code></pre>
-    <p>Launch with <code>codex</code>; when prompted, choose <em>Provide your own API key</em> and paste your <code>gw_</code> key.</p>
-    <div class="callout">Codex CLI prefers OpenAI's Responses API, which the ApiSpi gateway does not implement — if your Codex version cannot fall back to chat completions, use another terminal agent from this list.</div>
-
-    <h3>Continue CLI</h3>
-    <pre><code>npm install -g @continuedev/cli
-mkdir -p ~/.continue</code></pre>
-    <pre><code># ~/.continue/config.yaml
-name: apispi
-version: 0.0.13
-models:
-  - name: claude-sonnet-4-6
-    provider: openai          # the gateway is OpenAI-compatible
-    model: claude-sonnet-4-6
-    apiBase: https://apispi.com/api/gateway/v1
-    apiKey: gw_your_api_key_here</code></pre>
-    <pre><code>cn --config ~/.continue/config.yaml</code></pre>
-
-    <h3>Hermes Agent</h3>
-    <pre><code>curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
-source ~/.bashrc && hermes --version
-hermes setup</code></pre>
-    <p>In the wizard choose <strong>Custom OpenAI-compatible endpoint</strong>, enter base URL <code>https://apispi.com/api/gateway/v1</code> and your <code>gw_</code> key, pick a model, and choose a terminal backend. Settings land in <code>~/.hermes/config.yaml</code> (keys in <code>~/.hermes/.env</code>). <code>hermes doctor</code> diagnoses connection issues.</p>
-
-    <h3>Kimi Code</h3>
-    <pre><code># macOS/Linux
-curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash   # or: brew install kimi-code
-# Windows (PowerShell)
-irm https://code.kimi.com/kimi-code/install.ps1 | iex</code></pre>
-    <p>Run <code>kimi</code>, type <code>/provider</code>, and configure a custom OpenAI-type provider — or edit <code>~/.kimi-code/config.toml</code> directly:</p>
-    <pre><code>[providers.apispi]
-type = "openai"
-api_key = "gw_your_api_key_here"
-base_url = "https://apispi.com/api/gateway/v1"</code></pre>
-    <p>Switch models mid-session with <code>/model</code>.</p>
-
-    <h3>OpenCode</h3>
-    <p>Run <code>/providers</code> (or <code>/connect</code>) inside <code>opencode</code> and add the gateway as a custom OpenAI-compatible provider, or configure it in <code>~/.config/opencode/config.json</code>:</p>
-    <pre><code>{
-  "provider": {
-    "apispi": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "ApiSpi Gateway",
-      "options": { "baseURL": "https://apispi.com/api/gateway/v1" },
-      "models": {
-        "claude-sonnet-4-6": { "name": "Claude Sonnet 4.6" }
-      }
-    }
-  }
-}</code></pre>
-    <p>Restart OpenCode after config changes. Also usable from VS Code/Cursor via the OpenCode extension ("Open opencode" in the command palette).</p>
-
-    <h3>Pi</h3>
-    <p>Configure the provider in <code>~/.pi/agent/models.json</code>:</p>
-    <pre><code>{
-  "providers": {
-    "apispi": {
-      "baseUrl": "https://apispi.com/api/gateway/v1",
-      "api": "openai-completions",
-      "apiKey": "gw_your_api_key_here",
-      "models": [
-        { "id": "claude-sonnet-4-6", "name": "Claude Sonnet 4.6" }
-      ]
-    }
-  }
-}</code></pre>
-    <p>To keep the key out of the file, set <code>"apiKey": "APISPI_API_KEY"</code> and <code>export APISPI_API_KEY=gw_…</code>. Run <code>pi</code> in your project and pick the model with <code>/model</code>.</p>
-
-    <h3>Autohand Code</h3>
-    <pre><code>export OPENAI_BASE_URL=https://apispi.com/api/gateway/v1
-export OPENAI_API_KEY=gw_your_api_key_here
-
-autohand</code></pre>
-    <p>With the environment set, all Autohand commands (multi-file editing, agentic search, autonomous generation) work as normal through the gateway.</p>
+    <p>CLI-based coding agents — point the base URL at ApiSpi's gateway and the API key at your ApiSpi key.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="clients/claude-code.html"><strong>Claude Code</strong></a></td><td>AI-powered terminal assistance and coding; connects via the Anthropic proxy and/or <a href="mcp.html">MCP</a>.</td></tr>
+        <tr><td><a href="clients/codex-cli.html"><strong>Codex CLI</strong></a></td><td>OpenAI's Codex CLI for AI-powered terminal coding.</td></tr>
+        <tr><td><a href="clients/continue-cli.html"><strong>Continue CLI</strong></a></td><td>Open-source AI code assistant CLI.</td></tr>
+        <tr><td><a href="clients/hermes-agent.html"><strong>Hermes Agent</strong></a></td><td>Nous Research's Hermes Agent for terminal-based AI coding.</td></tr>
+        <tr><td><a href="clients/kimi-code.html"><strong>Kimi Code</strong></a></td><td>CLI for autonomous terminal-based AI coding.</td></tr>
+        <tr><td><a href="clients/opencode.html"><strong>OpenCode</strong></a></td><td>CLI for AI-powered development workflows.</td></tr>
+        <tr><td><a href="clients/pi.html"><strong>Pi</strong></a></td><td>Coding agent for AI-powered terminal coding with any model.</td></tr>
+        <tr><td><a href="clients/autohand-code.html"><strong>Autohand Code</strong></a></td><td>Autonomous AI-powered coding across terminal, IDE, and Slack.</td></tr>
+      </tbody>
+    </table>
 
     <h2>IDEs &amp; Editor Extensions</h2>
-
-    <h3>Cursor</h3>
-    <ol>
-      <li>Cursor → Settings → <strong>Cursor Settings</strong> → <strong>Models</strong></li>
-      <li><strong>Add OpenAI API Key</strong> → paste your <code>gw_</code> key</li>
-      <li>Enable <strong>Override OpenAI Base URL</strong> → <code>https://apispi.com/api/gateway/v1</code></li>
-    </ol>
-    <div class="callout">Only the AI panel (plan mode) and Agent-mode edits route through the gateway. <strong>Inline Edit (Cmd/Ctrl+K) and tab autocomplete stay on Cursor's own backend</strong> — use Claude Code, Cline, or Continue if you need every request governed.</div>
-
-    <h3>Cline</h3>
-    <ol>
-      <li>VS Code → Extensions → search <strong>Cline</strong> → Install</li>
-      <li>Cline panel → gear icon → API Provider: <strong>OpenAI Compatible</strong></li>
-      <li>Base URL <code>https://apispi.com/api/gateway/v1</code>, API key <code>gw_…</code>, Model ID e.g. <code>claude-sonnet-4-6</code></li>
-    </ol>
-    <p>Verify with a request like "Create a hello world function in Python" — Cline should respond and offer to create the file.</p>
-
-    <h3>Kilo Code</h3>
-    <ol>
-      <li>VS Code (or any VS Code-based editor) → Extensions → search <strong>Kilo Code</strong> → Install</li>
-      <li>Kilo Code sidebar icon → Settings → <strong>Providers</strong></li>
-      <li>Add an OpenAI-compatible provider with the gateway base URL and your <code>gw_</code> key</li>
-      <li>Pick the model from the picker at the bottom of the chat panel</li>
-    </ol>
-
-    <h3>VS Code (native) <em>— coming soon</em></h3>
-    <p>Native VS Code completion/chat integration is on the roadmap; use Cline, Kilo Code, or the OpenCode extension in the meantime.</p>
+    <p>Editor-native integrations. Some editor features stay on the editor's own backend even when chat/agent requests route through ApiSpi.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="clients/cursor.html"><strong>Cursor</strong></a></td><td>Plan and agent mode via the gateway; tab autocomplete and inline edit remain on Cursor's own backend.</td></tr>
+        <tr><td><a href="clients/cline.html"><strong>Cline</strong></a></td><td>AI-powered coding assistance in VS Code.</td></tr>
+        <tr><td><a href="clients/kilo-code.html"><strong>Kilo Code</strong></a></td><td>VS Code integration for autonomous AI coding.</td></tr>
+        <tr><td><strong>VS Code</strong> <em>(coming soon)</em></td><td>Native integration for AI-powered code completion and chat.</td></tr>
+      </tbody>
+    </table>
 
     <h2>Desktop Apps</h2>
-
-    <h3>OpenCode Desktop</h3>
-    <ol>
-      <li>Download from <a href="https://opencode.ai/download">opencode.ai/download</a> (or <code>brew install --cask opencode-desktop</code>)</li>
-      <li>Sidebar → <strong>Server → Providers</strong> → <strong>+ Connect</strong> → add a custom OpenAI-compatible provider with the gateway base URL</li>
-      <li>Paste your <code>gw_</code> key and continue</li>
-      <li>Pick a model from the chat input bar's model picker and start chatting — no config files needed</li>
-    </ol>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="clients/opencode-desktop.html"><strong>OpenCode Desktop</strong></a></td><td>GUI-based app — no configuration file editing required.</td></tr>
+      </tbody>
+    </table>
 
     <h2>Workflow Automation</h2>
-
-    <h3>n8n</h3>
-    <ol>
-      <li>n8n → <strong>Settings → Credentials → Add Credential → OpenAI</strong></li>
-      <li>API Key: your <code>gw_</code> key · Base URL: <code>https://apispi.com/api/gateway/v1</code> · Organization ID: leave blank</li>
-      <li>Add an <strong>AI Agent</strong> node, connect a <strong>Chat Model</strong> edge, and select the credential</li>
-      <li><strong>Toggle off the Responses API</strong> on the model node — the gateway supports chat completions only</li>
-    </ol>
-    <p>Run the workflow with a test prompt to verify.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="clients/n8n.html"><strong>n8n</strong></a></td><td>Workflow automation platform — connect any node to the ApiSpi LLM Gateway.</td></tr>
+      </tbody>
+    </table>
 
     <h2>Chat Platforms</h2>
-
-    <h3>OpenClaw</h3>
-    <pre><code>export APISPI_API_KEY=gw_your_api_key_here</code></pre>
-    <p>Add the gateway as a custom provider in <code>~/.openclaw/openclaw.json</code>:</p>
-    <pre><code>{
-  "models": {
-    "mode": "merge",
-    "providers": {
-      "apispi": {
-        "baseUrl": "https://apispi.com/api/gateway/v1",
-        "apiKey": "${APISPI_API_KEY}",
-        "api": "openai-completions",
-        "models": [
-          { "id": "claude-sonnet-4-6", "name": "Claude Sonnet 4.6",
-            "contextWindow": 200000, "maxTokens": 8192 }
-        ]
-      }
-    }
-  },
-  "agents": {
-    "defaults": { "model": { "primary": "apispi/claude-sonnet-4-6" } }
-  }
-}</code></pre>
-    <p>Reference models as <code>apispi/&lt;model-id&gt;</code>. OpenClaw then answers across Discord, WhatsApp, Telegram, and more — governed and logged by ApiSpi.</p>
+    <table>
+      <thead><tr><th>Client</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="clients/openclaw.html"><strong>OpenClaw</strong></a></td><td>AI-powered chat across Discord, WhatsApp, Telegram, and more.</td></tr>
+      </tbody>
+    </table>
 
     <h2>Beyond OpenAI-Compatible</h2>
     <p>Clients that speak richer protocols get more than chat completions:</p>

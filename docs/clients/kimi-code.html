@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kimi Code — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../../index.html" class="nav-link">Home</a>
+      <a href="../overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="../agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="../skills.html" class="nav-link">Skills</a>
+      <a href="../aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="../connectors.html" class="nav-link">Connectors</a>
+      <a href="../workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="../api.html" class="nav-link">API Gateway</a>
+      <a href="../mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="../clients.html" class="nav-link active">Compatible Clients</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="../training.html" class="nav-link">Training Courses</a>
+      <a href="../partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="../governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <p><a href="../clients.html">&larr; All compatible clients</a></p>
+    <h1 class="page-title">Kimi Code</h1>
+    <p class="page-lead">CLI for autonomous terminal-based AI coding, configured via /provider or a TOML file.</p>
+
+    <h2>Gateway Settings</h2>
+    <table>
+      <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Base URL</td><td><code>https://apispi.com/api/gateway/v1</code></td></tr>
+        <tr><td>API key</td><td>Your gateway key (<code>gw_&hellip;</code>) &mdash; create one at <code>/dashboard/profile#api-keys</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Installation</h2>
+    <pre><code># macOS/Linux
+curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash   # or: brew install kimi-code
+# Windows (PowerShell)
+irm https://code.kimi.com/kimi-code/install.ps1 | iex
+
+kimi --version</code></pre>
+
+    <h2>Configuration</h2>
+    <p>Run <code>kimi</code>, type <code>/provider</code>, and configure a custom OpenAI-type provider &mdash; or edit <code>~/.kimi-code/config.toml</code> directly:</p>
+    <pre><code>[providers.apispi]
+type = "openai"
+api_key = "gw_your_api_key_here"
+base_url = "https://apispi.com/api/gateway/v1"</code></pre>
+    <p>Switch models mid-session with <code>/model</code>.</p>
+
+    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="../api.html">API Gateway</a>): responses are <strong>non-streaming</strong>, the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported. Model IDs are case-sensitive &mdash; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="../clients.html">All compatible clients</a></li>
+      <li><a href="../api.html">API Gateway</a> &mdash; keys, endpoints, limitations</li>
+      <li><a href="../mcp.html">MCP &amp; A2A</a> &mdash; protocol-level integration</li>
+      <li><a href="https://apispi.com/models">apispi.com/models</a> &mdash; model IDs and pricing</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>

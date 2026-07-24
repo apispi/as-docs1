@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../../index.html" class="nav-link">Home</a>
+      <a href="../overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="../agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="../skills.html" class="nav-link">Skills</a>
+      <a href="../aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="../connectors.html" class="nav-link">Connectors</a>
+      <a href="../workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="../api.html" class="nav-link">API Gateway</a>
+      <a href="../mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="../clients.html" class="nav-link active">Compatible Clients</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="../training.html" class="nav-link">Training Courses</a>
+      <a href="../partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="../governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <p><a href="../clients.html">&larr; All compatible clients</a></p>
+    <h1 class="page-title">Claude Code</h1>
+    <p class="page-lead">AI-powered terminal assistance and coding — connects to the ApiSpi gateway two ways: the Anthropic proxy for chat, and MCP for your connected tools.</p>
+
+    <h2>Gateway Settings</h2>
+    <table>
+      <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Base URL</td><td><code>https://apispi.com/api/gateway/v1</code></td></tr>
+        <tr><td>API key</td><td>Your gateway key (<code>gw_&hellip;</code>) &mdash; create one at <code>/dashboard/profile#api-keys</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Setup (Anthropic proxy)</h2>
+    <p>No installation needed beyond Claude Code itself &mdash; it speaks the Anthropic wire format, so point it at the gateway's Anthropic proxy (your Anthropic key is injected server-side):</p>
+    <pre><code>export ANTHROPIC_BASE_URL=https://apispi.com/api/gateway/anthropic
+export ANTHROPIC_AUTH_TOKEN=gw_your_api_key_here
+export ANTHROPIC_MODEL=claude-sonnet-4-6   # optional
+
+claude</code></pre>
+
+    <h2>Setup (MCP — connected tools)</h2>
+    <p>Alternatively (or additionally), connect over <a href="../mcp.html">MCP</a> so Claude Code can call your connected ApiSpi tools directly:</p>
+    <pre><code>claude mcp add apispi --transport http https://apispi.com/api/gateway/mcp \
+  --header "Authorization: Bearer gw_your_api_key_here"</code></pre>
+
+    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="../api.html">API Gateway</a>): responses are <strong>non-streaming</strong>, the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported. Model IDs are case-sensitive &mdash; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="../clients.html">All compatible clients</a></li>
+      <li><a href="../api.html">API Gateway</a> &mdash; keys, endpoints, limitations</li>
+      <li><a href="../mcp.html">MCP &amp; A2A</a> &mdash; protocol-level integration</li>
+      <li><a href="https://apispi.com/models">apispi.com/models</a> &mdash; model IDs and pricing</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>
