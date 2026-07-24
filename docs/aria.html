@@ -98,6 +98,30 @@
       <li>Platform default (<code>claude-sonnet-4-6</code> for Anthropic, <code>gemini-2.0-flash</code> for Gemini, <code>default</code> for SCX).</li>
     </ol>
 
+    <h3>Available Models</h3>
+    <p>The model picker (shared by Aria and the My Schedule creation form via <code>AvailableModelsResolver</code>) is built from the user's active connectors plus any platform-key fallback. Anthropic and Gemini expose a fixed model list; every other provider surfaces as a single entry using the model configured on the connector, falling back to the provider default below (<code>AiProviderResolver</code>):</p>
+    <table>
+      <thead><tr><th>Provider</th><th>Picker models / default</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Anthropic</td><td>Claude Sonnet 4.6 · Claude Opus 4.8 · Claude Haiku 4.5</td><td>Fixed three-model list; also the platform fallback when no provider is connected.</td></tr>
+        <tr><td>Google Gemini</td><td>Gemini 2.0 Flash · Gemini 2.0 Flash Lite · Gemini 1.5 Pro</td><td>Fixed three-model list.</td></tr>
+        <tr><td>SCX AI</td><td>Connector's model list, else platform list (default <code>gpt-4o</code>)</td><td>Multiple configured models each appear as their own pick, namespaced <code>scx:&lt;model&gt;</code> so routing always targets SCX.</td></tr>
+        <tr><td>Argyll Data</td><td>Configured model (default <code>gpt-4o</code>)</td><td></td></tr>
+        <tr><td>Mistral AI</td><td>Configured model (default <code>mistral-large-latest</code>)</td><td></td></tr>
+        <tr><td>OpenAI</td><td>Configured model (default <code>gpt-4o</code>)</td><td>Config field is <code>default_model</code>, unlike the other providers' <code>model</code>.</td></tr>
+        <tr><td>DeepSeek</td><td>Configured model (default <code>deepseek-chat</code>)</td><td><code>deepseek-reasoner</code> (R1) also supported.</td></tr>
+        <tr><td>Groq</td><td>Configured model (default <code>llama-3.3-70b-versatile</code>)</td><td></td></tr>
+        <tr><td>Grok (xAI)</td><td>Configured model (default <code>grok-4-latest</code>)</td><td></td></tr>
+        <tr><td>Z.ai (GLM)</td><td>Configured model (default <code>glm-4.6</code>)</td><td></td></tr>
+        <tr><td>Qwen (Alibaba Cloud)</td><td>Configured model (default <code>qwen-plus</code>)</td><td></td></tr>
+        <tr><td>Moonshot AI (Kimi)</td><td>Configured model (default <code>kimi-latest</code>)</td><td></td></tr>
+        <tr><td>AWS Bedrock</td><td>Configured model (default <code>openai.gpt-oss-120b-1:0</code>)</td><td>Endpoint is region-templated; defaults to <code>ap-southeast-2</code> (Sydney).</td></tr>
+        <tr><td>Local LLM</td><td>Connector's configured model</td><td>Shown as "Local LLM — &lt;model&gt;".</td></tr>
+      </tbody>
+    </table>
+    <p>Ordering in the picker: Local LLM, then SCX (user key or platform key when the user can draw from the Token Bank), Argyll and the other bring-your-own providers, then Gemini, then Anthropic.</p>
+    <p>A public, admin-curated <strong>Model Library</strong> lives at <a href="https://apispi.com/models">apispi.com/models</a> — grouped into <em>Native Routing</em> (Anthropic, Gemini), <em>OpenAI-Compatible Engines</em> (SCX, Argyll, Mistral, DeepSeek, Groq, Grok, OpenAI, Z.ai, Qwen, Moonshot, AWS Bedrock), and <em>Bring Your Own / Self-Hosted</em> (Local LLM, Custom Chat API) — with a per-model detail page at <code>/models/{slug}</code> and a single searchable, sortable price list at <a href="https://apispi.com/models/pricing">/models/pricing</a>.</p>
+
     <h3>Modes</h3>
     <table>
       <thead><tr><th>Mode</th><th>Icon</th><th>Description</th><th>Model Override</th><th>Tools Restricted To</th></tr></thead>

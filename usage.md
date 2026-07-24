@@ -241,6 +241,27 @@ Aria uses the AI provider connected via **My Connectors**. The priority order is
 
 If no provider is connected, Aria runs in basic mode using the built-in keyword classifier and shows a notice explaining how to enable full AI responses.
 
+Beyond those three, any bring-your-own model-provider connector can power Aria and appears in the model picker (shared with the My Schedule form). Each uses the model configured on the connector, or the provider default:
+
+| Provider | Picker models / default |
+|---|---|
+| Anthropic | Claude Sonnet 4.6 · Claude Opus 4.8 · Claude Haiku 4.5 (fixed list) |
+| Google Gemini | Gemini 2.0 Flash · 2.0 Flash Lite · 1.5 Pro (fixed list) |
+| SCX AI | Connector/platform model list (default `gpt-4o`); multiple models each appear as `scx:<model>` |
+| Argyll Data | default `gpt-4o` |
+| Mistral AI | default `mistral-large-latest` |
+| OpenAI | default `gpt-4o` |
+| DeepSeek | default `deepseek-chat` (`deepseek-reasoner` supported) |
+| Groq | default `llama-3.3-70b-versatile` |
+| Grok (xAI) | default `grok-4-latest` |
+| Z.ai (GLM) | default `glm-4.6` |
+| Qwen (Alibaba Cloud) | default `qwen-plus` |
+| Moonshot AI (Kimi) | default `kimi-latest` |
+| AWS Bedrock | default `openai.gpt-oss-120b-1:0` (region defaults to Sydney, `ap-southeast-2`) |
+| Local LLM | the model configured on the connector |
+
+Browse the public **Model Library** at [apispi.com/models](https://apispi.com/models) (per-model pages at `/models/{slug}`, searchable price list at `/models/pricing`), and the **Compatible Clients** list — terminal agents, IDE extensions, workflow tools, and chat platforms that work with the gateway — at [apispi.com/clients](https://apispi.com/clients).
+
 **Transparency:** Aria will honestly answer questions about which provider, model, and mode she is currently running — ask "What model are you using?" or "What's your current configuration?" at any time.
 
 ---

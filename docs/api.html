@@ -322,6 +322,21 @@ console.log(resp.choices[0].message.content);</code></pre>
       <strong>v1 limitations:</strong> non-streaming only (<code>stream:true</code> rejected) · model maps to Anthropic — non-<code>claude-*</code> models fall back to the platform default · client-supplied tools are ignored in favour of your connectors · <code>max_tokens</code> is fixed at 1024 · errors always render as JSON regardless of <code>Accept</code> header.
     </div>
 
+    <h2>Supported Clients</h2>
+    <p>All the ways to consume your ApiSpi workspace from outside the dashboard — pick whichever matches your tooling:</p>
+    <table>
+      <thead><tr><th>Client</th><th>Endpoint</th><th>Auth</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Any HTTP client (curl, Postman, your code)</td><td><code>/api/gateway/{slug}/{path}</code>, <code>/api/gateway/tools</code> + <code>/invoke</code></td><td><code>gw_</code> key</td><td>Raw proxy or unified tool discovery/invoke — examples above.</td></tr>
+        <tr><td>OpenAI SDKs (Python, JS) and any OpenAI-compatible app</td><td><code>/api/gateway/v1</code> as <code>base_url</code></td><td><code>gw_</code> key as <code>api_key</code></td><td>Chat completions run through Aria's agentic engine with your connectors as tools.</td></tr>
+        <tr><td>Off-the-shelf coding agents, IDEs &amp; workflow tools</td><td><code>/api/gateway/v1</code> as custom base URL</td><td><code>gw_</code> key</td><td>Anything with a custom base-URL/API-key setting works unmodified — Claude Code, Codex CLI, Cline, Continue CLI, Hermes Agent, Kimi Code, OpenCode, Pi, Autohand Code, Cursor, Kilo Code, VS Code, n8n, OpenClaw, and more. Full list with setup notes: <a href="https://apispi.com/clients">apispi.com/clients</a>.</td></tr>
+        <tr><td>Claude Code</td><td><code>/api/gateway/mcp</code></td><td><code>gw_</code> key header</td><td><code>claude mcp add apispi --transport http …</code> — see <a href="mcp.html">MCP &amp; A2A</a>.</td></tr>
+        <tr><td>Claude Desktop / claude.ai custom connector</td><td><code>/api/gateway/mcp</code></td><td>OAuth (automatic)</td><td>Discovery + dynamic registration + PKCE consent, no manual config.</td></tr>
+        <tr><td>ChatGPT Custom GPT</td><td>Actions from <code>/openapi/gpt-actions.json</code></td><td><code>gw_</code> key (static)</td><td><code>listTools</code>/<code>invokeTool</code> actions over the unified gateway.</td></tr>
+        <tr><td>External A2A agents</td><td><code>/api/a2a</code></td><td>Bearer</td><td>Discover ApiSpi via <code>/.well-known/agent-card.json</code>.</td></tr>
+      </tbody>
+    </table>
+
     <h2>MCP Server &amp; A2A</h2>
     <pre><code>POST https://apispi.com/api/gateway/mcp
 POST https://apispi.com/api/a2a</code></pre>

@@ -438,6 +438,20 @@ console.log(value.map(m => m.subject));
 
 ---
 
+## Supported Clients
+
+| Client | Endpoint | Auth | Notes |
+|---|---|---|---|
+| Any HTTP client | `/api/gateway/{slug}/{path}`, `/api/gateway/tools` + `/invoke` | `gw_` key | Raw proxy or unified discovery/invoke |
+| OpenAI SDKs / OpenAI-compatible apps | `/api/gateway/v1` as `base_url` | `gw_` key as `api_key` | Chat completions run through Aria's agentic engine with your connectors as tools |
+| Coding agents, IDEs & workflow tools | `/api/gateway/v1` as custom base URL | `gw_` key | Anything with a custom base-URL setting works unmodified (Claude Code, Codex CLI, Cline, Cursor, VS Code, n8n, …) — full list at [apispi.com/clients](https://apispi.com/clients) |
+| Claude Code | `/api/gateway/mcp` | `gw_` key header | `claude mcp add apispi --transport http …` |
+| Claude Desktop / claude.ai connector | `/api/gateway/mcp` | OAuth (automatic) | Discovery + RFC 7591 registration + PKCE consent |
+| ChatGPT Custom GPT | Actions from `/openapi/gpt-actions.json` | `gw_` key (static) | `listTools`/`invokeTool` over the unified gateway |
+| External A2A agents | `/api/a2a` | Bearer | Agent card at `/.well-known/agent-card.json` |
+
+---
+
 ## MCP Server
 
 The gateway doubles as a **Model Context Protocol server**: `POST /api/gateway/mcp` (`McpController`) — a stateless Streamable HTTP server speaking JSON-RPC 2.0 (`initialize`, `tools/list`, `tools/call`, `ping`; notifications get an empty 202; batch arrays are rejected). Protocol revisions `2025-06-18`, `2025-03-26`, `2024-11-05` are negotiated in `initialize`. It exposes the same governance-filtered tool set as the unified gateway and Aria's tool loop; `tools/call` returns a JSON text block plus `structuredContent`, with `isError` on failures, and governed tools may return `approval_required`. Any MCP client (Claude Desktop/Code, other agents) can connect with a `gw_` Bearer key or an OAuth access token (the issued access token *is* a gateway key).
