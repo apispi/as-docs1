@@ -65,25 +65,8 @@
 
     <h2>Recommended Network Placement</h2>
     <p>The appliance sits in its own <strong>DMZ / AI-services zone</strong> (a screened subnet) between the internal and perimeter firewalls:</p>
-    <pre><code>┌─ CORPORATE NETWORK ─────────┐  ┌─ DMZ / AI SERVICES ZONE ──┐  ┌─ INTERNET ──────────────────┐
-│  (trusted zone)             │  │  (screened subnet)        │  │  (untrusted zone)           │
-│                             │  │                           │  │                             │
-│  Employees & workstations ──┼──┼─▶ ┌───────────────────┐   │  │   LLM providers             │
-│  (copilots, chat UI,        │ I│  │  ApiSpi APPLIANCE  ├───┼──┼─▶ Anthropic · OpenAI ·      │
-│   browser plugins)          │ N│  │                    │TLS│ P│   Azure OpenAI · Google     │
-│                             │ T│  │ · LLM gateway      │443│ E│   (allow-listed only)       │
-│  Business applications ─────┼─E┼─▶│ · Policy/guardrails│   │ R│                             │
-│  (CRM, ERP, service desk)   │ R│  │ · DLP/PII redaction├───┼─I┼─▶ SaaS connectors           │
-│                             │ N│  │ · Model routing    │   │ M│   M365, Salesforce, Slack   │
-│  Data centre / file servers─┼─A┼─▶│ · Audit logging    │   │ E│                             │
-│  (sources agents act on)    │ L│  └────────┬───▲───────┘   │ T│   Remote / mobile users     │
-│                             │  │           │   └───────────┼─E┼── via VPN / ZTNA back       │
-│  Identity provider ◀┄┄┄┄┄┄┄┄┼─F┼┄ SSO/RBAC │               │ R│   to ApiSpi                 │
-│  (AD / Entra ID)            │ W│           ▼               │  │                             │
-│                             │  │   Secure web proxy / WAF  │ F│  ✕ Direct egress to AI APIs │
-│  SIEM / SOC ◀┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┼──┼┄ audit logs (existing egress   │    blocked at perimeter   │
-│                             │  │            controls, unchanged)│                           │
-└─────────────────────────────┘  └───────────────────────────┘  └─────────────────────────────┘</code></pre>
+    <p><a href="appliance/ApiSpi%20-%20On-Prem%20-%20Network%20Placement.pdf"><img src="appliance/network-placement.png" alt="ApiSpi Appliance recommended network placement: corporate network (workstations, business apps, file servers, identity provider, SIEM) connects through the internal firewall to the ApiSpi appliance in a DMZ/AI-services zone; the perimeter firewall allows only the appliance out to allow-listed LLM providers and SaaS connectors on TLS 443, with direct egress to AI APIs blocked; remote users come back in via VPN/ZTNA" style="max-width:100%;height:auto;border:1px solid #e2e2e2;border-radius:6px;"></a></p>
+    <p><em>Click the diagram for the full-resolution PDF (PPTX also available under <a href="#downloads">Downloads</a>).</em></p>
 
     <h3>Zones &amp; Components</h3>
     <table>
@@ -138,7 +121,7 @@
     <h2>Getting the Appliance</h2>
     <p>The On-Prem Appliance is one of the two LLM Gateway deployment modes (alongside SaaS — see the <a href="overview.html">Platform Overview</a>). Register interest on the <a href="https://apispi.com/llm-gateway">LLM Gateway page</a>; the ApiSpi team will follow up on sizing, provider allow-lists, and identity/SIEM integration for your environment.</p>
 
-    <h2>Downloads</h2>
+    <h2 id="downloads">Downloads</h2>
     <p>Shareable versions of this design, suitable for architecture and security review boards:</p>
     <table>
       <thead><tr><th>Document</th><th>Formats</th></tr></thead>
