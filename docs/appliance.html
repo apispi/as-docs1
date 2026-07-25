@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On-Prem Appliance — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">API Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="clients.html" class="nav-link">Compatible Clients</a>
+      <a href="appliance.html" class="nav-link active">On-Prem Appliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">On-Prem Appliance</h1>
+    <p class="page-lead">The ApiSpi Appliance is the self-hosted deployment mode of the <a href="api.html">LLM Gateway</a>: a governed AI gateway placed in your own network as the <strong>single enforced choke point</strong> for all LLM and agent traffic, with direct egress to AI providers blocked at the perimeter.</p>
+
+    <h2>What the Appliance Provides</h2>
+    <ul>
+      <li><strong>LLM gateway</strong> — OpenAI-compatible, so existing tools and <a href="clients.html">compatible clients</a> work unmodified</li>
+      <li><strong>Policy, guardrails &amp; governance</strong> — the same controls as the SaaS platform (see <a href="governance-howto.html">Governance How-To</a>)</li>
+      <li><strong>DLP / PII redaction</strong> on prompts and responses</li>
+      <li><strong>Model routing &amp; cost control</strong> across allow-listed providers</li>
+      <li><strong>Full audit logging</strong> of prompts and responses, streamed to your SIEM</li>
+    </ul>
+
+    <h2>Recommended Network Placement</h2>
+    <p>The appliance sits in its own <strong>DMZ / AI-services zone</strong> (a screened subnet) between the internal and perimeter firewalls:</p>
+    <pre><code>┌─ CORPORATE NETWORK ─────────┐  ┌─ DMZ / AI SERVICES ZONE ──┐  ┌─ INTERNET ──────────────────┐
+│  (trusted zone)             │  │  (screened subnet)        │  │  (untrusted zone)           │
+│                             │  │                           │  │                             │
+│  Employees & workstations ──┼──┼─▶ ┌───────────────────┐   │  │   LLM providers             │
+│  (copilots, chat UI,        │ I│  │  ApiSpi APPLIANCE  ├───┼──┼─▶ Anthropic · OpenAI ·      │
+│   browser plugins)          │ N│  │                    │TLS│ P│   Azure OpenAI · Google     │
+│                             │ T│  │ · LLM gateway      │443│ E│   (allow-listed only)       │
+│  Business applications ─────┼─E┼─▶│ · Policy/guardrails│   │ R│                             │
+│  (CRM, ERP, service desk)   │ R│  │ · DLP/PII redaction├───┼─I┼─▶ SaaS connectors           │
+│                             │ N│  │ · Model routing    │   │ M│   M365, Salesforce, Slack   │
+│  Data centre / file servers─┼─A┼─▶│ · Audit logging    │   │ E│                             │
+│  (sources agents act on)    │ L│  └────────┬───▲───────┘   │ T│   Remote / mobile users     │
+│                             │  │           │   └───────────┼─E┼── via VPN / ZTNA back       │
+│  Identity provider ◀┄┄┄┄┄┄┄┄┼─F┼┄ SSO/RBAC │               │ R│   to ApiSpi                 │
+│  (AD / Entra ID)            │ W│           ▼               │  │                             │
+│                             │  │   Secure web proxy / WAF  │ F│  ✕ Direct egress to AI APIs │
+│  SIEM / SOC ◀┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┼──┼┄ audit logs (existing egress   │    blocked at perimeter   │
+│                             │  │            controls, unchanged)│                           │
+└─────────────────────────────┘  └───────────────────────────┘  └─────────────────────────────┘</code></pre>
+
+    <h3>Zones &amp; Components</h3>
+    <table>
+      <thead><tr><th>Zone</th><th>Components</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Corporate network</strong><br>(trusted)</td>
+          <td>Employees &amp; workstations (copilots, chat UI, browser plugins) · Business applications (CRM, ERP, service desk calling AI APIs) · Data centre / file servers · Identity provider (AD / Entra ID) · SIEM / SOC</td>
+          <td>All AI consumers, the data sources agents read and act on (governed), and the control plane the appliance integrates with.</td>
+        </tr>
+        <tr>
+          <td><strong>DMZ / AI services zone</strong><br>(screened subnet)</td>
+          <td>ApiSpi Appliance · Secure web proxy / WAF (existing egress controls, unchanged)</td>
+          <td>The appliance is the single choke point for all AI traffic; it slots in beside your existing egress controls without replacing them.</td>
+        </tr>
+        <tr>
+          <td><strong>Internet</strong><br>(untrusted)</td>
+          <td>LLM providers (Anthropic, OpenAI, Azure OpenAI, Google — allow-listed endpoints only) · SaaS connectors (M365, Salesforce, Slack — agent actions) · Remote / mobile users</td>
+          <td>Only the appliance may reach provider endpoints; remote users come back in over VPN/ZTNA rather than around the controls.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Firewall Rules</h3>
+    <table>
+      <thead><tr><th>Firewall</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Internal firewall</strong></td><td>Permit <em>only corporate subnets</em> → appliance, on its gateway port. Nothing else crosses into the AI zone.</td></tr>
+        <tr><td><strong>Perimeter firewall</strong></td><td>Permit <em>only the appliance</em> → allow-listed AI provider endpoints on TCP 443. <strong>Deny AI API destinations for everything else</strong> — direct egress to AI providers is blocked for all other hosts.</td></tr>
+      </tbody>
+    </table>
+    <p>Together these rules make ApiSpi the single enforced choke point: no workstation, server, or application can talk to an LLM provider except through the governed gateway.</p>
+
+    <h2>Why This Placement</h2>
+    <ul>
+      <li><strong>DMZ / screened subnet, dual-firewall.</strong> The appliance sits in its own AI-services zone between the internal and perimeter firewalls, so both directions of AI traffic are explicitly permitted rather than implicitly possible.</li>
+      <li><strong>Control-plane integration stays internal.</strong> The appliance authenticates users against your identity provider — SSO/RBAC decides <em>who may use which models and agents</em> — and streams full prompt/response audit logs to the SIEM, supporting <strong>Essential Eight, ISM and PSPF</strong>-aligned governance without exposing internal systems to the internet.</li>
+      <li><strong>Remote users come back in, not around.</strong> VPN/ZTNA users reach the appliance the same way office users do, so policy, DLP and logging apply everywhere.</li>
+      <li><strong>Cloud workloads follow the same rule.</strong> If you later add cloud workloads, point them at the same appliance (or a cloud-hosted replica) rather than letting them call providers directly.</li>
+    </ul>
+
+    <h2>Traffic Types</h2>
+    <table>
+      <thead><tr><th>Path</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>AI / agent traffic</td><td>Everything model- or agent-bound, always via the appliance (solid paths in the diagram).</td></tr>
+        <tr><td>Control plane</td><td>Identity (SSO/RBAC) and audit-log streaming — internal-only, dashed paths.</td></tr>
+        <tr><td>Blocked path</td><td>Any host other than the appliance attempting to reach an AI API — denied at the perimeter firewall.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Getting the Appliance</h2>
+    <p>The On-Prem Appliance is one of the two LLM Gateway deployment modes (alongside SaaS — see the <a href="overview.html">Platform Overview</a>). Register interest on the <a href="https://apispi.com/llm-gateway">LLM Gateway page</a>; the ApiSpi team will follow up on sizing, provider allow-lists, and identity/SIEM integration for your environment.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="api.html">API Gateway</a> — the gateway endpoints the appliance exposes</li>
+      <li><a href="clients.html">Compatible Clients</a> — tools that work against the gateway unmodified</li>
+      <li><a href="governance-howto.html">Governance How-To</a> — the controls enforced at the choke point</li>
+    </ul>
+  </main>
+</div>
+
+</body>
+</html>
