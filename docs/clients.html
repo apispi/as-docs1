@@ -63,6 +63,7 @@
         <tr><td>API key</td><td>Your gateway key (<code>gw_…</code>) — create one at <code>/dashboard/profile#api-keys</code></td></tr>
       </tbody>
     </table>
+    <p>On an <a href="appliance.html">On-Prem Appliance</a> deployment, substitute your appliance's hostname for <code>apispi.com</code> — everything else in these guides is identical.</p>
     <div class="callout"><strong>Current v1 caveats</strong> (see <a href="api.html">API Gateway</a>): responses are <strong>non-streaming</strong> (clients that hard-require streaming may not work yet), the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported — use chat-completions mode wherever a client offers the choice. Model IDs are case-sensitive; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
 
     <h2>Terminal Agents</h2>

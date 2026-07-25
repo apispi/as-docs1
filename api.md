@@ -4,6 +4,8 @@ The ApiSpi API Gateway lets you call your connected third-party services (connec
 
 ---
 
+> **On-Prem Appliance:** the gateway is also available self-hosted ([docs/appliance.html](docs/appliance.html)) — same endpoints and controls, with your appliance's hostname in place of `apispi.com` and direct egress to AI providers blocked at your perimeter.
+
 ## Base URL
 
 ```

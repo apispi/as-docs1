@@ -15,13 +15,17 @@ ApiSpi is an AI agents SaaS platform that builds and deploys enterprise-grade au
 - **[Usage Guide](usage.md)** — User features, dashboard, subscriptions, connectors, training
 - **[API Gateway](api.md)** — Authentication, endpoints, connector proxy
 
-### Reference
-- [Platform Overview](docs/overview.md) — Core offerings
-- [AI Agents Catalogue](docs/agents.md)
-- [Aria AI Assistant](docs/aria.md)
-- [Connectors](docs/connectors.md)
-- [Training Courses](docs/training.md)
-- [Partner Program](docs/partners.md)
+### Reference (published site pages)
+- [Platform Overview](docs/overview.html) — Core offerings
+- [AI Agents Catalogue](docs/agents.html)
+- [Aria AI Assistant](docs/aria.html)
+- [Connectors](docs/connectors.html)
+- [MCP & A2A](docs/mcp.html)
+- [Compatible Clients](docs/clients.html) — per-client install guides in [docs/clients/](docs/clients/)
+- [On-Prem Appliance](docs/appliance.html) — network placement, firewall rules, SIEM/identity integration
+- [Governance How-To](docs/governance-howto.html)
+- [Training Courses](docs/training.html)
+- [Partner Program](docs/partners.html)
 
 ## Quick Links
 
