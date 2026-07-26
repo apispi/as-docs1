@@ -34,19 +34,19 @@
     </div>
     <div class="nav-group">
       <div class="nav-group-title">API</div>
-      <a href="api.html" class="nav-link">API Gateway</a>
+      <a href="api.html" class="nav-link">LLM Gateway</a>
       <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
       <a href="clients.html" class="nav-link active">Compatible Clients</a>
       <a href="appliance.html" class="nav-link">On-Prem Appliance</a>
     </div>
     <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+    <div class="nav-group">
       <div class="nav-group-title">Services</div>
       <a href="training.html" class="nav-link">Training Courses</a>
       <a href="partners.html" class="nav-link">Partner Program</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Governance</div>
-      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -64,7 +64,7 @@
       </tbody>
     </table>
     <p>On an <a href="appliance.html">On-Prem Appliance</a> deployment, substitute your appliance's hostname for <code>apispi.com</code> — everything else in these guides is identical.</p>
-    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="api.html">API Gateway</a>): responses are <strong>non-streaming</strong> (clients that hard-require streaming may not work yet), the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported — use chat-completions mode wherever a client offers the choice. Model IDs are case-sensitive; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
+    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="api.html">LLM Gateway</a>): responses are <strong>non-streaming</strong> (clients that hard-require streaming may not work yet), the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported — use chat-completions mode wherever a client offers the choice. Model IDs are case-sensitive; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
 
     <h2>Terminal Agents</h2>
     <p>CLI-based coding agents — point the base URL at ApiSpi's gateway and the API key at your ApiSpi key.</p>
@@ -122,13 +122,13 @@
     <p>Clients that speak richer protocols get more than chat completions:</p>
     <ul>
       <li><strong>MCP clients</strong> (Claude Desktop, Claude Code, claude.ai custom connectors) — connect to <code>/api/gateway/mcp</code> and call your connected ApiSpi tools directly. See <a href="mcp.html">MCP &amp; A2A</a>.</li>
-      <li><strong>ChatGPT</strong> — a Custom GPT with Actions from <code>/openapi/gpt-actions.json</code>. See <a href="api.html">API Gateway</a>.</li>
+      <li><strong>ChatGPT</strong> — a Custom GPT with Actions from <code>/openapi/gpt-actions.json</code>. See <a href="api.html">LLM Gateway</a>.</li>
       <li><strong>A2A agents</strong> — task exchange via <code>/api/a2a</code> with discovery through the published agent card.</li>
     </ul>
 
     <h2>See Also</h2>
     <ul>
-      <li><a href="api.html">API Gateway</a> — keys, endpoints, and the full supported-clients matrix</li>
+      <li><a href="api.html">LLM Gateway</a> — keys, endpoints, and the full supported-clients matrix</li>
       <li><a href="mcp.html">MCP &amp; A2A</a> — protocol-level integration</li>
       <li><a href="https://apispi.com/models">apispi.com/models</a> — model IDs and pricing</li>
       <li><a href="https://apispi.com/clients">apispi.com/clients</a> — the live client list</li>

@@ -416,7 +416,7 @@ PDF text is extracted automatically. Upload the file, then type your question �
 
 ### Token Usage
 
-All Aria dashboard conversations are tracked. Admins can view token consumption at `/admin/token-usage`: a 30-day daily input/output chart, totals grouped by connector and model, and a filterable, paginated log of individual conversation turns (connector, user, date range) showing the prompt, reply, system prompt, and mode used. Connector tool-call activity (from the [API Gateway](api.md)) is tracked separately on the same page.
+All Aria dashboard conversations are tracked. Admins can view token consumption at `/admin/token-usage`: a 30-day daily input/output chart, totals grouped by connector and model, and a filterable, paginated log of individual conversation turns (connector, user, date range) showing the prompt, reply, system prompt, and mode used. Connector tool-call activity (from the [LLM Gateway](api.md)) is tracked separately on the same page.
 
 You can see your own usage on the **Usage**/**Token** tabs of `/dashboard/profile` — remaining, lifetime, and consumed token counts per AI provider, plus your recent usage history.
 
@@ -514,7 +514,7 @@ At the bottom of the profile page, use the **Delete Account** control. This acti
 
 ### API Keys
 
-Manage your own API Gateway keys from the **API Keys** section of your profile (`/dashboard/profile#api-keys`) — create, name, set an optional expiry, and revoke keys for programmatic access. See [API Gateway](api.md) for full details on using a key.
+Manage your own LLM Gateway keys from the **API Keys** section of your profile (`/dashboard/profile#api-keys`) — create, name, set an optional expiry, and revoke keys for programmatic access. See [LLM Gateway](api.md) for full details on using a key.
 
 ### Affiliate Program
 

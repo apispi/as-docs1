@@ -34,19 +34,19 @@
     </div>
     <div class="nav-group">
       <div class="nav-group-title">API</div>
-      <a href="../api.html" class="nav-link">API Gateway</a>
+      <a href="../api.html" class="nav-link">LLM Gateway</a>
       <a href="../mcp.html" class="nav-link">MCP &amp; A2A</a>
       <a href="../clients.html" class="nav-link active">Compatible Clients</a>
       <a href="../appliance.html" class="nav-link">On-Prem Appliance</a>
     </div>
     <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="../governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+    <div class="nav-group">
       <div class="nav-group-title">Services</div>
       <a href="../training.html" class="nav-link">Training Courses</a>
       <a href="../partners.html" class="nav-link">Partner Program</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Governance</div>
-      <a href="../governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -81,12 +81,12 @@ api_key = "gw_your_api_key_here"
 base_url = "https://apispi.com/api/gateway/v1"</code></pre>
     <p>Switch models mid-session with <code>/model</code>.</p>
 
-    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="../api.html">API Gateway</a>): responses are <strong>non-streaming</strong>, the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported. Model IDs are case-sensitive &mdash; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
+    <div class="callout"><strong>Current v1 caveats</strong> (see <a href="../api.html">LLM Gateway</a>): responses are <strong>non-streaming</strong>, the <code>model</code> parameter maps to Anthropic models (<code>claude-*</code>; anything else falls back to the platform default), <code>max_tokens</code> is fixed at 1024, and the Responses API is not supported. Model IDs are case-sensitive &mdash; take them from the <a href="https://apispi.com/models">Model Library</a>.</div>
 
     <h2>See Also</h2>
     <ul>
       <li><a href="../clients.html">All compatible clients</a></li>
-      <li><a href="../api.html">API Gateway</a> &mdash; keys, endpoints, limitations</li>
+      <li><a href="../api.html">LLM Gateway</a> &mdash; keys, endpoints, limitations</li>
       <li><a href="../mcp.html">MCP &amp; A2A</a> &mdash; protocol-level integration</li>
       <li><a href="https://apispi.com/models">apispi.com/models</a> &mdash; model IDs and pricing</li>
     </ul>

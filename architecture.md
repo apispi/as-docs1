@@ -90,7 +90,7 @@ ApiSpi is a Laravel 11-based SaaS platform for managing AI agents, skills, conne
 
 ### 10. TokenUsage / ConnectorUsageLog (Telemetry)
 - `TokenUsage`: one row per Aria conversation turn — user_id, connector_slug, model, input/output tokens, prompt, reply, system prompt, mode
-- `ConnectorUsageLog`: one row per API Gateway proxy call — user_id, connector_slug, tool_name (upstream path), status, result_count, error_message (see [API Gateway → Usage Logging](api.md#usage-logging))
+- `ConnectorUsageLog`: one row per LLM Gateway proxy call — user_id, connector_slug, tool_name (upstream path), status, result_count, error_message (see [LLM Gateway → Usage Logging](api.md#usage-logging))
 - Both feed the admin `/admin/token-usage` page; `TokenUsage::todayTotalForUser()` also backs `OrgPolicy.daily_token_limit` enforcement
 
 ### 11. AffiliateConversion (Referral Program)
@@ -219,7 +219,7 @@ Example:
 
 ## Rate Limiting & Security
 
-- **API Gateway Keys**: Bearer token auth for programmatic access (e.g., `gw_AbCd...`)
+- **LLM Gateway Keys**: Bearer token auth for programmatic access (e.g., `gw_AbCd...`)
 - **Chatbot**: 30 requests/min per IP (contact, dashboard chat)
 - **Digital Avatars & Partners forms**: 5 requests/10min per IP (prevent abuse)
 - **CSRF Protection**: Laravel's CSRF middleware on all form submissions

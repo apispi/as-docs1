@@ -165,4 +165,4 @@ All other connectors listed in the [Full Connector List](#full-connector-list) a
 - `user_connector_tokens` (model `ConnectorToken`) holds OAuth access/refresh tokens for OAuth connectors
 - A `disabled_tools` column on `user_connectors` lets a user turn off individual tool names from a connector's `tool_definitions` without disconnecting the whole connector
 
-See [API Gateway](api.md) for how these tools are invoked programmatically (`GET /api/gateway/tools`, `POST /api/gateway/invoke`) and how upstream credentials are resolved per connector type.
+See [LLM Gateway](api.md) for how these tools are invoked programmatically (`GET /api/gateway/tools`, `POST /api/gateway/invoke`) and how upstream credentials are resolved per connector type.

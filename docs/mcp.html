@@ -34,19 +34,19 @@
     </div>
     <div class="nav-group">
       <div class="nav-group-title">API</div>
-      <a href="api.html" class="nav-link">API Gateway</a>
+      <a href="api.html" class="nav-link">LLM Gateway</a>
       <a href="mcp.html" class="nav-link active">MCP &amp; A2A</a>
       <a href="clients.html" class="nav-link">Compatible Clients</a>
       <a href="appliance.html" class="nav-link">On-Prem Appliance</a>
     </div>
     <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+    </div>
+    <div class="nav-group">
       <div class="nav-group-title">Services</div>
       <a href="training.html" class="nav-link">Training Courses</a>
       <a href="partners.html" class="nav-link">Partner Program</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-title">Governance</div>
-      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
     </div>
   </nav>
 
@@ -80,7 +80,7 @@
     <h3>Authentication</h3>
     <p>Two options, both resolved by <code>gateway.auth</code>:</p>
     <ol>
-      <li><strong>Gateway API key</strong> — <code>Authorization: Bearer gw_…</code> (see <a href="api.html">API Gateway</a>). The prefix-less form is also accepted.</li>
+      <li><strong>Gateway API key</strong> — <code>Authorization: Bearer gw_…</code> (see <a href="api.html">LLM Gateway</a>). The prefix-less form is also accepted.</li>
       <li><strong>OAuth</strong> — for MCP clients that expect an OAuth flow (e.g. adding ApiSpi as a Claude connector). The access token issued <em>is</em> a gateway API key under the hood.</li>
     </ol>
     <p>Unauthenticated requests get a <code>401</code> with a <code>WWW-Authenticate</code> header pointing at the protected-resource metadata, which lets clients bootstrap the whole flow automatically:</p>
@@ -124,7 +124,7 @@
 
     <h2>See Also</h2>
     <ul>
-      <li><a href="api.html">API Gateway</a> — keys, unified tools/invoke endpoints, guardrails</li>
+      <li><a href="api.html">LLM Gateway</a> — keys, unified tools/invoke endpoints, guardrails</li>
       <li><a href="appliance.html">On-Prem Appliance</a> — the same gateway (MCP server included) self-hosted in your network</li>
       <li><a href="connectors.html">Connectors</a> — the catalogue MCP/A2A connectors join</li>
       <li><a href="aria.html">Aria AI Assistant</a> — how the shared tool loop selects and executes tools</li>

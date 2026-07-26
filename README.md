@@ -13,7 +13,7 @@ ApiSpi is an AI agents SaaS platform that builds and deploys enterprise-grade au
 
 ### User & Feature Documentation
 - **[Usage Guide](usage.md)** — User features, dashboard, subscriptions, connectors, training
-- **[API Gateway](api.md)** — Authentication, endpoints, connector proxy
+- **[LLM Gateway](api.md)** — Authentication, endpoints, connector proxy
 
 ### Reference (published site pages)
 - [Platform Overview](docs/overview.html) — Core offerings

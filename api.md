@@ -1,6 +1,6 @@
-# ApiSpi API Gateway
+# ApiSpi LLM Gateway
 
-The ApiSpi API Gateway lets you call your connected third-party services (connectors) programmatically — from your own code, scripts, or external tools — using a single authenticated endpoint. Your API key carries your identity and connector credentials, so you never need to manage upstream OAuth tokens or API keys yourself.
+The ApiSpi LLM Gateway lets you call your connected third-party services (connectors) programmatically — from your own code, scripts, or external tools — using a single authenticated endpoint. Your API key carries your identity and connector credentials, so you never need to manage upstream OAuth tokens or API keys yourself.
 
 ---
 
@@ -121,7 +121,7 @@ A key is **not** restricted to specific connectors — it inherits whichever con
 
 ---
 
-## Unified API Gateway
+## Unified LLM Gateway
 
 The unified gateway exposes all your connected tools through a single, normalized interface. Instead of constructing raw HTTP requests for each upstream service, you discover tools via a manifest and invoke them by name. The gateway handles routing and credential injection automatically.
 
