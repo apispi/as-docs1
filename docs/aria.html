@@ -42,6 +42,7 @@
     <div class="nav-group">
       <div class="nav-group-title">Governance</div>
       <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Services</div>
@@ -52,7 +53,51 @@
 
   <main class="content">
     <h1 class="page-title">Aria AI Assistant</h1>
-    <p class="page-lead">Aria is ApiSpi's AI assistant. There are two variants: the <strong>public chatbot</strong> on the marketing site, and the <strong>dashboard Aria</strong> available to authenticated users.</p>
+    <p class="page-lead">Aria is ApiSpi's AI assistant. This page starts with <strong>how to use Aria day-to-day</strong>, then goes deep on how it works — providers, modes, tool selection, and governance.</p>
+
+    <h2>Using Aria</h2>
+    <p>Open <strong>Aria</strong> from the dashboard sidebar (<code>/dashboard/aria</code>) and just type. Everything below makes your results better:</p>
+
+    <h3>Pick a model and a mode</h3>
+    <ul>
+      <li>The <strong>model picker</strong> lists every model your connectors give you access to (see <a href="#available-models">Available Models</a>). Your choice is remembered across page loads.</li>
+      <li>The <strong>mode selector</strong> shapes how Aria answers: <em>General</em> for everyday work, <em>Email</em> when triaging your inbox, <em>Research</em> for deep, structured analysis (automatically uses a more capable model), <em>Strategy</em> for frameworks and decisions, <em>Technical</em> for precise answers with code.</li>
+    </ul>
+
+    <h3>Let Aria use your tools</h3>
+    <p>Aria automatically has access to every tool from your active <a href="connectors.html">connectors</a> — you don't invoke tools by name, you just ask for the outcome:</p>
+    <table>
+      <thead><tr><th>If you've connected…</th><th>Try asking…</th></tr></thead>
+      <tbody>
+        <tr><td>Gmail / Outlook</td><td><em>"Summarise my unread email and draft a reply to the most urgent one."</em></td></tr>
+        <tr><td>Starter connectors (pre-connected)</td><td><em>"Weather this weekend, top news, and the time in Singapore."</em></td></tr>
+        <tr><td>Your CRM (Salesforce, HubSpot…)</td><td><em>"Which opportunities are closing this month?"</em></td></tr>
+        <tr><td>WhatsApp / Twilio</td><td><em>"Text my plumber that I'll be home after 3pm."</em></td></tr>
+      </tbody>
+    </table>
+    <p>Sources in replies are clickable — bare URLs are auto-linked.</p>
+
+    <h3>Create things, not just answers</h3>
+    <ul>
+      <li><strong>Documents</strong> — ask for a Word or Excel file (<em>"Put that comparison in a spreadsheet"</em>); a download link appears in the chat.</li>
+      <li><strong>Images</strong> — with a Gemini connector active, ask Aria to generate images and graphics inline.</li>
+      <li><strong>Uploads</strong> — attach a document and ask questions about it.</li>
+    </ul>
+
+    <h3>Save and automate</h3>
+    <ul>
+      <li>Save prompts you'll reuse to <strong>My Prompts</strong>, then run any of them on a timer with <strong>My Schedule</strong> — results come back into this chat, badged <em>scheduled</em>.</li>
+    </ul>
+
+    <h3>Trust, but verify</h3>
+    <ul>
+      <li>Ask <em>"What model are you using?"</em>, <em>"What connectors do you have?"</em>, or <em>"What mode are you in?"</em> — Aria answers these directly and honestly, without going through the model.</li>
+      <li>If something is blocked, Aria tells you which restriction applied (mode, governance, or org policy) rather than failing silently.</li>
+    </ul>
+
+    <div class="callout"><strong>New here?</strong> The <a href="getting-started.html">Getting Started guide</a> walks through your first ten minutes — profile, first connectors, first schedule.</div>
+
+    <hr>
 
     <h2>Public Chatbot</h2>
     <p>Route: <code>POST /chat</code> — handled by <code>ChatController</code>.</p>
@@ -100,7 +145,7 @@
       <li>Platform default (<code>claude-sonnet-4-6</code> for Anthropic, <code>gemini-2.0-flash</code> for Gemini, <code>default</code> for SCX).</li>
     </ol>
 
-    <h3>Available Models</h3>
+    <h3 id="available-models">Available Models</h3>
     <p>The model picker (shared by Aria and the My Schedule creation form via <code>AvailableModelsResolver</code>) is built from the user's active connectors plus any platform-key fallback. Anthropic and Gemini expose a fixed model list; every other provider surfaces as a single entry using the model configured on the connector, falling back to the provider default below (<code>AiProviderResolver</code>):</p>
     <table>
       <thead><tr><th>Provider</th><th>Picker models / default</th><th>Notes</th></tr></thead>

@@ -22,6 +22,7 @@
     <div class="nav-group">
       <div class="nav-group-title">Platform</div>
       <a href="../index.html" class="nav-link">Home</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
       <a href="overview.html" class="nav-link">Overview</a>
     </div>
     <div class="nav-group">
@@ -42,6 +43,7 @@
     <div class="nav-group">
       <div class="nav-group-title">Governance</div>
       <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Services</div>
@@ -52,7 +54,24 @@
 
   <main class="content">
     <h1 class="page-title">Connectors</h1>
-    <p class="page-lead">Connectors are integrations with external services that extend Aria's capabilities and power agent functionality. Each connector is defined in the <code>connectors</code> table and linked to users via <code>user_connectors</code>.</p>
+    <p class="page-lead">Connectors are integrations with external services — email, calendars, CRMs, weather, news, AI providers — that extend what Aria and your agents can do. Connect a service once, and every relevant tool becomes available in your chats, schedules, and API calls.</p>
+
+    <h2>Connect Your First Connector</h2>
+    <ol>
+      <li>Open the catalogue at <code>/dashboard/connectors</code> — connectors are grouped by category, and each card lists exactly which tools it provides (cards marked <em>Coming soon</em> can't be used yet)</li>
+      <li>Click <strong>Connect</strong>:
+        <ul>
+          <li><strong>OAuth connectors</strong> (Gmail, Microsoft 365, Xero…) send you to the provider's own consent page — approve and you're done; ApiSpi never sees your password</li>
+          <li><strong>API-key connectors</strong> (Anthropic, Stripe, Twilio…) ask you to paste a key from the provider, plus any settings the form shows</li>
+          <li><strong>No-key connectors</strong> (news, BOM/Open-Meteo weather, World Time) work instantly — new accounts get these pre-connected as starters</li>
+        </ul>
+      </li>
+      <li>Test it in <a href="aria.html">Aria</a>: <em>"Summarise my unread email"</em>, <em>"What's the weather tomorrow?"</em></li>
+      <li>Fine-tune any time: <strong>Configure</strong> to change settings, <strong>disable individual tools</strong> you don't want Aria calling, or <strong>Disconnect</strong> to revoke access entirely</li>
+    </ol>
+    <div class="callout">Everything a connector does is governed and logged — your <a href="governance-howto.html">governance settings</a> (and your organisation's policy) filter which tools Aria can see before any model is called.</div>
+
+    <hr>
 
     <h2>Connector Types</h2>
 

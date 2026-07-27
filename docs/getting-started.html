@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="getting-started.html" class="nav-link active">Getting Started</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">LLM Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="clients.html" class="nav-link">Compatible Clients</a>
+      <a href="appliance.html" class="nav-link">On-Prem Appliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Getting Started</h1>
+    <p class="page-lead">From zero to a working AI workspace in about ten minutes. Follow the steps in order — each one leaves you with something you can use immediately, and none requires technical setup until the optional final step.</p>
+
+    <div class="callout"><strong>What you'll need:</strong> just an email address. Every new account starts a <strong>7-day free trial</strong> — no credit card required to begin, and starter connectors (news, weather, world time) are pre-connected so Aria is useful from your very first message.</div>
+
+    <h2>1. Create Your Account</h2>
+    <ol>
+      <li>Go to <a href="https://apispi.com/register">apispi.com/register</a></li>
+      <li>Enter your name, email, and a password (minimum 8 characters)</li>
+      <li>You're logged in automatically and land on your dashboard</li>
+    </ol>
+    <p>Look for the <strong>thought-bubble callouts</strong> around the dashboard — they point at your recommended next step and are clickable. You can dismiss any of them.</p>
+
+    <h2>2. Say Hello to Aria</h2>
+    <p>Aria is your AI assistant and the fastest way to see ApiSpi working.</p>
+    <ol>
+      <li>Open <strong>Aria</strong> from the sidebar (<code>/dashboard/aria</code>)</li>
+      <li>Try a question that uses your starter connectors:
+        <ul>
+          <li><em>"What's the weather in Sydney this weekend?"</em></li>
+          <li><em>"Give me this morning's top news headlines."</em></li>
+          <li><em>"What time is it in London right now?"</em></li>
+        </ul>
+      </li>
+      <li>Ask <em>"What model are you using?"</em> any time — Aria answers honestly about its current provider, model, and mode</li>
+    </ol>
+    <p>Aria knows your local date, time, and saved location, so "today" and "nearby" work the way you'd expect. Set your location and preferences under <strong>Profile → Personalisation</strong>.</p>
+
+    <h2>3. Complete Your Profile</h2>
+    <p>Two minutes here makes every future answer better. Go to <code>/dashboard/profile</code> → <strong>Personalisation</strong> and set:</p>
+    <table>
+      <thead><tr><th>Setting</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>Preferred name &amp; job title</td><td>Aria addresses you properly and frames answers for your role.</td></tr>
+        <tr><td>Location</td><td>Anchors weather, news, times — and the timezone your <a href="#schedule">schedules</a> run in.</td></tr>
+        <tr><td>Communication style &amp; response length</td><td>Formal or casual, concise or detailed — your call.</td></tr>
+        <tr><td>Custom instructions</td><td>Standing instructions Aria always follows.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>4. Connect Your Tools</h2>
+    <p>Connectors let Aria and your agents act on your real accounts — read email, check your calendar, query your CRM. Browse the catalogue at <code>/dashboard/connectors</code>.</p>
+    <h3>Two kinds of connection</h3>
+    <table>
+      <thead><tr><th>Type</th><th>How it connects</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OAuth</strong></td><td>Click <strong>Connect</strong>, approve on the provider's own consent page, done. ApiSpi never sees your password.</td><td>Gmail, Microsoft 365, Xero, LinkedIn</td></tr>
+        <tr><td><strong>API key</strong></td><td>Paste a key from the provider into the connector's form.</td><td>Anthropic, OpenAI, Stripe, Twilio</td></tr>
+      </tbody>
+    </table>
+    <h3>Recommended first connections</h3>
+    <ol>
+      <li><strong>Your email</strong> — Gmail or Outlook (OAuth). Then try: <em>"Summarise my unread email."</em></li>
+      <li><strong>An AI provider of your own</strong> (optional) — bring your own Anthropic, OpenAI, Gemini, or other key and Aria uses it instead of platform credit. See the full provider list on the <a href="connectors.html">Connectors</a> page.</li>
+    </ol>
+    <div class="callout">Worried about what a connector can do? Every connector's tool list is shown honestly on its catalogue card, you can <strong>disable individual tools</strong> without disconnecting, and everything is governed and logged — see <a href="governance-howto.html">Governance How-To</a>.</div>
+
+    <h2>5. Pick Your Agents</h2>
+    <p>Agents are pre-built specialists — bid writing, security compliance, bookkeeping, customer support, and more (<a href="agents.html">full catalogue</a>).</p>
+    <ol>
+      <li>Browse <code>/dashboard/catalog</code> and open any agent to see its skills and use cases</li>
+      <li>Your subscription is a <strong>pick-3 platform plan</strong>: one subscription, three agent slots you can activate agents into</li>
+      <li>Have a promo code? Apply it on the payment page — the Stripe button updates to the discounted amount</li>
+    </ol>
+
+    <h2 id="schedule">6. Automate Something</h2>
+    <p>My Schedule runs any saved Prompt automatically — a morning briefing is the classic first schedule:</p>
+    <ol>
+      <li>In Aria, refine a prompt you like (e.g. <em>"Top 5 news stories for my industry, plus today's weather and my calendar"</em>) and save it to <strong>My Prompts</strong></li>
+      <li>Go to <strong>My Schedule</strong> (<code>/dashboard/schedule</code>) → create a schedule → pick your Prompt and a time</li>
+      <li>Times run in your profile location's timezone; results arrive in your Aria chat, badged as <em>scheduled</em></li>
+      <li>Use <strong>Run now</strong> to test it immediately, and the schedule's own page to review run history</li>
+    </ol>
+
+    <h2>7. Set Your Guardrails (Optional)</h2>
+    <p>Under <code>/dashboard/profile</code> → <strong>Governance</strong> you can add personal blocked keywords, a daily token budget, country-based sovereignty rules, and guardrail alerts. If you're part of an organisation, your admin's policy applies automatically and your settings can only tighten it. Full walkthroughs: <a href="governance-howto.html">Governance How-To</a>.</p>
+
+    <h2>8. Go Beyond the Dashboard (Optional)</h2>
+    <p>Everything Aria can do is also available programmatically through the <a href="api.html">LLM Gateway</a>:</p>
+    <table>
+      <thead><tr><th>I want to…</th><th>Do this</th></tr></thead>
+      <tbody>
+        <tr><td>Use my coding tool / IDE with ApiSpi</td><td>Create an API key at <code>/dashboard/profile#api-keys</code>, then follow your tool's <a href="clients.html">installation guide</a> — two settings, done.</td></tr>
+        <tr><td>Use my ApiSpi tools inside Claude</td><td>Add ApiSpi as a connector over <a href="mcp.html">MCP</a> — OAuth setup is automatic.</td></tr>
+        <tr><td>Use my ApiSpi tools inside ChatGPT</td><td>Build the Custom GPT from our published Actions spec — see <a href="api.html">LLM Gateway</a>.</td></tr>
+        <tr><td>Call the gateway from my own code</td><td>Point any OpenAI SDK at <code>https://apispi.com/api/gateway/v1</code> with your key.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Troubleshooting</h2>
+    <table>
+      <thead><tr><th>Symptom</th><th>Likely cause &amp; fix</th></tr></thead>
+      <tbody>
+        <tr><td>Aria gives generic answers, no live data</td><td>No AI provider or connector is active. Check <code>/dashboard/connectors</code> — starter connectors should be listed as active; connect a provider key for full capability.</td></tr>
+        <tr><td>"Limit reached" message</td><td>You've hit your daily token limit (yours or your organisation's). It resets next day, or raise your personal limit under Governance → Limits.</td></tr>
+        <tr><td>A tool won't run / is missing</td><td>It may be disabled on the connector, blocked by mode restrictions, or governed by org policy — Aria's reply explains which. See <a href="governance-howto.html">Governance</a>.</td></tr>
+        <tr><td>Schedule ran at the wrong time</td><td>Schedules use your <em>profile location's</em> timezone — set your location under Profile → Personalisation.</td></tr>
+        <tr><td>Trial expired</td><td>You'll be routed to the payment page; pick your plan (and apply any promo code) to continue.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Where to Next</h2>
+    <ul>
+      <li><a href="aria.html">Aria in depth</a> — modes, models, tools, and how it decides what to do</li>
+      <li><a href="connectors.html">Connectors reference</a> — all 76 integrations and their tools</li>
+      <li><a href="clients.html">Compatible Clients</a> — use ApiSpi from your terminal, IDE, or chat platform</li>
+      <li>Stuck? Email <a href="mailto:sales@apispi.com">sales@apispi.com</a> (Mon–Fri 9 AM–6 PM AEST)</li>
+    </ul>
+  </main>
+</div>
+
+<script src="../js/copy.js" defer></script>
+</body>
+</html>
