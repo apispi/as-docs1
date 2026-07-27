@@ -364,7 +364,7 @@ pre code {
 }
 
 /* ── Click-to-copy ── */
-pre { position: relative; }
+pre { position: relative; padding-right: 5.5rem; } /* keep first line clear of the button */
 .copy-btn {
   position: absolute;
   top: 0.5rem;
@@ -379,13 +379,12 @@ pre { position: relative; }
   border: 1px solid rgba(245, 240, 232, 0.15);
   border-radius: 6px;
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.75;
   transition: opacity 0.15s, background 0.15s, color 0.15s;
 }
 pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
 .copy-btn:hover { background: var(--primary-dark); color: var(--white); }
 .copy-btn.copied { opacity: 1; background: #166534; border-color: #166534; color: var(--white); }
-@media (hover: none) { .copy-btn { opacity: 1; } } /* always visible on touch */
 
 .copy-chip {
   display: inline-flex;
