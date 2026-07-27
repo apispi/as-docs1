@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governance Features — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="prompts-schedules.html" class="nav-link">Prompts &amp; Schedules</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">LLM Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="clients.html" class="nav-link">Compatible Clients</a>
+      <a href="appliance.html" class="nav-link">On-Prem Appliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-features.html" class="nav-link active">Governance Features</a>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Governance Features</h1>
+    <p class="page-lead">The complete reference of ApiSpi's governance controls. Every feature here applies across <strong>all surfaces</strong> — Aria chat, scheduled runs, the LLM Gateway, MCP clients, and workspace chat — and every enforcement decision is logged and auditable.</p>
+
+    <h2>How Governance Layers</h2>
+    <p>Three layers combine at request time, strictest wins:</p>
+    <table>
+      <thead><tr><th>Layer</th><th>Set by</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Platform baseline</strong></td><td>ApiSpi</td><td>The global floor every account inherits.</td></tr>
+        <tr><td><strong>Organisation policy</strong></td><td>Your admin (see <a href="organisation-setup.html">Organisation Setup</a>)</td><td>Everyone in your organisation.</td></tr>
+        <tr><td><strong>Personal overrides</strong></td><td>You, at <code>/dashboard/profile</code> → Governance</td><td>Yourself only — can tighten the layers above, never loosen them.</td></tr>
+      </tbody>
+    </table>
+    <p>Kill switches OR together, limits take the lowest set value, keyword/country lists union, and free-text policy notes from every layer are all injected into the system prompt.</p>
+
+    <h2>Content Controls</h2>
+    <table>
+      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Policy notes</strong></td><td>Free-text rules (up to 50,000 characters) injected into every conversation — acceptable use, tone, disclaimers.</td></tr>
+        <tr><td><strong>Blocked keywords</strong></td><td>Terms that trigger the guardrail. Configurable <em>action</em> — <code>block</code> (reject), <code>redact</code> (mask), <code>warn</code> (proceed with warning) — and <em>scope</em>: user input, AI output, or both. Optional whole-word matching prevents false positives ("cat" won't match "category").</td></tr>
+        <tr><td><strong>PII redaction</strong></td><td>Automatically masks personal data (emails, card numbers, key-like strings) before it reaches a model.</td></tr>
+        <tr><td><strong>Prompt-injection detection</strong></td><td>Two lines of defence: pattern matching for known attacks (DAN, role-play overrides, system-prompt extraction) plus an LLM-based moderation classifier as a second opinion.</td></tr>
+        <tr><td><strong>Output moderation</strong></td><td>AI replies are scanned before being returned, with the same keyword/action machinery as input.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Spend &amp; Usage Controls</h2>
+    <table>
+      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Token limits</strong></td><td>Daily, weekly, and monthly per-user caps. On breach, requests get a fixed "limit reached" reply instead of a model call.</td></tr>
+        <tr><td><strong>Spend caps</strong></td><td>Daily and monthly USD spend limits, independent of token counts.</td></tr>
+        <tr><td><strong>Access windows</strong></td><td>Restrict AI use to specific days and hours (e.g. Mon–Fri 9:00–17:00).</td></tr>
+        <tr><td><strong>Retention</strong></td><td>Configurable retention period (days) for conversation data.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Model &amp; Provider Controls</h2>
+    <table>
+      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Allowed providers</strong></td><td>Whitelist which AI providers may answer at all.</td></tr>
+        <tr><td><strong>Data sovereignty</strong></td><td>Block connectors by country — model providers carry country labels (DeepSeek, Qwen, Z.ai, Moonshot are labelled China), so one rule removes them everywhere.</td></tr>
+        <tr><td><strong>Routing rules</strong></td><td>Steer classes of requests to specific models/providers.</td></tr>
+        <tr><td><strong>Connector kill switch</strong></td><td>Ignore everyone's saved AI connector config and fall back to the platform default provider — without touching user settings. Also strips every connector tool from the candidate set.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Tool &amp; Action Controls</h2>
+    <table>
+      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tool access modes</strong></td><td><code>read_only</code> drops all state-changing tools (send email, create files, post messages); <code>approval</code> requires explicit sign-off before actions execute.</td></tr>
+        <tr><td><strong>Approval queue</strong></td><td>In approval mode, pending actions wait for an approve/deny decision; a governed MCP call returns <code>approval_required</code> so external clients handle it gracefully too.</td></tr>
+        <tr><td><strong>Blocked tools</strong></td><td>Ban specific tool names for everyone, regardless of other settings.</td></tr>
+        <tr><td><strong>Per-connector rules</strong></td><td>Rules scoped to individual connectors; users can additionally disable individual tools on their own connections.</td></tr>
+        <tr><td><strong>Autonomy budgets</strong></td><td><code>max_actions</code> caps tool calls per run; <code>action_time_budget</code> force-stops long autonomous runs.</td></tr>
+        <tr><td><strong>Emergency stop</strong></td><td>The org-level kill switch halts all connector tool traffic on every surface at once. Idempotent; users are told an emergency stop is active instead of seeing cryptic errors.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Oversight &amp; Assurance</h2>
+    <table>
+      <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Audit trail</strong></td><td>Every guardrail event — keyword blocks, injection attempts, moderation flags — in one reviewable, filterable log.</td></tr>
+        <tr><td><strong>Guardrail alerts</strong></td><td>In-app and/or email notifications, for the affected user and for admins.</td></tr>
+        <tr><td><strong>Policy versioning &amp; rollback</strong></td><td>Policy changes are versioned; any previous version can be rolled back to in one step, and the last editor is recorded.</td></tr>
+        <tr><td><strong>Dry-run</strong></td><td>Test a message against the current policy without sending it to a model — see exactly which rules would fire.</td></tr>
+        <tr><td><strong>Posture view &amp; export</strong></td><td>A single summary of your effective governance posture, exportable for auditors and review boards.</td></tr>
+        <tr><td><strong>Usage telemetry</strong></td><td>Per-user, per-model token consumption and per-tool connector activity logs.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Where Enforcement Happens</h2>
+    <ul>
+      <li><strong>Before the model sees anything</strong> — governance filters the candidate tool list (kill switch, sovereignty, blocked/disabled tools, mode restrictions), so a banned tool is never even visible to the model</li>
+      <li><strong>On the way in</strong> — keyword guardrails, PII redaction, and injection detection run on user input</li>
+      <li><strong>During the run</strong> — tool-access modes, approval gates, and autonomy budgets govern each tool call</li>
+      <li><strong>On the way out</strong> — output moderation scans the reply before you see it</li>
+      <li><strong>At the network edge</strong> — with the <a href="appliance.html">On-Prem Appliance</a>, the same controls sit at a DMZ choke point with direct provider egress blocked at the perimeter</li>
+    </ul>
+    <div class="callout">When something is blocked, ApiSpi tells you <em>which</em> restriction applied — a mode limit, your own setting, or org policy — instead of failing with a generic error. Supporting <strong>Essential Eight, ISM, and PSPF</strong>-aligned governance programs.</div>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="governance-howto.html">Governance How-To</a> — step-by-step setup of your personal controls</li>
+      <li><a href="organisation-setup.html">Organisation Setup</a> — rolling out the org policy</li>
+      <li><a href="appliance.html">On-Prem Appliance</a> — network-enforced governance</li>
+    </ul>
+  </main>
+</div>
+
+<script src="../js/copy.js" defer></script>
+</body>
+</html>

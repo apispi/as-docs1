@@ -30,6 +30,7 @@
       <a href="agents.html" class="nav-link">Agents Catalogue</a>
       <a href="skills.html" class="nav-link active">Skills</a>
       <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="prompts-schedules.html" class="nav-link">Prompts &amp; Schedules</a>
       <a href="connectors.html" class="nav-link">Connectors</a>
       <a href="workspaces.html" class="nav-link">Workspaces</a>
     </div>
@@ -42,6 +43,7 @@
     </div>
     <div class="nav-group">
       <div class="nav-group-title">Governance</div>
+      <a href="governance-features.html" class="nav-link">Governance Features</a>
       <a href="governance-howto.html" class="nav-link">Governance How-To</a>
       <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
     </div>
@@ -56,8 +58,11 @@
     <h1 class="page-title">Skills</h1>
     <p class="page-lead">A Skill is a packaged capability or persona prompt — distinct from both Agents and Connectors — that gets attached to one or more agents. Skills have no relationship to connectors.</p>
 
+    <h2>Skills in Practice</h2>
+    <p>Think of the three building blocks this way: <strong>connectors</strong> are what your AI can <em>reach</em> (your email, your CRM), <strong>skills</strong> are what it knows <em>how to do well</em> (draft a compliance matrix, parse an RFQ, triage an inbox), and <strong>agents</strong> bundle the right skills for a job. You don't invoke skills directly — subscribe to an agent and its skills come with it. Each <a href="agents.html">agent's page</a> lists exactly which skills it draws on, and your subscription tier controls which are enabled.</p>
+
     <h2>Data Model</h2>
-    <p>Model <code>Skill</code>, table <code>skills</code>: <code>slug</code>, <code>name</code>, <code>description</code>, <code>category</code>, <code>is_active</code>, <code>sort_order</code>. The base catalogue is seeded by <code>SkillSeeder</code> — <strong>46 skills</strong> across 10 categories — with a further <strong>20 industry skills</strong> (Front Office, Commerce &amp; Retail, Trades &amp; Field Services, and Communications &amp; Front Office) added by the standalone agent seeders, for <strong>66 skills</strong> across <strong>14 categories</strong>.</p>
+    <p>Model <code>Skill</code>, table <code>skills</code>: <code>slug</code>, <code>name</code>, <code>description</code>, <code>category</code>, <code>is_active</code>, <code>sort_order</code>. The base catalogue is seeded by <code>SkillSeeder</code> — <strong>46 skills</strong> across 10 categories — with a further <strong>20 industry skills</strong> (Front Office, Commerce &amp; Retail, Trades &amp; Field Services, and Communications &amp; Front Office) added by the standalone agent seeders, for <strong>71 skills</strong> across <strong>15 categories</strong> (the Chief of Staff agent adds an Executive &amp; Operations category).</p>
     <div class="callout">Most skills carry a short one-line description. A subset (Forensic Analysis, Architecture Review, Technology Roadmapping, Decision Record Drafting, Architecture Pattern Matching, Avatar Generation, Voice Cloning, Market Mapping, Pricing Strategy) instead carry a full markdown system-prompt — these double as the actual prompt injected when the skill is active for an agent. The three persona skills (Shopping Agent, Digital Plumber, Digital Receptionist) are the full system prompts behind those agents.</div>
 
     <h2>Full Skill List</h2>
@@ -135,7 +140,7 @@
     <p>† Carries a full markdown system-prompt description rather than a one-line blurb.</p>
 
     <h2>Skill ↔ Agent Relationship</h2>
-    <p>Skills attach to agents via a many-to-many pivot, <code>agent_skill</code> (with a <code>definition</code> column), seeded by <code>AgentSkillSeeder</code>. Each of the <a href="agents.html">18 agents</a> is assigned 4–10 skills; some skills are reused across multiple agents (e.g. Document Analysis, Report Writing, Compliance Matrix Generation).</p>
+    <p>Skills attach to agents via a many-to-many pivot, <code>agent_skill</code> (with a <code>definition</code> column), seeded by <code>AgentSkillSeeder</code>. Each of the <a href="agents.html">19 agents</a> is assigned 4–10 skills; some skills are reused across multiple agents (e.g. Document Analysis, Report Writing, Compliance Matrix Generation).</p>
     <p>Example — <strong>Bid &amp; Tender Response</strong> draws on: RFQ/RFT Parsing, CV Parsing, Document Analysis, STAR Response Generation, Executive Summary Writing, Capability Statement Writing, Compliance Matrix Generation, and Gap Analysis. The pattern repeats for the other agents — each draws on the skill category closest to its domain.</p>
 
     <h2>Skill Entitlement (Subscriptions)</h2>

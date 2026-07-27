@@ -1,5 +1,42 @@
 // Copyright © 2026 ApiSpi
-// Click-to-copy for code blocks and key inline values across the docs.
+// Docs behaviours: collapsible sidebar sections + click-to-copy for code
+// blocks and key inline values.
+
+// Collapsible sidebar nav groups. State persists per section title; the
+// section containing the current page always starts expanded.
+(function () {
+  var KEY = 'apispi-docs-nav-collapsed';
+  var collapsed = {};
+  try { collapsed = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+
+  document.querySelectorAll('.sidebar .nav-group').forEach(function (group) {
+    var title = group.querySelector('.nav-group-title');
+    if (!title) return;
+    var name = title.textContent.trim();
+    var hasActive = !!group.querySelector('.nav-link.active');
+
+    title.setAttribute('role', 'button');
+    title.setAttribute('tabindex', '0');
+    title.setAttribute('aria-expanded', 'true');
+
+    function setCollapsed(on, persist) {
+      group.classList.toggle('collapsed', on);
+      title.setAttribute('aria-expanded', on ? 'false' : 'true');
+      if (persist) {
+        collapsed[name] = on;
+        try { localStorage.setItem(KEY, JSON.stringify(collapsed)); } catch (e) {}
+      }
+    }
+
+    if (collapsed[name] && !hasActive) setCollapsed(true, false);
+
+    function toggle() { setCollapsed(!group.classList.contains('collapsed'), true); }
+    title.addEventListener('click', toggle);
+    title.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+})();
 
 (function () {
   var COPY_ICON =

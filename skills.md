@@ -2,7 +2,7 @@
 
 A **Skill** is a distinct first-class model (`app/Models/Skill.php`, `skills` table) — separate from both **Agents** ([the 18 catalogue agents](usage.md#agent-catalog)) and **Connectors** ([connectors.md](connectors.md)). A skill is a packaged capability/persona prompt (e.g. "Contract Review", "Threat Detection") that gets attached to one or more agents; it has no relationship to connectors at all.
 
-The base catalogue is seeded by `database/seeders/SkillSeeder.php` — **46 skills** across 10 categories, auto-run via `DatabaseSeeder`. A further **20 industry skills** (across the **Front Office**, **Commerce & Retail**, **Trades & Field Services**, and **Communications & Front Office** categories) are added by the standalone agent seeders (`ShoppingAgentSeeder`, `DigitalReceptionistAgentSeeder`, `DigitalPlumberAgentSeeder`, `IndustryAgentSkillConnectorSeeder`), bringing the total to **66 skills** across **14 categories**.
+The base catalogue is seeded by `database/seeders/SkillSeeder.php` — **46 skills** across 10 categories, auto-run via `DatabaseSeeder`. A further **20 industry skills** (across the **Front Office**, **Commerce & Retail**, **Trades & Field Services**, and **Communications & Front Office** categories) are added by the standalone agent seeders (`ShoppingAgentSeeder`, `DigitalReceptionistAgentSeeder`, `DigitalPlumberAgentSeeder`, `IndustryAgentSkillConnectorSeeder`), bringing the total to **71 skills** across **15 categories** (a further 5 Executive & Operations skills come with the Chief of Staff agent).
 
 Fields on `Skill`: `slug`, `name`, `description`, `category`, `is_active`, `sort_order`. Most skills have a short one-line `description`; a handful (noted below) instead carry a full markdown system-prompt — hundreds of lines covering purpose, capabilities, process, and best practices — because they double as the actual prompt injected when that skill is active for an agent.
 
@@ -85,7 +85,7 @@ Fields on `Skill`: `slug`, `name`, `description`, `category`, `is_active`, `sort
 
 ## Skill ↔ Agent Relationship
 
-Skills attach to [agents](usage.md#agent-catalog) via a many-to-many pivot, `agent_skill` (with a `definition` column), seeded by `database/seeders/AgentSkillSeeder.php` (and, for the industry/standalone agents, by their respective seeders). Each of the **18 agents** is assigned 4–10 skills; some skills are reused across multiple agents (e.g. `document-analysis`, `report-writing`, `compliance-matrix`).
+Skills attach to [agents](usage.md#agent-catalog) via a many-to-many pivot, `agent_skill` (with a `definition` column), seeded by `database/seeders/AgentSkillSeeder.php` (and, for the industry/standalone agents, by their respective seeders). Each of the **19 agents** is assigned 4–10 skills; some skills are reused across multiple agents (e.g. `document-analysis`, `report-writing`, `compliance-matrix`).
 
 Example mapping — **Bid & Tender Response** agent (`bid-tender`):
 

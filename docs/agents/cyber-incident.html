@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Incident &amp; Threat Intel — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../../index.html" class="nav-link">Home</a>
+      <a href="../getting-started.html" class="nav-link">Getting Started</a>
+      <a href="../overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="../agents.html" class="nav-link active">Agents Catalogue</a>
+      <a href="../skills.html" class="nav-link">Skills</a>
+      <a href="../aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="../prompts-schedules.html" class="nav-link">Prompts &amp; Schedules</a>
+      <a href="../connectors.html" class="nav-link">Connectors</a>
+      <a href="../workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="../api.html" class="nav-link">LLM Gateway</a>
+      <a href="../mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="../clients.html" class="nav-link">Compatible Clients</a>
+      <a href="../appliance.html" class="nav-link">On-Prem Appliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="../governance-features.html" class="nav-link">Governance Features</a>
+      <a href="../governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="../organisation-setup.html" class="nav-link">Organisation Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="../training.html" class="nav-link">Training Courses</a>
+      <a href="../partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <p><a href="../agents.html">&larr; All agents</a></p>
+    <h1 class="page-title">Cyber Incident &amp; Threat Intel</h1>
+    <p class="page-lead">Acts as a first-line cyber operations assistant for SOC teams, MSPs, and security consultancies. Summarises logs, correlates threat intel, triages incidents, and drafts executive reports.</p>
+    <h2>At a Glance</h2>
+    <table>
+      <tbody>
+        <tr><td><strong>Category</strong></td><td>Cyber Operations</td></tr>
+        <tr><td><strong>Rating</strong></td><td>&#11088; 4.9</td></tr>
+        <tr><td><strong>Users</strong></td><td>150+</td></tr>
+        <tr><td><strong>Built for</strong></td><td>SOC teams and analysts, MSPs with security offerings, Small government agencies, Security consultancies</td></tr>
+      </tbody>
+    </table>
+    <h2>What It Does</h2>
+    <ul>
+      <li>Log summarisation</li>
+      <li>Threat intel correlation</li>
+      <li>Incident triage</li>
+      <li>IOC extraction</li>
+      <li>Executive reports</li>
+      <li>Playbook recommendations</li>
+    </ul>
+    <h2>What&#8217;s Included</h2>
+    <ul>
+      <li>Log summarisation and analysis</li>
+      <li>Threat intelligence correlation</li>
+      <li>Incident triage and classification</li>
+      <li>IOC extraction</li>
+      <li>Executive incident reports</li>
+      <li>Playbook recommendations</li>
+    </ul>
+    <h2>Use Cases</h2>
+    <table>
+      <thead><tr><th>Scenario</th><th>How the agent helps</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Incident Triage</strong></td><td>Feed in raw logs or alert data and receive a structured triage report with severity classification, affected assets, and recommended containment actions.</td></tr>
+        <tr><td><strong>Threat Intel Correlation</strong></td><td>Cross-reference IOCs against threat feeds and produce enriched intelligence summaries for analysts.</td></tr>
+        <tr><td><strong>Executive Reporting</strong></td><td>Automatically draft non-technical executive incident reports from technical findings, ready to brief leadership within minutes.</td></tr>
+      </tbody>
+    </table>
+    <h2>Skills</h2>
+    <p>Packaged capabilities this agent draws on (see <a href="../skills.html">Skills</a>):</p>
+    <ul>
+      <li>Threat Detection</li>
+      <li>Incident Triage</li>
+      <li>Vulnerability Assessment</li>
+      <li>Forensic Analysis</li>
+      <li>Penetration Test Reporting</li>
+      <li>Audit Trail Generation</li>
+      <li>Report Writing</li>
+    </ul>
+    <h2>FAQs</h2>
+    <h3>Does it connect to our SIEM?</h3>
+    <p>SIEM integrations (Sentinel, Splunk, Defender, CrowdStrike) are on the roadmap. Currently, paste or upload log excerpts and alert data directly.</p>
+    <h3>How does it handle sensitive incident data?</h3>
+    <p>All data is processed in an isolated environment. Nothing is retained after the session. Suitable for protected and sensitive incident data.</p>
+    <h3>Can it generate playbooks from scratch?</h3>
+    <p>Yes. Describe the incident type and environment and the agent generates a structured playbook with detection, containment, eradication, and recovery steps.</p>
+
+    <h2>Getting This Agent</h2>
+    <p>Activate <strong>Cyber Incident &amp; Threat Intel</strong> into one of your platform plan's agent slots from the dashboard catalogue (<code>/dashboard/catalog</code>). New to ApiSpi? Start with the <a href="../getting-started.html">Getting Started guide</a>.</p>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="../agents.html">All agents</a></li>
+      <li><a href="../skills.html">Skills</a> — how packaged capabilities attach to agents</li>
+      <li><a href="../connectors.html">Connectors</a> — the integrations agents act through</li>
+    </ul>
+  </main>
+</div>
+
+<script src="../../js/copy.js" defer></script>
+</body>
+</html>

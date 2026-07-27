@@ -401,3 +401,24 @@ pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
 }
 .copy-chip:hover { color: var(--primary-dark); background: var(--light-2); }
 .copy-chip.copied { color: #166534; }
+
+/* ── Collapsible nav groups ── */
+.nav-group-title {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-group-title::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin-right: 0.35rem;
+  border-right: 1.5px solid var(--gray);
+  border-bottom: 1.5px solid var(--gray);
+  transform: rotate(45deg);            /* pointing down = expanded */
+  transition: transform 0.15s;
+}
+.nav-group.collapsed .nav-group-title::after { transform: rotate(-45deg); } /* pointing right */
+.nav-group.collapsed .nav-link { display: none; }

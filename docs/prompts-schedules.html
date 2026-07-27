@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompts &amp; Schedules — ApiSpi Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="../css/docs.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo"><span>ApiSpi</span></a>
+  <span class="header-title">Documentation</span>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-title">Platform</div>
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="overview.html" class="nav-link">Overview</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Agents &amp; AI</div>
+      <a href="agents.html" class="nav-link">Agents Catalogue</a>
+      <a href="skills.html" class="nav-link">Skills</a>
+      <a href="aria.html" class="nav-link">Aria AI Assistant</a>
+      <a href="prompts-schedules.html" class="nav-link active">Prompts &amp; Schedules</a>
+      <a href="connectors.html" class="nav-link">Connectors</a>
+      <a href="workspaces.html" class="nav-link">Workspaces</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">API</div>
+      <a href="api.html" class="nav-link">LLM Gateway</a>
+      <a href="mcp.html" class="nav-link">MCP &amp; A2A</a>
+      <a href="clients.html" class="nav-link">Compatible Clients</a>
+      <a href="appliance.html" class="nav-link">On-Prem Appliance</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Governance</div>
+      <a href="governance-features.html" class="nav-link">Governance Features</a>
+      <a href="governance-howto.html" class="nav-link">Governance How-To</a>
+      <a href="organisation-setup.html" class="nav-link">Organisation Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Services</div>
+      <a href="training.html" class="nav-link">Training Courses</a>
+      <a href="partners.html" class="nav-link">Partner Program</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <h1 class="page-title">Prompts &amp; Schedules</h1>
+    <p class="page-lead">Prompts turn things you ask Aria repeatedly into reusable, one-click building blocks. Schedules run those prompts automatically — hourly, daily, or weekly — and deliver the results back into your Aria chat.</p>
+
+    <h2>The Prompt Library</h2>
+    <p>ApiSpi ships a curated library of prompts — browsable publicly at <a href="https://apispi.com/prompts">apispi.com/prompts</a> (each prompt has its own page) and inside the dashboard at <code>/dashboard/prompts</code>, organised by category with tags.</p>
+    <ul>
+      <li><strong>Adopt</strong> a library prompt to copy it into <em>My Prompts</em>, where you can edit it freely</li>
+      <li><strong>Rate</strong> prompts to surface the best ones for other users</li>
+      <li><strong>Sync with catalog</strong> pulls in newly published library prompts at any time</li>
+    </ul>
+
+    <h2>My Prompts</h2>
+    <p>Your personal prompt collection at <code>/dashboard/prompts</code>:</p>
+    <table>
+      <thead><tr><th>Action</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Create</strong></td><td><em>New Prompt</em> → name it, write the body, pick a category. Anything you find yourself typing into Aria twice belongs here.</td></tr>
+        <tr><td><strong>Use</strong></td><td>Run it straight into an Aria conversation — one click, no retyping.</td></tr>
+        <tr><td><strong>Favourite</strong></td><td>Pin the prompts you use most to the top.</td></tr>
+        <tr><td><strong>Edit / Delete</strong></td><td>Adopted library prompts become fully yours to change.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>Writing a good reusable prompt:</strong> state the outcome, the format, and the sources. <em>"Summarise my unread email from today; group by urgency; one line each"</em> beats <em>"check my email"</em> — and it makes a far better schedule, because there's no follow-up conversation to have.</div>
+
+    <h2>My Schedule</h2>
+    <p>Schedules run a saved Prompt automatically, using the model you choose. Manage them at <code>/dashboard/schedule</code>.</p>
+
+    <h3>Creating a schedule</h3>
+    <ol>
+      <li>Save the prompt you want to automate to <strong>My Prompts</strong> first</li>
+      <li>Go to <strong>My Schedule</strong> → create a schedule → pick the prompt and a model (the model picker offers the same choices as Aria — see <a href="aria.html#available-models">Available Models</a>)</li>
+      <li>Choose the cadence:
+        <table>
+          <thead><tr><th>Frequency</th><th>Runs</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hourly</strong></td><td>Every hour, on the hour</td></tr>
+            <tr><td><strong>Daily</strong></td><td>Every day at your chosen time</td></tr>
+            <tr><td><strong>Weekly</strong></td><td>On your chosen day of the week, at your chosen time</td></tr>
+          </tbody>
+        </table>
+      </li>
+      <li>Times are anchored to the timezone of your <strong>saved profile location</strong>, and each schedule's "Next" run is displayed in its own timezone — set your location under Profile → Personalisation before relying on run times</li>
+    </ol>
+
+    <h3>Living with schedules</h3>
+    <ul>
+      <li><strong>Results arrive in Aria</strong> — badged as <em>scheduled</em>, so your briefing is waiting in the same chat you already use</li>
+      <li><strong>Run now</strong> tests a schedule immediately without waiting for the next slot</li>
+      <li><strong>Pause / resume</strong> with the toggle; edit or delete any time</li>
+      <li><strong>Run History</strong> — every schedule has its own page with collapsible past runs, so you can see exactly what ran and when</li>
+    </ul>
+
+    <h3>Schedule ideas</h3>
+    <table>
+      <thead><tr><th>Schedule</th><th>Prompt sketch</th><th>Cadence</th></tr></thead>
+      <tbody>
+        <tr><td>Morning briefing</td><td>Top news for my industry + today's weather + my calendar</td><td>Daily, 7:00</td></tr>
+        <tr><td>Inbox digest</td><td>Summarise unread email, grouped by urgency</td><td>Daily, 8:30</td></tr>
+        <tr><td>Pipeline check</td><td>CRM opportunities closing this month and their status</td><td>Weekly, Mon 9:00</td></tr>
+        <tr><td>Ops watch</td><td>AWS month-to-date spend and any CloudWatch alarms</td><td>Daily, 17:00</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">Scheduled runs use the same connectors and are subject to the same <a href="governance-howto.html">governance</a> (token limits, guardrails, tool rules) as live chat. If your organisation runs schedules at scale, admins can see health stats across all users' schedules and pause/resume any of them.</div>
+
+    <h2>See Also</h2>
+    <ul>
+      <li><a href="aria.html">Aria AI Assistant</a> — where prompts run and results arrive</li>
+      <li><a href="getting-started.html#schedule">Getting Started → Automate Something</a> — your first schedule in four steps</li>
+      <li><a href="skills.html">Skills</a> — the packaged capabilities agents and prompts draw on</li>
+    </ul>
+  </main>
+</div>
+
+<script src="../js/copy.js" defer></script>
+</body>
+</html>
