@@ -34,9 +34,11 @@ ApiSpi is an AI agents SaaS platform that builds and deploys enterprise-grade au
 ### Log In
 
 1. Visit `/login`
-2. Enter your email and password
+2. Enter your email and password — or use a **passkey** (Face ID / fingerprint / security key; add one under Profile → Security), or **Continue with Microsoft** if your organisation has Entra SSO
 3. Check **Remember me** to stay logged in for two weeks
 4. On success you are redirected to `/dashboard` (or whatever page you were trying to reach)
+
+> New accounts verify their email address on sign-up.
 
 ### Forgot Password
 
@@ -246,7 +248,7 @@ Beyond those three, any bring-your-own model-provider connector can power Aria a
 | Provider | Picker models / default |
 |---|---|
 | Anthropic | Claude Sonnet 4.6 · Claude Opus 4.8 · Claude Haiku 4.5 (fixed list) |
-| Google Gemini | Gemini 2.0 Flash · 2.0 Flash Lite · 1.5 Pro (fixed list) |
+| Google Gemini | Gemini 3.6/3.5/3.1 Flash family + 2.5 Pro/Flash/Flash-Lite (fixed list; default `gemini-2.5-flash`) |
 | SCX AI | Connector/platform model list (default `gpt-4o`); multiple models each appear as `scx:<model>` |
 | Argyll Data | default `gpt-4o` |
 | Mistral AI | default `mistral-large-latest` |

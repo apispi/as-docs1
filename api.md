@@ -117,7 +117,7 @@ Admins can issue keys on behalf of any user at `/admin/api-keys` (pick the user 
 
 ### Key scope
 
-A key is **not** restricted to specific connectors — it inherits whichever connectors the owning user has actively connected. There is currently no way to scope a key to a subset of connectors, nor to attach a custom rate limit to an individual key.
+By default a key inherits whichever connectors the owning user has actively connected. Keys can additionally be **scoped down** per key: a `tool_access` mode, a `connector_allowlist`, and a `daily_spend_limit_usd` cap. Widening a key's scope is a maker-checker-gated change where dual-admin approval is enabled.
 
 ---
 

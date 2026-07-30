@@ -74,8 +74,9 @@
     <h2>2. Set Up Identity &amp; Sign-In</h2>
     <ol>
       <li>Each team member registers with their <strong>work email</strong> at <a href="https://apispi.com/register">apispi.com/register</a> — they start on the standard 7-day trial and inherit your org policy automatically</li>
-      <li>If your organisation uses <strong>Microsoft Entra ID (Azure AD)</strong>, ask the ApiSpi team to configure SSO — "Continue with Microsoft" then appears on the login page, and role-based access (who may use which models and agents) follows your directory</li>
-      <li>From the admin area you can review users, assign or revoke agent subscriptions, and issue gateway API keys on a user's behalf</li>
+      <li>If your organisation uses <strong>Microsoft Entra ID (Azure AD)</strong>, ask the ApiSpi team to configure SSO — "Continue with Microsoft" then appears on the login page, and role-based access (who may use which models and agents) follows your directory. Entra SSO also enables <strong>Aria in Microsoft Teams</strong>: a native bot on the same governed engine, mapping each Teams user to their ApiSpi account</li>
+      <li>Users verify their email on sign-up, and can add <strong>passkeys</strong> (WebAuthn) for phishing-resistant sign-in</li>
+      <li>From the admin area you can review users, assign or revoke agent subscriptions, and issue gateway API keys on a user's behalf — each key can be scoped to a tool-access mode, a connector allowlist, and a daily spend cap</li>
     </ol>
 
     <h2>3. Write the Org Policy</h2>
@@ -103,7 +104,10 @@
 
     <h2>5. Monitor &amp; Audit</h2>
     <ul>
-      <li><strong>Token usage</strong> — per-user, per-model consumption with a daily chart, so cost surprises don't happen</li>
+      <li><strong>Token usage</strong> — per-user, per-model consumption with a daily chart (including which client made each gateway request), so cost surprises don't happen</li>
+      <li><strong>SIEM/webhook export</strong> — stream governance events to Splunk, Elastic, Sentinel/Defender, or any webhook in real time: signed with a rotatable secret, test deliveries, and automatic retries with delivery visibility</li>
+      <li><strong>Governance digest emails</strong> — a per-org summary of guardrail and usage activity, delivered by email</li>
+      <li><strong>Maker-checker</strong> — once you have a second administrator, enable dual-admin approval so sensitive changes (policy, firewall rules, admin grants, key-scope widening, retention) need a second pair of eyes</li>
       <li><strong>Governance audit</strong> — every guardrail event (keyword blocks, injection attempts, moderation flags) in one reviewable log</li>
       <li><strong>Connector activity</strong> — each tool execution is logged: who, which connector, which tool, success or error</li>
       <li><strong>Emergency stop</strong> — the org-level kill switch halts all connector tool traffic at once, across every surface; users are told an emergency stop is active rather than seeing cryptic errors. Engaging it twice is safe (idempotent)</li>

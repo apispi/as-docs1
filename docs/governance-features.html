@@ -79,6 +79,8 @@
         <tr><td><strong>PII redaction</strong></td><td>Automatically masks personal data (emails, card numbers, key-like strings) before it reaches a model.</td></tr>
         <tr><td><strong>Prompt-injection detection</strong></td><td>Two lines of defence: pattern matching for known attacks (DAN, role-play overrides, system-prompt extraction) plus an LLM-based moderation classifier as a second opinion.</td></tr>
         <tr><td><strong>Output moderation</strong></td><td>AI replies are scanned before being returned, with the same keyword/action machinery as input.</td></tr>
+        <tr><td><strong>AI Firewall block mode</strong></td><td>The pattern-based firewall (PII, injection, secrets) works per category in <em>log</em> or <em>block</em> mode. Existing rules stay log-only until an admin explicitly upgrades a category to block; an org can upgrade a category, never downgrade the platform baseline.</td></tr>
+        <tr><td><strong>Policy-as-Code on passthrough</strong></td><td>Governance rules are enforced even on raw gateway passthrough traffic — there is no ungoverned path to a provider.</td></tr>
       </tbody>
     </table>
 
@@ -113,6 +115,7 @@
         <tr><td><strong>Blocked tools</strong></td><td>Ban specific tool names for everyone, regardless of other settings.</td></tr>
         <tr><td><strong>Per-connector rules</strong></td><td>Rules scoped to individual connectors; users can additionally disable individual tools on their own connections.</td></tr>
         <tr><td><strong>Autonomy budgets</strong></td><td><code>max_actions</code> caps tool calls per run; <code>action_time_budget</code> force-stops long autonomous runs.</td></tr>
+        <tr><td><strong>Per-API-key scoping</strong></td><td>Each gateway key can carry its own tool-access mode, a <em>connector allowlist</em>, and a daily USD spend cap — so an integration key can be far narrower than the user who owns it.</td></tr>
         <tr><td><strong>Emergency stop</strong></td><td>The org-level kill switch halts all connector tool traffic on every surface at once. Idempotent; users are told an emergency stop is active instead of seeing cryptic errors.</td></tr>
       </tbody>
     </table>
@@ -126,7 +129,12 @@
         <tr><td><strong>Policy versioning &amp; rollback</strong></td><td>Policy changes are versioned; any previous version can be rolled back to in one step, and the last editor is recorded.</td></tr>
         <tr><td><strong>Dry-run</strong></td><td>Test a message against the current policy without sending it to a model — see exactly which rules would fire.</td></tr>
         <tr><td><strong>Posture view &amp; export</strong></td><td>A single summary of your effective governance posture, exportable for auditors and review boards.</td></tr>
-        <tr><td><strong>Usage telemetry</strong></td><td>Per-user, per-model token consumption and per-tool connector activity logs.</td></tr>
+        <tr><td><strong>Usage telemetry</strong></td><td>Per-user, per-model token consumption and per-tool connector activity logs — including <em>which client</em> (Claude Code, Cursor, n8n…) made each gateway request.</td></tr>
+        <tr><td><strong>Real-time SIEM/webhook export</strong></td><td>Governance events stream to your SIEM (Splunk, Elastic, Sentinel/Defender) or any webhook endpoint — signed with a rotatable secret, with test delivery, per-delivery visibility, and automatic retries.</td></tr>
+        <tr><td><strong>Governance digest emails</strong></td><td>Per-organisation email digests summarising guardrail and usage activity.</td></tr>
+        <tr><td><strong>Maker-checker approvals</strong></td><td>Optional dual-admin control (off until a second admin exists): sensitive changes — policy edits, firewall rules, admin grants, widening an API key's scope or spend cap, retention changes — require a second administrator's approval.</td></tr>
+        <tr><td><strong>Config-change audit</strong></td><td>Administrative configuration changes are themselves audit events, alongside firewall block events.</td></tr>
+        <tr><td><strong>Supply-chain validation</strong></td><td>External AI dependencies are pinned and re-verified, so an upstream change can't silently alter behaviour.</td></tr>
       </tbody>
     </table>
 

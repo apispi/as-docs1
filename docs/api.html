@@ -116,7 +116,7 @@ const { key } = await resp.json();
 console.log(key); // store this now — it is never returned again</code></pre>
     </details>
 
-    <div class="callout">A key is <strong>not</strong> restricted to specific connectors — it inherits whichever connectors the owning user has actively connected. There is no per-key connector scoping or custom rate limit.</div>
+    <div class="callout">By default a key inherits whichever connectors the owning user has actively connected — but each key can now be <strong>scoped down</strong>: its own tool-access mode, a connector allowlist, and a daily USD spend cap. Use one narrowly-scoped key per integration. Where maker-checker is enabled, <em>widening</em> a key's scope requires a second admin's approval (see <a href="governance-features.html">Governance Features</a>).</div>
 
     <h2>Proxy Endpoint</h2>
     <pre><code>ANY /api/gateway/{connector_slug}/{path?}</code></pre>

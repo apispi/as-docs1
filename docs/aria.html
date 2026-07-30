@@ -22,6 +22,7 @@
     <div class="nav-group">
       <div class="nav-group-title">Platform</div>
       <a href="../index.html" class="nav-link">Home</a>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
       <a href="overview.html" class="nav-link">Overview</a>
     </div>
     <div class="nav-group">
@@ -86,10 +87,18 @@
       <li><strong>Uploads</strong> — attach a document and ask questions about it.</li>
     </ul>
 
+    <h3>Talk instead of type</h3>
+    <ul>
+      <li>Use the <strong>mic button</strong> for voice input — recording stops automatically when you stop speaking. In workspace chat, <strong>⌘⇧A / Ctrl+Shift+A</strong> toggles the mic.</li>
+    </ul>
+
     <h3>Save and automate</h3>
     <ul>
       <li>Save prompts you'll reuse to <strong>My Prompts</strong>, then run any of them on a timer with <strong>My Schedule</strong> — results come back into this chat, badged <em>scheduled</em>.</li>
     </ul>
+
+    <h3>Aria in Microsoft Teams</h3>
+    <p>Organisations using Microsoft Entra SSO can chat with Aria <strong>natively in Microsoft Teams</strong>. The Teams bot maps your Teams identity to your ApiSpi account via Entra, and replies run on the same governed engine — your connectors, your governance, fully logged. Ask your admin about enabling the ApiSpi bot for your tenant.</p>
 
     <h3>Trust, but verify</h3>
     <ul>
@@ -144,7 +153,7 @@
       <li>Explicit <code>model</code> param in the request.</li>
       <li>Mode's configured model override (e.g. Research mode forces <code>claude-opus-4-8</code>).</li>
       <li>Model configured on the user's connector.</li>
-      <li>Platform default (<code>claude-sonnet-4-6</code> for Anthropic, <code>gemini-2.0-flash</code> for Gemini, <code>default</code> for SCX).</li>
+      <li>Platform default (<code>claude-sonnet-4-6</code> for Anthropic, <code>gemini-2.5-flash</code> for Gemini, <code>default</code> for SCX).</li>
     </ol>
 
     <h3 id="available-models">Available Models</h3>
@@ -153,7 +162,7 @@
       <thead><tr><th>Provider</th><th>Picker models / default</th><th>Notes</th></tr></thead>
       <tbody>
         <tr><td>Anthropic</td><td>Claude Sonnet 4.6 · Claude Opus 4.8 · Claude Haiku 4.5</td><td>Fixed three-model list; also the platform fallback when no provider is connected.</td></tr>
-        <tr><td>Google Gemini</td><td>Gemini 2.0 Flash · Gemini 2.0 Flash Lite · Gemini 1.5 Pro</td><td>Fixed three-model list.</td></tr>
+        <tr><td>Google Gemini</td><td>Gemini 3.6 Flash · 3.5 Flash · 3.5 Flash-Lite · 3.1 Flash-Lite · 2.5 Pro · 2.5 Flash · 2.5 Flash-Lite</td><td>Fixed list refreshed from Google's official lineup; default <code>gemini-2.5-flash</code>.</td></tr>
         <tr><td>SCX AI</td><td>Connector's model list, else platform list (default <code>gpt-4o</code>)</td><td>Multiple configured models each appear as their own pick, namespaced <code>scx:&lt;model&gt;</code> so routing always targets SCX.</td></tr>
         <tr><td>Argyll Data</td><td>Configured model (default <code>gpt-4o</code>)</td><td></td></tr>
         <tr><td>Mistral AI</td><td>Configured model (default <code>mistral-large-latest</code>)</td><td></td></tr>
